@@ -1,0 +1,17 @@
+# Unreal Engine - regenerável
+Binaries/
+Intermediate/
+DerivedDataCache/
+Saved/
+.vs/
+.vscode/
+*.sln
+*.VC.db
+*.opensdf
+*.sdf
+*.opendb
+*.ipch
+*.tmp
+
+# Logs
+*.log

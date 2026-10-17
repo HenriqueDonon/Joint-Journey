@@ -1,0 +1,9 @@
+Joint Journey (JogoCoop) - co-op online, UE 5.5 C++. Host = Neon, convidado = Ruina.
+
+CONECTAR (os dois com Radmin VPN na mesma rede):
+ 1. Host: abre Radmin, passa o IP dele (26.x.x.x) ao amigo, roda Hospedar.bat.
+ 2. Amigo: roda Entrar.bat, digita o IP do host.
+ Porta usada: UDP 7777 (Radmin dispensa abrir no roteador).
+
+TESTE LOCAL NO EDITOR: Play > Number of Players 2 > Net Mode "Play As Listen Server".
+CONTROLES: WASD, Mouse, Espaco, E (poder), Q (secundario da Ruina), F1 ajuda.

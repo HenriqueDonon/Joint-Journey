@@ -1,0 +1,23 @@
+#pragma once
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "CoopBlock.generated.h"
+
+// Bloco colidível replicado (chão, paredes). Tamanho em cm.
+UCLASS()
+class JOGOCOOP_API ACoopBlock : public AActor
+{
+	GENERATED_BODY()
+public:
+	ACoopBlock();
+	void Setup(FVector InSize, FLinearColor InColor, bool bInGhost = false, FLinearColor InEmissive = FLinearColor::Black, float InRough = 0.9f, float InMetal = 0.f);
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	UPROPERTY(VisibleAnywhere) UStaticMeshComponent* Mesh;
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) FVector Size = FVector(100);
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) FLinearColor Color = FLinearColor::Gray;
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) FLinearColor Emissive = FLinearColor::Black;
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) float Rough = 0.9f;
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) float Metal = 0.f;
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) bool bGhost = false;
+	UFUNCTION() void OnRep_Setup();
+};
