@@ -15,3 +15,6 @@ Saved/
 
 # Logs
 *.log
+
+# Conteudo padrao do template Third Person da Unreal (recriavel, nao e nosso)
+Content/Characters/Mannequins/
