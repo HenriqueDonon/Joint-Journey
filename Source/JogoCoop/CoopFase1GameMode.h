@@ -21,6 +21,7 @@ private:
 	void CheckFall();
 	void SpawnBarrier();
 	void BuildDecor();
+	void BuildTransition();
 	void TickCollapse();
 	void SpawnCrackCluster(int32 Idx);
 	void ClearCracks();
@@ -36,6 +37,9 @@ private:
 	UPROPERTY() class ACoopDestructible* Column = nullptr;
 	UPROPERTY() class ACoopDestructible* Bridge = nullptr;
 	UPROPERTY() AActor* Barrier = nullptr;
+	UPROPERTY() class ACoopExitDoor* ExitDoor = nullptr;
+	void TickExit();
+	bool bDoorLatched = false, bPhaseDone = false;
 	FTimerHandle FallTimer;
 	int32 NextStart = 0;
 	bool bBuilt = false;

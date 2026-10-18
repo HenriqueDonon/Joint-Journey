@@ -10,7 +10,7 @@ class JOGOCOOP_API ACoopBurst : public AActor
 	GENERATED_BODY()
 public:
 	ACoopBurst();
-	void Init(FLinearColor Col, FVector BeamFrom);
+	void Init(FLinearColor Col, FVector BeamFrom, int32 NumSparks = 28);
 	virtual void Tick(float DeltaTime) override;
 private:
 	float Age = 0.f;

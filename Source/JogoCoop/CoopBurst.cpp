@@ -9,11 +9,11 @@ ACoopBurst::ACoopBurst()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 }
 
-void ACoopBurst::Init(FLinearColor Col, FVector From)
+void ACoopBurst::Init(FLinearColor Col, FVector From, int32 NumSparks)
 {
 	UStaticMesh* Cube = JJ::Mesh(TEXT("Cube"));
 	UMaterialInstanceDynamic* M = JJ::Mat(this, Col * 0.1f, Col * 6.f, 0.3f);
-	for (int32 i = 0; i < 28; ++i)
+	for (int32 i = 0; i < NumSparks; ++i)
 	{
 		UStaticMeshComponent* C = NewObject<UStaticMeshComponent>(this);
 		C->SetStaticMesh(Cube);

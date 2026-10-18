@@ -43,7 +43,7 @@ void ACoopHUD::DrawHUD()
 	if (GEngine)
 	{
 		const FString T = bPortal ? TEXT("[R] ARMA DE PORTAIS  -  botao esq: portal azul | botao dir: portal laranja")
-		                          : TEXT("[R] ARMA DE PODERES  -  botao esq / E: poder | botao dir / Q: secundario");
+		                          : TEXT("[R] ARMA DE PODERES  -  botao esquerdo: atirar poder (Ruina destroi / Neon constroi)");
 		DrawText(T, bPortal ? FLinearColor(0.4f, 0.8f, 1.f) : FLinearColor(0.8f, 1.f, 0.6f), cx - 280.f, Canvas->SizeY - 50.f, GEngine->GetMediumFont(), 1.f);
 	}
 }

@@ -9,6 +9,8 @@
 #include "CoopLamp.h"
 #include "CoopFog.h"
 #include "CoopEasterEgg.h"
+#include "CoopExitDoor.h"
+#include "Misc/PackageName.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/PlayerStart.h"
@@ -104,7 +106,10 @@ void ACoopFase1GameMode::BuildLevel()
 	M(B(TEXT("F1_ParedeLateralEsq"), FVector(500, -520, 50), FVector(3850, 40, 1300), Wall), TEXT("Parede_Lateral_Esq"));
 	M(B(TEXT("F1_ParedeLateralDir"), FVector(500, 520, 50), FVector(3850, 40, 1300), Wall), TEXT("Parede_Lateral_Dir"));
 	M(B(TEXT("F1_ParedeFundoInicio"), FVector(-1420, 0, 50), FVector(40, 1080, 1300), Wall), TEXT("Parede_Fundo_Inicio"));
-	M(B(TEXT("F1_ParedeFundoSaida"), FVector(2420, 0, 50), FVector(40, 1080, 1300), Wall), TEXT("Parede_Fundo_Saida"));
+	// parede do fundo da saida com ABERTURA para a porta (300 x 286 cm, do piso ate Z=330)
+	B(TEXT("F1_ParedeFundoSaida_Esq"), FVector(2420, -320, 50), FVector(40, 440, 1300), Wall);
+	B(TEXT("F1_ParedeFundoSaida_Dir"), FVector(2420, 320, 50), FVector(40, 440, 1300), Wall);
+	B(TEXT("F1_ParedeFundoSaida_Topo"), FVector(2420, 0, 500), FVector(40, 1080, 400), Wall);
 	// teto cobrindo a sala toda (visual, cai no colapso) + paineis de luz + luzes sem sombra
 	auto Roofed = [&](const TCHAR* Name, FVector C, FVector S, FLinearColor Col, FLinearColor Em = FLinearColor::Black) -> ACoopCeiling*
 	{
@@ -150,8 +155,10 @@ void ACoopFase1GameMode::BuildLevel()
 	if (Column && Bridge) { Column->Partner = Bridge; Bridge->Partner = Column; }
 	if (ACoopBlock* Slab = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(FVector(780, 0, -140)), FRotator(-35.f, 0.f, 0.f)))
 	{ Slab->Setup(Sc(FVector(150, 250, 30)), FLinearColor(0.45f, 0.42f, 0.38f)); Lbl(Slab, TEXT("F1_Ponte_LajeCaida")); }
-	// F. saida: porta emissiva na parede do fundo da plataforma de saida
-	M(B(TEXT("F1_PortaSaida"), FVector(2395, 0, 170), FVector(10, 200, 260), FLinearColor(0.02f, 0.1f, 0.05f), false, FLinearColor(0.1f, 1.f, 0.4f) * 1.5f), TEXT("Porta_Saida"));
+	// F. saida: porta que SOBE quando todos os jogadores estao perto (ver TickExit)
+	if (ACoopExitDoor* Dr = W->SpawnActor<ACoopExitDoor>(ACoopExitDoor::StaticClass(), Sc(FVector(2395, 0, 170)), FRotator::ZeroRotator))
+	{ Dr->Setup(Sc(FVector(10, 200, 260)), FLinearColor(0.02f, 0.1f, 0.05f), false, FLinearColor(0.1f, 1.f, 0.4f) * 1.5f); Dr->SetOpts(TEXT("Porta_Saida"), false); Lbl(Dr, TEXT("F1_PortaSaida")); ExitDoor = Dr; }
+	BuildTransition();
 
 	SpawnBarrier();
 	W->SpawnActor<ACoopFog>(ACoopFog::StaticClass(), Sc(FVector(500, 0, 200)), FRotator::ZeroRotator);
@@ -172,6 +179,7 @@ bool ACoopFase1GameMode::ToggleTestBridge()
 void ACoopFase1GameMode::CheckFall()
 {
 	TickCollapse();
+	TickExit();
 	// barreira invisivel do vao existe so enquanto a ponte nao existe
 	if (Bridge)
 	{
@@ -282,7 +290,87 @@ void ACoopFase1GameMode::TickCollapse()
 		Column->ServerForce(false);          // estruturas voltam ao estado inicial
 		if (Bridge) Bridge->ServerForce(true);
 		Phase = 0;
+		if (ExitDoor) ExitDoor->SetOpen(false);
+		bDoorLatched = false; bPhaseDone = false;
 		Announce(TEXT("Fase reiniciada"));
+	}
+}
+
+// Area de transicao depois da porta (coordenadas ja em cm reais, sem Sc): corredor ate o "portal" da proxima fase.
+static constexpr float TrX0 = 3660.f, TrLen = 1710.f, TrHalfW = 420.f, TrFloorTop = 44.f, TrH = 440.f;
+void ACoopFase1GameMode::BuildTransition()
+{
+	UWorld* W = GetWorld();
+	const float X1 = TrX0 + TrLen, CX = (TrX0 + X1) * 0.5f;
+	const FLinearColor Dk(0.10f, 0.11f, 0.13f), Wl(0.17f, 0.18f, 0.21f);
+	auto Blk = [&](const TCHAR* N, FVector C, FVector S, FLinearColor Col, FLinearColor Em = FLinearColor::Black) -> ACoopBlock*
+	{
+		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), C, FRotator::ZeroRotator);
+		if (b) { b->Setup(S, Col, false, Em, 0.85f, 0.2f); Lbl(b, N); }
+		return b;
+	};
+	Blk(TEXT("F1_Trans_Piso"), FVector(CX, 0, TrFloorTop - 30.f), FVector(TrLen, TrHalfW * 2 + 80.f, 60.f), Dk);
+	for (float Sg : {-1.f, 1.f})
+		Blk(TEXT("F1_Trans_Parede"), FVector(CX, Sg * (TrHalfW + 20.f), TrFloorTop + TrH * 0.5f - 30.f), FVector(TrLen, 40.f, TrH + 60.f), Wl);
+	Blk(TEXT("F1_Trans_Teto"), FVector(CX, 0, TrFloorTop + TrH + 20.f), FVector(TrLen, TrHalfW * 2 + 80.f, 40.f), Dk);
+	Blk(TEXT("F1_Trans_Fundo"), FVector(X1 + 20.f, 0, TrFloorTop + TrH * 0.5f - 30.f), FVector(40.f, TrHalfW * 2 + 80.f, TrH + 60.f), Wl);
+	// "portal" luminoso da proxima fase no fundo
+	Blk(TEXT("F1_Trans_Portal"), FVector(X1 - 6.f, 0, TrFloorTop + 150.f), FVector(8.f, 340.f, 300.f), FLinearColor(0.02f, 0.06f, 0.1f), FLinearColor(0.15f, 0.7f, 1.f) * 2.2f);
+	Blk(TEXT("F1_Trans_PortalMoldura"), FVector(X1 - 12.f, 0, TrFloorTop + 150.f), FVector(10.f, 380.f, 340.f), Dk);
+	// tiras de luz no teto + lampadas
+	for (float X = TrX0 + 200.f; X < X1; X += 400.f)
+	{
+		Blk(TEXT("F1_Trans_Luz"), FVector(X, 0, TrFloorTop + TrH - 4.f), FVector(180.f, 40.f, 6.f), FLinearColor(0.8f, 0.85f, 0.9f), FLinearColor(0.85f, 0.95f, 1.f) * 3.f);
+		if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(X, 0, TrFloorTop + TrH - 50.f), FRotator::ZeroRotator)) L->Setup(FLinearColor(0.75f, 0.9f, 1.f), 9000.f, 800.f);
+	}
+	// faixas de chao guiando ate o portal
+	for (float Sg : {-1.f, 1.f})
+		Blk(TEXT("F1_Trans_Guia"), FVector(CX, Sg * 150.f, TrFloorTop + 0.5f), FVector(TrLen - 100.f, 8.f, 1.f), FLinearColor(0.02f, 0.05f, 0.08f), FLinearColor(0.1f, 0.8f, 1.f) * 2.f);
+	// modelos do Blender: paineis nas paredes e placas no piso
+	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot)
+	{
+		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Base + FVector(0, 0, Size.Z * 0.5f), Rot);
+		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), true); Lbl(b, Slot); }
+	};
+	for (int32 i = 0; i < 3; ++i)
+	{
+		const float X = TrX0 + 285.f + 570.f * i;
+		Prop(TEXT("Painel_Parede"), FVector(X, -(TrHalfW - 7.f), TrFloorTop), FVector(570, 14, 240), FRotator(0, 0, 0));
+		Prop(TEXT("Painel_Parede"), FVector(X, TrHalfW - 7.f, TrFloorTop), FVector(570, 14, 240), FRotator(0, 180, 0));
+	}
+	for (int32 i = 0; i < 5; ++i) Prop(TEXT("Placa_Industrial"), FVector(TrX0 + 150.f + 300.f * i, 0, TrFloorTop), FVector(300, 140, 4), FRotator(0, 0, 0));
+}
+
+// Porta: abre quando TODOS os jogadores (min. 1) estao perto dela; fica aberta. Fim da fase: todos na zona do portal.
+void ACoopFase1GameMode::TickExit()
+{
+	if (!ExitDoor) return;
+	const FVector DoorLoc = ExitDoor->GetActorLocation();
+	int32 N = 0, Near = 0, InZone = 0;
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		APawn* P = It->Get() ? It->Get()->GetPawn() : nullptr;
+		if (!P) continue;
+		++N;
+		const FVector L = P->GetActorLocation();
+		if (FVector::Dist2D(L, DoorLoc) < 650.f && FMath::Abs(L.Z - DoorLoc.Z) < 400.f) ++Near;
+		if (L.X > TrX0 + TrLen - 380.f && FMath::Abs(L.Y) < TrHalfW) ++InZone;
+	}
+	if (N == 0) return;
+	if (!bDoorLatched && Near == N)
+	{
+		bDoorLatched = true; ExitDoor->SetOpen(true);
+		Announce(N > 1 ? TEXT("Todos juntos: PORTA ABERTA!") : TEXT("PORTA ABERTA!"));
+	}
+	if (bDoorLatched && !bPhaseDone && InZone == N)
+	{
+		bPhaseDone = true;
+		if (FPackageName::DoesPackageExist(TEXT("/Game/Maps/Fase2")))
+		{
+			Announce(TEXT("FASE 1 CONCLUIDA! Indo para a proxima fase..."));
+			GetWorld()->ServerTravel(TEXT("/Game/Maps/Fase2?listen"));
+		}
+		else Announce(TEXT("FASE 1 CONCLUIDA! A proxima fase vem em breve."));
 	}
 }
 

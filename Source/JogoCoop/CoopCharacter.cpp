@@ -25,8 +25,10 @@
 #include "Engine/SkeletalMesh.h"
 #include "Animation/AnimSequence.h"
 #include "Components/PointLightComponent.h"
+#include "CoopSkelMesh.h"
 
-ACoopCharacter::ACoopCharacter()
+ACoopCharacter::ACoopCharacter(const FObjectInitializer& OI)
+	: Super(OI.SetDefaultSubobjectClass<UCoopSkelMesh>(ACharacter::MeshComponentName))
 {
 	PrimaryActorTick.bCanEverTick = true;
 	Boom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Boom"));
@@ -319,13 +321,37 @@ void ACoopCharacter::AnimateBody(float DT)
 	const float Flutter = FMath::Sin(AnimTime * 7.f) * 4.f * AnimSpeed;
 	CapePivot->SetRelativeRotation(FRotator(FMath::Clamp(-(Fwd / 600.f) * 38.f - 6.f - AirBlend * 25.f + Flutter, -75.f, 8.f), 0, 0));
 
-	// arma segue a mira e fica NA MAO direita (osso hand_r da malha importada; sem malha usa o braco procedural)
-	const FRotator Aim = bFreeCam ? GetActorRotation() : GetBaseAimRotation();
+	// ---- tiro: o braco direito levanta e aponta; a arma so aparece enquanto o braco esta levantado ----
+	const bool bPortalHold = bPortalMode;
+	ShootT = FMath::Max(0.f, ShootT - DT);
+	const float TargetA = (ShootT > 0.f || bPortalHold) ? 1.f : 0.f;
+	ArmAlpha = FMath::FInterpTo(ArmAlpha, TargetA, DT, 16.f);
+	if (BeamAt >= 0.f && GetWorld()->GetTimeSeconds() >= BeamAt)
+	{
+		BeamAt = -1.f;
+		const FVector From = GunTip ? GunTip->GetComponentLocation() : GetActorLocation();
+		if (ACoopBurst* Bu = GetWorld()->SpawnActor<ACoopBurst>(ACoopBurst::StaticClass(), BeamEnd, FRotator::ZeroRotator)) Bu->Init(BeamCol, From, BeamHit ? 28 : 5);
+	}
+	FRotator Aim = bFreeCam ? GetActorRotation() : GetBaseAimRotation();
 	USkeletalMeshComponent* SK = GetMesh();
+	UCoopSkelMesh* CSK = Cast<UCoopSkelMesh>(SK);
 	const bool bSK = SK && SK->IsVisible() && SK->GetSkeletalMeshAsset() && SK->DoesSocketExist(TEXT("hand_r"));
-	const FVector Hand = bSK ? SK->GetSocketLocation(TEXT("hand_r")) + Aim.Vector() * 4.f : ArmRPivot->GetComponentLocation() + Aim.Vector() * 46.f;
-	GunPivot->SetWorldLocation(Hand);
-	GunPivot->SetWorldRotation(Aim);
+	FVector AimVec = Aim.Vector();
+	if (bSK)
+	{
+		const FVector Shoulder = SK->DoesSocketExist(TEXT("upperarm_r")) ? SK->GetSocketLocation(TEXT("upperarm_r")) : GetActorLocation();
+		if (ShootT > 0.f && !ShotEnd.IsZero()) AimVec = (ShotEnd - Shoulder).GetSafeNormal();
+		if (CSK) { CSK->AimDir = AimVec; CSK->AimAlpha = ArmAlpha; }
+		GunPivot->SetWorldLocation(SK->GetSocketLocation(TEXT("hand_r")) + AimVec * 6.f);
+		GunPivot->SetWorldRotation(AimVec.Rotation());
+	}
+	else
+	{
+		GunPivot->SetWorldLocation(ArmRPivot->GetComponentLocation() + Aim.Vector() * 46.f);
+		GunPivot->SetWorldRotation(Aim);
+	}
+	const bool bShowGun = !bCrushed && ArmAlpha > 0.12f;
+	for (UMeshComponent* C : GunParts) if (C && C->IsVisible() != bShowGun) C->SetVisibility(bShowGun);
 	if (FaceLight && FaceLight->IsVisible() && bSK && SK->DoesSocketExist(TEXT("head")))
 		FaceLight->SetWorldLocation(SK->GetSocketLocation(TEXT("head")) + GetActorForwardVector() * 38.f + FVector(0, 0, 10.f));
 }
@@ -359,14 +385,12 @@ void ACoopCharacter::SetupPlayerInputComponent(UInputComponent* I)
 {
 	I->BindKey(EKeys::SpaceBar, IE_Pressed, this, &ACharacter::Jump);
 	I->BindKey(EKeys::SpaceBar, IE_Released, this, &ACharacter::StopJumping);
-	I->BindKey(EKeys::E, IE_Pressed, this, &ACoopCharacter::Primary);
-	I->BindKey(EKeys::Q, IE_Pressed, this, &ACoopCharacter::Secondary);
 	I->BindKey(EKeys::LeftMouseButton, IE_Pressed, this, &ACoopCharacter::FireA);
 	I->BindKey(EKeys::RightMouseButton, IE_Pressed, this, &ACoopCharacter::FireB);
 	I->BindKey(EKeys::R, IE_Pressed, this, &ACoopCharacter::ToggleMode);
 	I->BindKey(EKeys::F3, IE_Pressed, this, &ACoopCharacter::TestVertice);
 	I->BindKey(EKeys::F1, IE_Pressed, this, &ACoopCharacter::ShowHelp);
-	I->BindKey(EKeys::F, IE_Pressed, this, &ACoopCharacter::DestructPower);
+	I->BindKey(EKeys::F, IE_Pressed, this, &ACoopCharacter::PowerShot);
 	I->BindKey(EKeys::F4, IE_Pressed, this, &ACoopCharacter::TestBridge);
 	I->BindKey(EKeys::C, IE_Pressed, this, &ACoopCharacter::ToggleFreeCam);
 	I->BindAxisKey(EKeys::MouseX, this, &ACoopCharacter::LookX);
@@ -469,40 +493,58 @@ ACoopDestructible* ACoopCharacter::TraceDestructible() const
 	return Best;
 }
 
-void ACoopCharacter::DestructPower()
+void ACoopCharacter::PowerShot()
 {
-	if (CoopRole == ECoopRole::Vertice) { ClientToast(TEXT("VERTICE nao usa este poder")); return; }
-	if (ACoopDestructible* T = TraceDestructible()) ServerDestructPower(T);
-	else ClientToast(CoopRole == ECoopRole::Ruina ? TEXT("Mire num objeto destrutivel") : TEXT("Mire num objeto destruido"));
+	if (!Controller || bCrushed) return;
+	FVector Loc; FRotator Rot;
+	Controller->GetPlayerViewPoint(Loc, Rot);
+	FHitResult Hit; FCollisionQueryParams P(NAME_None, false, this);
+	const bool bBlock = GetWorld()->LineTraceSingleByChannel(Hit, Loc, Loc + Rot.Vector() * 3000.f, ECC_Visibility, P);
+	FVector End = bBlock ? Hit.ImpactPoint : Loc + Rot.Vector() * 3000.f;
+	ACoopDestructible* T = (CoopRole == ECoopRole::Vertice) ? nullptr : TraceDestructible();
+	if (T) End = T->GetActorLocation();
+	ServerPowerShot(T, End);
 }
 
-void ACoopCharacter::ServerDestructPower_Implementation(ACoopDestructible* T)
+void ACoopCharacter::ServerPowerShot_Implementation(ACoopDestructible* T, FVector_NetQuantize10 End)
 {
-	// validacao no servidor: personagem, alcance, linha de visao e estado
-	if (!T) return;
-	if (CoopRole != ECoopRole::Ruina && CoopRole != ECoopRole::Neon) { ClientToast(TEXT("Este personagem nao tem esse poder")); return; }
-	const FVector Eye = GetActorLocation() + FVector(0, 0, BaseEyeHeight);
-	if (FVector::Dist(Eye, T->GetActorLocation()) > DestructRange) { ClientToast(TEXT("Longe demais - chegue mais perto")); return; }
-	FCollisionQueryParams P(NAME_None, false, this);
-	FHitResult H;
-	if (GetWorld()->LineTraceSingleByChannel(H, Eye, T->GetActorLocation(), ECC_Visibility, P) && H.GetActor() != T)
-	{ ClientToast(TEXT("Sem linha de visao")); return; }
-	FString Why;
-	const bool bOk = (CoopRole == ECoopRole::Ruina) ? T->ServerBreak(Why) : T->ServerRebuild(Why);
-	if (bOk) ClientToast(CoopRole == ECoopRole::Ruina ? TEXT("RUINA: objeto DESTRUIDO") : TEXT("NEON: objeto RECONSTRUIDO"));
-	else ClientToast(Why);
+	const FLinearColor Col = CoopRole == ECoopRole::Neon ? FLinearColor(0.1f, 1.f, 0.4f) : CoopRole == ECoopRole::Ruina ? FLinearColor(0.7f, 0.25f, 1.f) : FLinearColor(1.f, 0.45f, 0.05f);
+	bool bHit = false;
+	// validacao no servidor: personagem, alcance, linha de visao e estado. Sem alvo valido = o tiro sai, mas nao faz nada.
+	if (T && (CoopRole == ECoopRole::Ruina || CoopRole == ECoopRole::Neon))
+	{
+		const FVector Eye = GetActorLocation() + FVector(0, 0, BaseEyeHeight);
+		FCollisionQueryParams P(NAME_None, false, this);
+		FHitResult H;
+		if (FVector::Dist(Eye, T->GetActorLocation()) > DestructRange) ClientToast(TEXT("Longe demais - chegue mais perto"));
+		else if (GetWorld()->LineTraceSingleByChannel(H, Eye, T->GetActorLocation(), ECC_Visibility, P) && H.GetActor() != T) ClientToast(TEXT("Sem linha de visao"));
+		else
+		{
+			FString Why;
+			bHit = (CoopRole == ECoopRole::Ruina) ? T->ServerBreak(Why) : T->ServerRebuild(Why);
+			if (bHit) ClientToast(CoopRole == ECoopRole::Ruina ? TEXT("RUINA: objeto DESTRUIDO") : TEXT("NEON: objeto RECONSTRUIDO"));
+			else ClientToast(Why);
+		}
+	}
+	MulticastShot(End, Col, bHit);
+}
+
+void ACoopCharacter::MulticastShot_Implementation(FVector_NetQuantize10 End, FLinearColor Col, bool bHit)
+{
+	ShootT = 0.85f; ShotEnd = End;
+	BeamAt = GetWorld()->GetTimeSeconds() + 0.14f; BeamEnd = End; BeamCol = Col; BeamHit = bHit;
 }
 
 void ACoopCharacter::ShowHelp()
 {
 	if (!GEngine) return;
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::White, TEXT("=== JOINT JOURNEY ==="));
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, TEXT("WASD mover | Espaco pular | Mouse mirar | Botao esq/E poder | Botao dir/Q secundario"));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, TEXT("WASD mover | Espaco pular | Mouse mirar | Botao esquerdo: atirar o poder"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, TEXT("R alterna ARMA DE PODERES / ARMA DE PORTAIS (esq = azul, dir = laranja)"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, ECoopRole::Neon == CoopRole ? FColor::Cyan : FColor::Orange,
-		CoopRole == ECoopRole::Neon ? TEXT("Voce e o NEON: poder inverte a gravidade do cubo mirado") : CoopRole == ECoopRole::Vertice ? TEXT("Voce e o VERTICE (poder em breve)") : TEXT("Voce e a RUINA: poder congela o cubo, Q rebobina 5s"));
+		CoopRole == ECoopRole::Neon ? TEXT("Voce e o NEON: o poder RECONSTROI objetos destruidos") : CoopRole == ECoopRole::Vertice ? TEXT("Voce e o VERTICE (poder em breve)") : TEXT("Voce e a RUINA: o poder DESTROI objetos destrutiveis"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, TEXT("F3 (teste): alterna NEON -> RUINA -> VERTICE"));
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, TEXT("F: NOVO PODER - Ruina destroi / Neon reconstroi o bloco roxo"));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, TEXT("Mire no objeto e atire: Ruina destroi / Neon reconstroi (tecla F tambem atira)"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("C: camera livre (gire o mouse para se ver de frente) - C de novo volta ao normal"));
 }
 
@@ -533,8 +575,8 @@ void ACoopCharacter::ServerSetMode_Implementation(bool bPortal)
 	ClientToast(bPortal ? TEXT("ARMA DE PORTAIS (esq azul / dir laranja)") : TEXT("ARMA DE PODERES"));
 }
 
-void ACoopCharacter::FireA() { if (bPortalMode) FirePortal(false); else Primary(); }
-void ACoopCharacter::FireB() { if (bPortalMode) FirePortal(true); else Secondary(); }
+void ACoopCharacter::FireA() { if (bPortalMode) FirePortal(false); else PowerShot(); }
+void ACoopCharacter::FireB() { if (bPortalMode) FirePortal(true); }
 
 void ACoopCharacter::FirePortal(bool bOrange)
 {

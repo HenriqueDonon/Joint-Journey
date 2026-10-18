@@ -12,7 +12,7 @@ class JOGOCOOP_API ACoopCharacter : public ACharacter
 {
 	GENERATED_BODY()
 public:
-	ACoopCharacter();
+	ACoopCharacter(const FObjectInitializer& ObjectInitializer);
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void PossessedBy(AController* NewController) override;
@@ -115,10 +115,15 @@ private:
 
 	void MoveB(float V); void MoveL(float V); void MoveF(float V); void MoveR(float V); void LookX(float V); void LookY(float V);
 	void Primary(); void Secondary(); void ShowHelp();
+	// Tiro do poder (botao esquerdo): levanta o braco e dispara o raio em qualquer direcao; so tem efeito em objeto destrutivel
+	void PowerShot();
+	UFUNCTION(NetMulticast, Unreliable) void MulticastShot(FVector_NetQuantize10 End, FLinearColor Col, bool bHit);
+	float ShootT = 0.f, ArmAlpha = 0.f;
+	FVector ShotEnd = FVector::ZeroVector;
+	float BeamAt = -1.f; FVector BeamEnd = FVector::ZeroVector; FLinearColor BeamCol = FLinearColor::White; bool BeamHit = false;
 	class ACoopProp* TraceProp() const;
 	// Poder novo (tecla F): Ruina destroi / Neon reconstroi ACoopDestructible. Isolado dos poderes antigos.
-	void DestructPower();
 	class ACoopDestructible* TraceDestructible() const;
-	UFUNCTION(Server, Reliable) void ServerDestructPower(class ACoopDestructible* Target);
+	UFUNCTION(Server, Reliable) void ServerPowerShot(class ACoopDestructible* Target, FVector_NetQuantize10 End);
 	UFUNCTION(Server, Reliable) void ServerUseAbility(class ACoopProp* Target, bool bSecondary);
 };
