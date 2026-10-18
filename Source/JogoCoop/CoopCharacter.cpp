@@ -414,7 +414,7 @@ ACoopDestructible* ACoopCharacter::TraceDestructible() const
 	const FVector Dir = Rot.Vector();
 	FCollisionQueryParams P(NAME_None, false, this);
 	ACoopDestructible* Best = nullptr;
-	float BestDot = FMath::Cos(FMath::DegreesToRadians(10.f));
+	float BestDot = FMath::Cos(FMath::DegreesToRadians(25.f)); // cone mais largo: mais facil de mirar
 	for (TActorIterator<ACoopDestructible> It(GetWorld()); It; ++It)
 	{
 		const FVector To = It->GetActorLocation() - Loc;
