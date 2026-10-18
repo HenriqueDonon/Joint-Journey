@@ -10,6 +10,8 @@ if not exist "%UE%\Engine\Build\BatchFiles\Build.bat" (
 )
 taskkill /F /IM UnrealEditor.exe /IM UnrealEditor-Cmd.exe /IM LiveCodingConsole.exe /IM CrashReportClientEditor.exe >nul 2>&1
 timeout /t 3 /nobreak >nul
+echo [0/2] Atualizando data dos arquivos de codigo (evita "Target is up to date" falso)...
+powershell -NoProfile -Command "Get-ChildItem -Path '%~dp0Source' -Recurse -File | ForEach-Object { $_.LastWriteTime = Get-Date }" >nul 2>&1
 echo [1/2] Compilando o jogo (pode levar 10-20 min na primeira vez)...
 call "%UE%\Engine\Build\BatchFiles\Build.bat" JogoCoopEditor Win64 Development -Project="%PRJ%" -WaitMutex -FromMsBuild > "%LOG%" 2>&1
 set ERR=%ERRORLEVEL%
