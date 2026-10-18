@@ -18,3 +18,7 @@ Saved/
 
 # Conteudo padrao do template Third Person da Unreal (recriavel, nao e nosso)
 Content/Characters/Mannequins/
+Referencias/
+
+ImportFase1/**/*.blend
+ImportFase1/**/*.fbm/
