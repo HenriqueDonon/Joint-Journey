@@ -12,6 +12,6 @@ void UCoopGameUserSettings::ApplyAudio()
 	if (GEngine)
 	{
 		if (FAudioDeviceHandle AD = GEngine->GetMainAudioDevice())
-			AD->SetTransientMasterVolume(FMath::Clamp(MasterVolume, 0.f, 1.f));
+			AD->SetTransientPrimaryVolume(FMath::Clamp(MasterVolume, 0.f, 1.f));
 	}
 }

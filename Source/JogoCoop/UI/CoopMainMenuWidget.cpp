@@ -1,5 +1,5 @@
 #include "CoopMainMenuWidget.h"
-#include "CoopGameUserSettings.h"
+#include "../CoopGameUserSettings.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
