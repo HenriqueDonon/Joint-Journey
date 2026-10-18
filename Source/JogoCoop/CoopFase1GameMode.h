@@ -19,6 +19,7 @@ private:
 	void BuildLevel();
 	void CheckFall();
 	void SpawnBarrier();
+	void BuildDecor();
 	void TickCollapse();
 	void SpawnCrackCluster(int32 Idx);
 	void ClearCracks();

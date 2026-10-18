@@ -2,6 +2,8 @@
 #include "CoopBurst.h"
 #include "JJVisual.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+#include "UObject/UObjectGlobals.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "GameFramework/Pawn.h"
 #include "Net/UnrealNetwork.h"
@@ -31,6 +33,21 @@ void ACoopDestructible::BeginPlay()
 	Mesh->SetWorldScale3D(Size / 100.f);
 	BodyMat = JJ::Mat(this, Color, FLinearColor(0.6f, 0.25f, 1.f) * 0.15f, 0.85f);
 	Mesh->SetMaterial(0, BodyMat);
+	if (Model != NAME_None)
+	{
+		const FString P = FString::Printf(TEXT("/Game/Fase1/%s/SM_%s.SM_%s"), *Model.ToString(), *Model.ToString(), *Model.ToString());
+		if (UStaticMesh* SM = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *P, nullptr, LOAD_Quiet | LOAD_NoWarn)))
+		{
+			ModelComp = NewObject<UStaticMeshComponent>(this);
+			ModelComp->SetStaticMesh(SM);
+			ModelComp->SetupAttachment(Mesh);
+			ModelComp->SetAbsolute(false, false, true);
+			ModelComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			ModelComp->RegisterComponent();
+			ModelComp->SetWorldScale3D(FVector(1.f));
+			ModelComp->SetWorldLocationAndRotation(GetActorLocation() - FVector(0, 0, Size.Z * 0.5f), GetActorRotation());
+		}
+	}
 	BuildChunks();
 	ApplyState(false);
 }
@@ -66,7 +83,8 @@ void ACoopDestructible::BuildChunks()
 void ACoopDestructible::ApplyState(bool bWithFx)
 {
 	// mesma logica no servidor e nos clientes: visual + colisao seguem o estado replicado
-	Mesh->SetVisibility(!bDestroyed, false);
+	if (ModelComp) { ModelComp->SetVisibility(!bDestroyed); Mesh->SetVisibility(false, false); }
+	else Mesh->SetVisibility(!bDestroyed, false);
 	Mesh->SetCollisionEnabled(bDestroyed ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
 	for (UStaticMeshComponent* C : Chunks) if (C) C->SetVisibility(bDestroyed);
 	if (bWithFx && GetNetMode() != NM_DedicatedServer)
@@ -121,6 +139,7 @@ void ACoopDestructible::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ACoopDestructible, bDestroyed);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, Size, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, Color, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ACoopDestructible, Model, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, DebrisDrop, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, DebrisSpreadX, COND_InitialOnly);
 }

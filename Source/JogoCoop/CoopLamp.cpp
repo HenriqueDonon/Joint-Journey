@@ -5,6 +5,8 @@
 ACoopLamp::ACoopLamp()
 {
 	bReplicates = true;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickInterval = 0.04f;
 	SetReplicateMovement(false);
 	Light = CreateDefaultSubobject<UPointLightComponent>(TEXT("Light"));
 	RootComponent = Light;
@@ -14,9 +16,17 @@ ACoopLamp::ACoopLamp()
 	OnRep_Lamp();
 }
 
-void ACoopLamp::Setup(FLinearColor InColor, float InLumens, float InRadius)
+void ACoopLamp::Tick(float DeltaTime)
 {
-	Col = InColor; Lumens = InLumens; Radius = InRadius;
+	Super::Tick(DeltaTime);
+	if (Flicker <= 0.f || !Light) return;
+	const float T = GetWorld()->GetTimeSeconds();
+	Light->SetIntensity(Lumens * FMath::Clamp(1.f + Flicker * FMath::PerlinNoise1D(T * 7.f + GetActorLocation().X * 0.013f) * 1.6f, 0.2f, 2.f));
+}
+
+void ACoopLamp::Setup(FLinearColor InColor, float InLumens, float InRadius, float InFlicker)
+{
+	Col = InColor; Lumens = InLumens; Radius = InRadius; Flicker = InFlicker;
 	OnRep_Lamp();
 }
 
@@ -34,4 +44,5 @@ void ACoopLamp::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	DOREPLIFETIME(ACoopLamp, Col);
 	DOREPLIFETIME(ACoopLamp, Lumens);
 	DOREPLIFETIME(ACoopLamp, Radius);
+	DOREPLIFETIME(ACoopLamp, Flicker);
 }

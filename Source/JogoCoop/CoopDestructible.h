@@ -30,6 +30,8 @@ public:
 	UPROPERTY(VisibleAnywhere) class UStaticMeshComponent* Mesh;
 	UPROPERTY(Replicated) FVector Size = FVector(220.f, 60.f, 200.f);
 	UPROPERTY(Replicated) FLinearColor Color = FLinearColor(0.35f, 0.33f, 0.32f);
+	UPROPERTY(Replicated) FName Model = NAME_None; // /Game/Fase1/<Model>/SM_<Model> (origem = centro da base)
+	UPROPERTY() class UStaticMeshComponent* ModelComp = nullptr;
 	UPROPERTY(Replicated) float DebrisDrop = 0.f;
 	UPROPERTY(Replicated) float DebrisSpreadX = 0.f;
 

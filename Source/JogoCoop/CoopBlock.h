@@ -19,5 +19,11 @@ public:
 	UPROPERTY(ReplicatedUsing=OnRep_Setup) float Rough = 0.9f;
 	UPROPERTY(ReplicatedUsing=OnRep_Setup) float Metal = 0.f;
 	UPROPERTY(ReplicatedUsing=OnRep_Setup) bool bGhost = false;
+	// Slot de modelo 3D: se existir /Game/Fase1/<Model>/SM_<Model>, ele vira o visual (origem = centro da base, 1uu=1cm).
+	// A colisao continua sendo a do bloco-placeholder. bNoCollide = decoracao sem colisao (replicado).
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) FName Model = NAME_None;
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) bool bNoCollide = false;
+	UPROPERTY() UStaticMeshComponent* ModelComp = nullptr;
+	void SetOpts(FName InModel, bool bInNoCollide) { Model = InModel; bNoCollide = bInNoCollide; OnRep_Setup(); }
 	UFUNCTION() void OnRep_Setup();
 };
