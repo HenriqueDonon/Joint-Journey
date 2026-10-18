@@ -19,6 +19,17 @@ private:
 	void BuildLevel();
 	void CheckFall();
 	void SpawnBarrier();
+	void TickCollapse();
+	void SpawnCrackCluster(int32 Idx);
+	void ClearCracks();
+	void SendAllToStart();
+	void Announce(const FString& Text);
+	UPROPERTY() TArray<class ACoopCeiling*> Roof;
+	UPROPERTY() TArray<AActor*> Cracks;
+	int32 Phase = 0;          // 0 estavel | 1 contagem (8s) | 2 desabando
+	float PhaseT0 = 0.f;
+	int32 CracksSpawned = 0;
+	int32 LastSecShown = -1;
 	UPROPERTY() TArray<AActor*> Starts;
 	UPROPERTY() class ACoopDestructible* Column = nullptr;
 	UPROPERTY() class ACoopDestructible* Bridge = nullptr;
