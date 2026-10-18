@@ -10,6 +10,7 @@
 #include "CoopDressing.h"
 #include "PuzzleButton.h"
 #include "PuzzleDoor.h"
+#include "CoopDestructible.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
@@ -60,6 +61,12 @@ void ACoopGameMode::BuildRoom(int32 Idx, FVector O)
 		APuzzleButton* Btn = W->SpawnActor<APuzzleButton>(APuzzleButton::StaticClass(), O + FVector(-500, 0, 0), FRotator::ZeroRotator);
 		if (Btn && Door) Btn->Doors.Add(Door);
 		W->SpawnActor<ACoopProp>(ACoopProp::StaticClass(), O + FVector(-700, 300, 60), FRotator::ZeroRotator);
+		// TESTE poderes novos (F): bloco que a Ruina destroi e o Neon reconstroi. Encostado na parede, fora do caminho do puzzle.
+		if (ACoopDestructible* DB = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(O + FVector(-300, 530, 100))))
+		{
+			DB->Setup(FVector(220, 60, 200), FLinearColor(0.32f, 0.18f, 0.42f));
+			DB->FinishSpawning(FTransform(O + FVector(-300, 530, 100)));
+		}
 
 		if (ACoopEasterEgg* E1 = W->SpawnActor<ACoopEasterEgg>(ACoopEasterEgg::StaticClass(), O + FVector(-1080, 520, 0), FRotator(0, 25, 0)))
 			E1->Message = TEXT("Easter egg 1/2: um cigarro enrolado na seda, pontinha torcida do jeito de sempre. Noite de jogo aprovada.");

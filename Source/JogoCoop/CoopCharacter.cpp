@@ -1,5 +1,6 @@
 #include "CoopCharacter.h"
 #include "CoopGameUserSettings.h"
+#include "CoopDestructible.h"
 #include "CoopProp.h"
 #include "CoopBurst.h"
 #include "CoopPortal.h"
@@ -327,6 +328,7 @@ void ACoopCharacter::SetupPlayerInputComponent(UInputComponent* I)
 	I->BindKey(EKeys::R, IE_Pressed, this, &ACoopCharacter::ToggleMode);
 	I->BindKey(EKeys::F3, IE_Pressed, this, &ACoopCharacter::TestVertice);
 	I->BindKey(EKeys::F1, IE_Pressed, this, &ACoopCharacter::ShowHelp);
+	I->BindKey(EKeys::F, IE_Pressed, this, &ACoopCharacter::DestructPower);
 	I->BindAxisKey(EKeys::MouseX, this, &ACoopCharacter::LookX);
 	I->BindAxisKey(EKeys::MouseY, this, &ACoopCharacter::LookY);
 }
@@ -403,6 +405,54 @@ void ACoopCharacter::ServerUseAbility_Implementation(ACoopProp* T, bool bSeconda
 	}
 }
 
+ACoopDestructible* ACoopCharacter::TraceDestructible() const
+{
+	// mira por angulo (funciona tambem com o objeto destruido, que nao tem colisao)
+	if (!Controller) return nullptr;
+	FVector Loc; FRotator Rot;
+	Controller->GetPlayerViewPoint(Loc, Rot);
+	const FVector Dir = Rot.Vector();
+	FCollisionQueryParams P(NAME_None, false, this);
+	ACoopDestructible* Best = nullptr;
+	float BestDot = FMath::Cos(FMath::DegreesToRadians(10.f));
+	for (TActorIterator<ACoopDestructible> It(GetWorld()); It; ++It)
+	{
+		const FVector To = It->GetActorLocation() - Loc;
+		const float D = To.Size();
+		if (D < 1.f || D > DestructRange + 400.f) continue;
+		const float Dot = FVector::DotProduct(Dir, To / D);
+		if (Dot < BestDot) continue;
+		FHitResult H;
+		if (GetWorld()->LineTraceSingleByChannel(H, Loc, It->GetActorLocation(), ECC_Visibility, P) && H.GetActor() != *It) continue;
+		BestDot = Dot; Best = *It;
+	}
+	return Best;
+}
+
+void ACoopCharacter::DestructPower()
+{
+	if (CoopRole == ECoopRole::Vertice) { ClientToast(TEXT("VERTICE nao usa este poder")); return; }
+	if (ACoopDestructible* T = TraceDestructible()) ServerDestructPower(T);
+	else ClientToast(CoopRole == ECoopRole::Ruina ? TEXT("Mire num objeto destrutivel") : TEXT("Mire num objeto destruido"));
+}
+
+void ACoopCharacter::ServerDestructPower_Implementation(ACoopDestructible* T)
+{
+	// validacao no servidor: personagem, alcance, linha de visao e estado
+	if (!T) return;
+	if (CoopRole != ECoopRole::Ruina && CoopRole != ECoopRole::Neon) { ClientToast(TEXT("Este personagem nao tem esse poder")); return; }
+	const FVector Eye = GetActorLocation() + FVector(0, 0, BaseEyeHeight);
+	if (FVector::Dist(Eye, T->GetActorLocation()) > DestructRange) { ClientToast(TEXT("Longe demais - chegue mais perto")); return; }
+	FCollisionQueryParams P(NAME_None, false, this);
+	FHitResult H;
+	if (GetWorld()->LineTraceSingleByChannel(H, Eye, T->GetActorLocation(), ECC_Visibility, P) && H.GetActor() != T)
+	{ ClientToast(TEXT("Sem linha de visao")); return; }
+	FString Why;
+	const bool bOk = (CoopRole == ECoopRole::Ruina) ? T->ServerBreak(Why) : T->ServerRebuild(Why);
+	if (bOk) ClientToast(CoopRole == ECoopRole::Ruina ? TEXT("RUINA: objeto DESTRUIDO") : TEXT("NEON: objeto RECONSTRUIDO"));
+	else ClientToast(Why);
+}
+
 void ACoopCharacter::ShowHelp()
 {
 	if (!GEngine) return;
@@ -412,6 +462,7 @@ void ACoopCharacter::ShowHelp()
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, ECoopRole::Neon == CoopRole ? FColor::Cyan : FColor::Orange,
 		CoopRole == ECoopRole::Neon ? TEXT("Voce e o NEON: poder inverte a gravidade do cubo mirado") : CoopRole == ECoopRole::Vertice ? TEXT("Voce e o VERTICE (poder em breve)") : TEXT("Voce e a RUINA: poder congela o cubo, Q rebobina 5s"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, TEXT("F3 (teste): alterna para o VERTICE"));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, TEXT("F: NOVO PODER - Ruina destroi / Neon reconstroi o bloco roxo"));
 }
 
 void ACoopCharacter::ApplyGunLook()

@@ -24,6 +24,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Role) ECoopRole CoopRole = ECoopRole::Neon;
 	UPROPERTY(EditAnywhere) float AbilityRange = 8000.f;
+	UPROPERTY(EditAnywhere) float DestructRange = 1500.f;
 	UFUNCTION() void OnRep_Role();
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Mode) bool bPortalMode = false;
 	UFUNCTION() void OnRep_Mode();
@@ -97,5 +98,9 @@ private:
 	void MoveB(float V); void MoveL(float V); void MoveF(float V); void MoveR(float V); void LookX(float V); void LookY(float V);
 	void Primary(); void Secondary(); void ShowHelp();
 	class ACoopProp* TraceProp() const;
+	// Poder novo (tecla F): Ruina destroi / Neon reconstroi ACoopDestructible. Isolado dos poderes antigos.
+	void DestructPower();
+	class ACoopDestructible* TraceDestructible() const;
+	UFUNCTION(Server, Reliable) void ServerDestructPower(class ACoopDestructible* Target);
 	UFUNCTION(Server, Reliable) void ServerUseAbility(class ACoopProp* Target, bool bSecondary);
 };
