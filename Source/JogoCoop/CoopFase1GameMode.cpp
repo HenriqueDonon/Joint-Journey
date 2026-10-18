@@ -16,6 +16,11 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 
+// Escala da sala: X/Y x1.5, altura x1.1 (degrau da saida 40*1.1=44 < MaxStepHeight 45). Tempo e alcance dos poderes escalam junto.
+static constexpr float KXY = 1.5f, KZ = 1.1f, KLUM = 2.25f;
+static constexpr float CollapseSecs = 12.f; // 8s * 1.5
+static FVector Sc(const FVector& V) { return FVector(V.X * KXY, V.Y * KXY, V.Z * KZ); }
+
 static void Lbl(AActor* A, const TCHAR* N)
 {
 #if WITH_EDITOR
@@ -47,8 +52,8 @@ void ACoopFase1GameMode::SpawnBarrier()
 	// Barreira INVISIVEL provisoria no vao (ver relatorio): o vao seria pulavel (pulo corrido ~700-800cm).
 	// Ignora Visibility/Camera (ghost), entao nao atrapalha mira nem linha de visao dos poderes.
 	UWorld* W = GetWorld();
-	ACoopBlock* B = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(500, 0, 125), FRotator::ZeroRotator);
-	if (B) { B->Setup(FVector(20, 1000, 950), FLinearColor::Black, true); Lbl(B, TEXT("F1_BarreiraVao_Provisoria")); }
+	ACoopBlock* B = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(FVector(500, 0, 125)), FRotator::ZeroRotator);
+	if (B) { B->Setup(Sc(FVector(20, 1000, 950)), FLinearColor::Black, true); Lbl(B, TEXT("F1_BarreiraVao_Provisoria")); }
 	Barrier = B;
 }
 
@@ -59,8 +64,8 @@ void ACoopFase1GameMode::BuildLevel()
 
 	auto B = [&](const TCHAR* Name, FVector C, FVector S, FLinearColor Col, bool bGhost = false, FLinearColor Em = FLinearColor::Black, float Rough = 0.9f, float Metal = 0.f) -> ACoopBlock*
 	{
-		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), C, FRotator::ZeroRotator);
-		if (b) { b->Setup(S, Col, bGhost, Em, Rough, Metal); Lbl(b, Name); }
+		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(C), FRotator::ZeroRotator);
+		if (b) { b->Setup(Sc(S), Col, bGhost, Em, Rough, Metal); Lbl(b, Name); }
 		return b;
 	};
 	auto M = [&](ACoopBlock* b, const TCHAR* Slot) { if (b) b->SetOpts(FName(Slot), false); };
@@ -80,8 +85,8 @@ void ACoopFase1GameMode::BuildLevel()
 	// teto cobrindo a sala toda (visual, cai no colapso) + paineis de luz + luzes sem sombra
 	auto Roofed = [&](const TCHAR* Name, FVector C, FVector S, FLinearColor Col, FLinearColor Em = FLinearColor::Black) -> ACoopCeiling*
 	{
-		ACoopCeiling* c = W->SpawnActor<ACoopCeiling>(ACoopCeiling::StaticClass(), C, FRotator::ZeroRotator);
-		if (c) { c->Setup(S, Col, false, Em, 0.9f, 0.f); Lbl(c, Name); Roof.Add(c); }
+		ACoopCeiling* c = W->SpawnActor<ACoopCeiling>(ACoopCeiling::StaticClass(), Sc(C), FRotator::ZeroRotator);
+		if (c) { c->Setup(Sc(S), Col, false, Em, 0.9f, 0.f); Lbl(c, Name); Roof.Add(c); }
 		return c;
 	};
 	if (ACoopCeiling* T = Roofed(TEXT("F1_Teto"), FVector(500, 0, 620), FVector(3890, 1080, 40), FLinearColor(0.22f, 0.23f, 0.26f))) T->SetOpts(TEXT("Teto_Principal"), false);
@@ -89,44 +94,44 @@ void ACoopFase1GameMode::BuildLevel()
 		for (float Y : {-250.f, 250.f})
 		{
 			Roofed(TEXT("F1_PainelLuz"), FVector(X, Y, 596), FVector(160, 50, 8), FLinearColor(0.8f, 0.8f, 0.75f), FLinearColor(1.f, 0.95f, 0.8f) * 3.f);
-			if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(X, Y, 540), FRotator::ZeroRotator)) L->Setup(X > 900.f ? FLinearColor(0.82f, 0.9f, 1.f) : FLinearColor(1.f, 0.9f, 0.78f), 7000.f, 900.f);
+			if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(X, Y, 540)), FRotator::ZeroRotator)) L->Setup(X > 900.f ? FLinearColor(0.82f, 0.9f, 1.f) : FLinearColor(1.f, 0.9f, 0.78f), 7000.f * KLUM, 900.f * KXY);
 		}
 	if (ACoopCeiling* T = Roofed(TEXT("F1_TetoEstrutural"), FVector(-200, 0, 590), FVector(600, 1000, 60), FLinearColor(0.26f, 0.27f, 0.30f))) T->SetOpts(TEXT("Teto_Estrutural"), false);
 	// luz sob o teto estrutural (ilumina a coluna) e brilho da lava (sem sombras)
-	if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(-200, 0, 500), FRotator::ZeroRotator)) L->Setup(FLinearColor(1.f, 0.95f, 0.85f), 9000.f, 900.f);
-	if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(500, 0, -250), FRotator::ZeroRotator)) L->Setup(FLinearColor(1.f, 0.35f, 0.08f), 40000.f, 1600.f);
+	if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(-200, 0, 500)), FRotator::ZeroRotator)) L->Setup(FLinearColor(1.f, 0.95f, 0.85f), 9000.f * KLUM, 900.f * KXY);
+	if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(500, 0, -250)), FRotator::ZeroRotator)) L->Setup(FLinearColor(1.f, 0.35f, 0.08f), 40000.f * KLUM, 1600.f * KXY);
 	// B. coluna estrutural DESTRUTIVEL: ao lado do caminho da ponte (Y=-330), 160x160x560, sustenta o teto estrutural
-	if (ACoopDestructible* Col = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(FVector(-200, -330, 280))))
+	if (ACoopDestructible* Col = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(Sc(FVector(-200, -330, 280)))))
 	{
-		Col->Setup(FVector(160, 160, 560), FLinearColor(0.62f, 0.62f, 0.64f));
+		Col->Setup(Sc(FVector(160, 160, 560)), FLinearColor(0.62f, 0.62f, 0.64f));
 		Col->Model = TEXT("Coluna_Inteira");
-		Col->FinishSpawning(FTransform(FVector(-200, -330, 280)));
+		Col->FinishSpawning(FTransform(Sc(FVector(-200, -330, 280))));
 		Lbl(Col, TEXT("F1_Coluna")); Column = Col;
 	}
 	// teto estrutural visivel apoiado pela coluna (X -500..100, base em Z=560 = topo da coluna)
 	// D. ponte danificada: toco ligado ao lado direito (X 850..1000, largura 250) + laje caida no vao
 	M(B(TEXT("F1_Ponte_Toco"), FVector(925, 0, 26), FVector(150, 240, 24), FLinearColor(0.55f, 0.52f, 0.46f)), TEXT("Ponte_Quebrada"));
 	// ponte DESTRUTIVEL: nasce destruida (escombros na lava); Neon so a constroi depois que a coluna cair
-	if (ACoopDestructible* Br = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(FVector(500, 0, 25))))
+	if (ACoopDestructible* Br = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(Sc(FVector(500, 0, 25)))))
 	{
-		Br->Setup(FVector(1000, 250, 30), FLinearColor(0.55f, 0.52f, 0.46f), 360.f, 350.f, true);
+		Br->Setup(Sc(FVector(1000, 250, 30)), FLinearColor(0.55f, 0.52f, 0.46f), 360.f * KZ, 350.f * KXY, true);
 		Br->Model = TEXT("Ponte_Inteira");
-		Br->FinishSpawning(FTransform(FVector(500, 0, 25)));
+		Br->FinishSpawning(FTransform(Sc(FVector(500, 0, 25))));
 		Lbl(Br, TEXT("F1_Ponte")); Bridge = Br;
 	}
 	if (Column && Bridge) { Column->Partner = Bridge; Bridge->Partner = Column; }
-	if (ACoopBlock* Slab = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(780, 0, -140), FRotator(-35.f, 0.f, 0.f)))
-	{ Slab->Setup(FVector(150, 250, 30), FLinearColor(0.45f, 0.42f, 0.38f)); Lbl(Slab, TEXT("F1_Ponte_LajeCaida")); }
+	if (ACoopBlock* Slab = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(FVector(780, 0, -140)), FRotator(-35.f, 0.f, 0.f)))
+	{ Slab->Setup(Sc(FVector(150, 250, 30)), FLinearColor(0.45f, 0.42f, 0.38f)); Lbl(Slab, TEXT("F1_Ponte_LajeCaida")); }
 	// F. saida: porta emissiva na parede do fundo da plataforma de saida
 	M(B(TEXT("F1_PortaSaida"), FVector(2395, 0, 170), FVector(10, 200, 260), FLinearColor(0.02f, 0.1f, 0.05f), false, FLinearColor(0.1f, 1.f, 0.4f) * 1.5f), TEXT("Porta_Saida"));
 
 	SpawnBarrier();
-	W->SpawnActor<ACoopFog>(ACoopFog::StaticClass(), FVector(500, 0, 200), FRotator::ZeroRotator);
+	W->SpawnActor<ACoopFog>(ACoopFog::StaticClass(), Sc(FVector(500, 0, 200)), FRotator::ZeroRotator);
 	BuildDecor();
 
-	Starts.Add(W->SpawnActor<APlayerStart>(FVector(-1250, -150, 100), FRotator::ZeroRotator));
-	Starts.Add(W->SpawnActor<APlayerStart>(FVector(-1250, 150, 100), FRotator::ZeroRotator));
-	Starts.Add(W->SpawnActor<APlayerStart>(FVector(-1350, 0, 100), FRotator::ZeroRotator));
+	Starts.Add(W->SpawnActor<APlayerStart>(Sc(FVector(-1250, -150, 100)), FRotator::ZeroRotator));
+	Starts.Add(W->SpawnActor<APlayerStart>(Sc(FVector(-1250, 150, 100)), FRotator::ZeroRotator));
+	Starts.Add(W->SpawnActor<APlayerStart>(Sc(FVector(-1350, 0, 100)), FRotator::ZeroRotator));
 }
 
 bool ACoopFase1GameMode::ToggleTestBridge()
@@ -200,8 +205,8 @@ void ACoopFase1GameMode::SpawnCrackCluster(int32 Idx)
 		const float dU = L * FMath::Cos(FMath::DegreesToRadians(Th)), dZ = L * FMath::Sin(FMath::DegreesToRadians(Th));
 		const float CU = U + dU * 0.5f, CZ = Z + dZ * 0.5f;
 		FVector Loc; FRotator Rot; FVector Sz;
-		if (bSide) { Loc = FVector(CU, Wall == 0 ? -498.6f : 498.6f, CZ); Rot = FRotator(Th, 0.f, 0.f); Sz = FVector(L, 3.f, 5.f); }
-		else { Loc = FVector(Wall == 2 ? -1398.6f : 2398.6f, CU, CZ); Rot = FRotator(0.f, 0.f, -Th); Sz = FVector(3.f, L, 5.f); }
+		if (bSide) { Loc = Sc(FVector(CU, Wall == 0 ? -498.6f : 498.6f, CZ)); Rot = FRotator(Th, 0.f, 0.f); Sz = FVector(L * KXY, 3.f, 6.f); }
+		else { Loc = Sc(FVector(Wall == 2 ? -1398.6f : 2398.6f, CU, CZ)); Rot = FRotator(0.f, 0.f, -Th); Sz = FVector(3.f, L * KXY, 6.f); }
 		if (ACoopBlock* B = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Loc, Rot))
 		{
 			B->Setup(Sz, FLinearColor(0.02f, 0.02f, 0.025f), false, FLinearColor(1.f, 0.28f, 0.04f) * 1.2f, 0.9f, 0.f);
@@ -228,14 +233,14 @@ void ACoopFase1GameMode::TickCollapse()
 	{
 		if (!bColDown) { Phase = 0; ClearCracks(); Announce(TEXT("Coluna restaurada: teto estabilizado")); return; }
 		const float El = Now - PhaseT0;
-		const int32 Left = FMath::CeilToInt(8.f - El);
+		const int32 Left = FMath::CeilToInt(CollapseSecs - El);
 		if (Left != LastSecShown && Left > 0) { LastSecShown = Left; Announce(FString::Printf(TEXT("TETO INSTAVEL! Desaba em %d s - reconstrua a coluna!"), Left)); }
-		const int32 Want = FMath::Min(16, FMath::FloorToInt(El / 0.5f) + 1);
+		const int32 Want = FMath::Min(24, FMath::FloorToInt(El / 0.5f) + 1);
 		while (CracksSpawned < Want) SpawnCrackCluster(CracksSpawned++);
-		if (El >= 8.f)
+		if (El >= CollapseSecs)
 		{
 			Phase = 2; PhaseT0 = Now;
-			for (ACoopCeiling* C : Roof) if (C) C->StartFall(0.8f, 560.f);
+			for (ACoopCeiling* C : Roof) if (C) C->StartFall(0.8f, 560.f * KZ);
 			Announce(TEXT("O TETO DESABOU!"));
 		}
 	}
@@ -258,11 +263,11 @@ void ACoopFase1GameMode::BuildDecor()
 	UWorld* W = GetWorld();
 	auto D = [&](const TCHAR* Slot, FVector C, FVector S, FLinearColor Col, FLinearColor Em = FLinearColor::Black, FRotator Rot = FRotator::ZeroRotator, bool bCollide = false) -> ACoopBlock*
 	{
-		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), C, Rot);
-		if (b) { b->Setup(S, Col, false, Em, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); Lbl(b, Slot); }
+		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(C), Rot);
+		if (b) { b->Setup(Sc(S), Col, false, Em, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); Lbl(b, Slot); }
 		return b;
 	};
-	auto Lamp = [&](FVector P, FLinearColor C, float Lm, float Rad, float Fl) { if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), P, FRotator::ZeroRotator)) L->Setup(C, Lm, Rad, Fl); };
+	auto Lamp = [&](FVector P, FLinearColor C, float Lm, float Rad, float Fl) { if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(P), FRotator::ZeroRotator)) L->Setup(C, Lm * KLUM, Rad * KXY, Fl); };
 	const FLinearColor Rust(0.30f, 0.13f, 0.06f), Dark(0.05f, 0.05f, 0.06f), Steel(0.36f, 0.38f, 0.41f), Grime(0.16f, 0.15f, 0.15f);
 	const FLinearColor Cyan(0.05f, 0.9f, 1.f), Orange(1.f, 0.4f, 0.05f), Fire(1.f, 0.3f, 0.04f);
 	FRandomStream R(4242);

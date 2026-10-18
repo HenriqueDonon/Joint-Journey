@@ -34,3 +34,5 @@ modelo `/Game/Fase1/<Slot>/SM_<Slot>`, ele aparece no lugar do placeholder autom
 `Parede_Rodape`, `Parede_Junta`, `Neon_Parede`, `Janela_Moldura`, `Janela_Vidro`, `Cano_Teto`, `Viga_Quebrada`, `Lava_Gota`,
 `Lava_Fluxo`, `Fogo`, `Escombro`, `Piso_Junta`, `Faixa_Perigo`, `Disco_Piso`, `Corrimao`, `Corrimao_Poste`, `Placa_Saida`,
 `Porta_Moldura`, `Mezanino`, `Mezanino_Corrimao`, `Mezanino_Pilar`.
+
+> Sala ampliada: dimensoes das pecas (tabela acima) valem x1.5 em X/Y e x1.1 em Z (ex.: ponte 1500x375x33 cm, coluna 240x240x616). Colapso: 12 s. Alcance dos poderes: 30 m.
