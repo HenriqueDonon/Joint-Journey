@@ -9,7 +9,7 @@ else:
 
 world = unreal.EditorLevelLibrary.get_editor_world()
 ws = world.get_world_settings()
-ws.set_editor_property('game_mode_override', unreal.load_class(None, '/Script/JogoCoop.CoopFrontEndGameMode'))
+ws.set_editor_property('default_game_mode', unreal.load_class(None, '/Script/JogoCoop.CoopFrontEndGameMode'))
 
 unreal.EditorLevelLibrary.save_current_level()
 print('MAINMENU_OK')
