@@ -315,8 +315,9 @@ void ACoopFase1GameMode::BuildTransition()
 	Blk(TEXT("F1_Trans_Teto"), FVector(CX, 0, TrFloorTop + TrH + 20.f), FVector(TrLen, TrHalfW * 2 + 80.f, 40.f), Dk);
 	Blk(TEXT("F1_Trans_Fundo"), FVector(X1 + 20.f, 0, TrFloorTop + TrH * 0.5f - 30.f), FVector(40.f, TrHalfW * 2 + 80.f, TrH + 60.f), Wl);
 	// "portal" luminoso da proxima fase no fundo
-	Blk(TEXT("F1_Trans_Portal"), FVector(X1 - 6.f, 0, TrFloorTop + 150.f), FVector(8.f, 340.f, 300.f), FLinearColor(0.02f, 0.06f, 0.1f), FLinearColor(0.15f, 0.7f, 1.f) * 2.2f);
-	Blk(TEXT("F1_Trans_PortalMoldura"), FVector(X1 - 12.f, 0, TrFloorTop + 150.f), FVector(10.f, 380.f, 340.f), Dk);
+	Blk(TEXT("F1_Trans_PortalMoldura"), FVector(X1 - 4.f, 0, TrFloorTop + 160.f), FVector(10.f, 400.f, 340.f), Dk);
+	Blk(TEXT("F1_Trans_Portal"), FVector(X1 - 14.f, 0, TrFloorTop + 160.f), FVector(6.f, 320.f, 300.f), FLinearColor(0.02f, 0.1f, 0.2f), FLinearColor(0.2f, 1.2f, 3.f) * 3.f);
+	if (ACoopLamp* PL = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(X1 - 120.f, 0, TrFloorTop + 160.f), FRotator::ZeroRotator)) PL->Setup(FLinearColor(0.2f, 0.7f, 1.f), 22000.f, 900.f);
 	// tiras de luz no teto + lampadas
 	for (float X = TrX0 + 200.f; X < X1; X += 400.f)
 	{

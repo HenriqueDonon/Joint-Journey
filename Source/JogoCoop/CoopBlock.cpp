@@ -39,6 +39,7 @@ void ACoopBlock::OnRep_Setup()
 			if (!ModelComp)
 			{
 				ModelComp = NewObject<UStaticMeshComponent>(this);
+				ModelComp->SetMobility(EComponentMobility::Movable); // senao nao acompanha porta/teto que se movem
 				ModelComp->SetupAttachment(Mesh);
 				ModelComp->SetAbsolute(false, false, true); // escala absoluta: o modelo ja vem em cm reais
 				ModelComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
