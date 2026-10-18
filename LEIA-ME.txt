@@ -7,3 +7,7 @@ CONECTAR (os dois com Radmin VPN na mesma rede):
 
 TESTE LOCAL NO EDITOR: Play > Number of Players 2 > Net Mode "Play As Listen Server".
 CONTROLES: WASD, Mouse, Espaco, E (poder), Q (secundario da Ruina), F1 ajuda.
+
+MENU PRINCIPAL (novo): rode MenuSetup.bat uma vez (compila + cria /Game/Maps/MainMenu).
+Hospedar.bat agora abre no menu -> Iniciar Campanha -> 2 ou 3 jogadores (hospeda a sala certa).
+TestarMenu.bat abre so o menu pra testar sozinho. TestarLocal.bat continua indo direto pra Sala1 (teste rapido).

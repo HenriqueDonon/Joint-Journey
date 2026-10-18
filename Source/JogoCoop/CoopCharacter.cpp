@@ -1,4 +1,5 @@
 #include "CoopCharacter.h"
+#include "CoopGameUserSettings.h"
 #include "CoopProp.h"
 #include "CoopBurst.h"
 #include "CoopPortal.h"
@@ -335,8 +336,8 @@ void ACoopCharacter::MoveF(float V) { if (Controller && V) AddMovementInput(FRot
 void ACoopCharacter::MoveR(float V) { if (Controller && V) AddMovementInput(FRotationMatrix(YawOf(Controller)).GetUnitAxis(EAxis::Y), V); }
 void ACoopCharacter::MoveB(float V) { MoveF(-V); }
 void ACoopCharacter::MoveL(float V) { MoveR(-V); }
-void ACoopCharacter::LookX(float V) { AddControllerYawInput(V); }
-void ACoopCharacter::LookY(float V) { AddControllerPitchInput(-V); }
+void ACoopCharacter::LookX(float V) { const UCoopGameUserSettings* S = UCoopGameUserSettings::Get(); AddControllerYawInput(V * (S ? S->MouseSensitivity : 1.f)); }
+void ACoopCharacter::LookY(float V) { const UCoopGameUserSettings* S = UCoopGameUserSettings::Get(); AddControllerPitchInput(-V * (S ? S->MouseSensitivity : 1.f)); }
 
 ACoopProp* ACoopCharacter::TraceProp() const
 {

@@ -1,4 +1,5 @@
 #include "CoopGameMode.h"
+#include "CoopGameState.h"
 #include "CoopCharacter.h"
 #include "CoopHUD.h"
 #include "CoopBlock.h"
@@ -13,8 +14,16 @@
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 
-ACoopGameMode::ACoopGameMode() { DefaultPawnClass = ACoopCharacter::StaticClass(); HUDClass = ACoopHUD::StaticClass(); }
+ACoopGameMode::ACoopGameMode() { DefaultPawnClass = ACoopCharacter::StaticClass(); HUDClass = ACoopHUD::StaticClass(); GameStateClass = ACoopGameState::StaticClass(); }
+
+void ACoopGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+	const int32 N = FCString::Atoi(*UGameplayStatics::ParseOption(Options, TEXT("Players")));
+	if (ACoopGameState* GS = GetGameState<ACoopGameState>()) GS->RequiredPlayers = (N == 3) ? 3 : 2;
+}
 
 // Sala = corredor ao longo de X (2400 x 1200 x 400). Divisória em x=0 com porta no meio.
 // Lado y<0 = Neon, lado y>0 = Ruína. Sala 1 no origin 0, Sala 2 em x=+5000.

@@ -1,6 +1,7 @@
 #include "CoopGoal.h"
 #include "CoopCharacter.h"
 #include "CoopGameMode.h"
+#include "CoopGameState.h"
 #include "JJVisual.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -36,7 +37,8 @@ void ACoopGoal::OnBegin(UPrimitiveComponent*, AActor* A, UPrimitiveComponent*, i
 {
 	if (!Cast<ACoopCharacter>(A)) return;
 	Inside.Add(A);
-	const int32 Need = 3;
+	const ACoopGameState* GS = GetWorld()->GetGameState<ACoopGameState>();
+	const int32 Need = GS ? GS->RequiredPlayers : 2;
 	if (Inside.Num() < Need && GEngine)
 		GEngine->AddOnScreenDebugMessage(102, 3.f, FColor::Yellow, FString::Printf(TEXT("Chegada: %d/%d jogadores"), Inside.Num(), Need));
 	if (Inside.Num() >= Need && !bComplete)

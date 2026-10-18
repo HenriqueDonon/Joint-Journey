@@ -9,6 +9,7 @@ class JOGOCOOP_API ACoopGameMode : public AGameModeBase
 	GENERATED_BODY()
 public:
 	ACoopGameMode();
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 	void RoomCompleted(int32 RoomIndex);
 private:
