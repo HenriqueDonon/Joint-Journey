@@ -517,13 +517,18 @@ void ACoopCharacter::ServerPlacePortal_Implementation(bool bOrange, FVector_NetQ
 	if (Found) Found->Setup(bOrange, Loc, Nrm);
 }
 
-void ACoopCharacter::TestVertice() { ServerSetRole(CoopRole == ECoopRole::Vertice ? ECoopRole::Neon : ECoopRole::Vertice); }
+void ACoopCharacter::TestVertice()
+{
+	// ciclo de teste solo: Neon -> Ruina -> Vertice -> Neon ... (sem precisar abrir 2/3 janelas)
+	const ECoopRole Next = (CoopRole == ECoopRole::Neon) ? ECoopRole::Ruina : (CoopRole == ECoopRole::Ruina) ? ECoopRole::Vertice : ECoopRole::Neon;
+	ServerSetRole(Next);
+}
 
 void ACoopCharacter::ServerSetRole_Implementation(ECoopRole NewRole)
 {
 	CoopRole = NewRole;
 	OnRep_Role();
-	ClientToast(NewRole == ECoopRole::Vertice ? TEXT("Teste: agora voce e o VERTICE (F3 volta)") : TEXT("Teste: voltou ao personagem original"));
+	ClientToast(NewRole == ECoopRole::Neon ? TEXT("Teste: agora voce e o NEON (F3 para trocar)") : NewRole == ECoopRole::Ruina ? TEXT("Teste: agora voce e a RUINA (F3 para trocar)") : TEXT("Teste: agora voce e o VERTICE (F3 para trocar)"));
 }
 
 void ACoopCharacter::LoadPapel()

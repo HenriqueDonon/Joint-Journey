@@ -73,7 +73,7 @@ private:
 	void LoadPapel();
 	void UpdateVerticeAnim();
 	void PlayV(class UAnimSequence* A, bool bLoop, float Rate = 1.f);
-	void TestVertice();                                   // F3: vira Vértice (teste)
+	void TestVertice();                                   // F3: alterna entre Neon/Ruina/Vertice (teste solo, 1 janela)
 	UFUNCTION(Server, Reliable) void ServerSetRole(ECoopRole NewRole);
 	UPROPERTY() TArray<class UMeshComponent*> RuinaOnly;
 
