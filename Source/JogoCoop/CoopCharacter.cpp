@@ -461,7 +461,7 @@ void ACoopCharacter::ShowHelp()
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, TEXT("R alterna ARMA DE PODERES / ARMA DE PORTAIS (esq = azul, dir = laranja)"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, ECoopRole::Neon == CoopRole ? FColor::Cyan : FColor::Orange,
 		CoopRole == ECoopRole::Neon ? TEXT("Voce e o NEON: poder inverte a gravidade do cubo mirado") : CoopRole == ECoopRole::Vertice ? TEXT("Voce e o VERTICE (poder em breve)") : TEXT("Voce e a RUINA: poder congela o cubo, Q rebobina 5s"));
-	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, TEXT("F3 (teste): alterna para o VERTICE"));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, TEXT("F3 (teste): alterna NEON -> RUINA -> VERTICE"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, TEXT("F: NOVO PODER - Ruina destroi / Neon reconstroi o bloco roxo"));
 }
 
