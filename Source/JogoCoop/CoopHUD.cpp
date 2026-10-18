@@ -2,6 +2,17 @@
 #include "CoopCharacter.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
+#include "GameFramework/PlayerController.h"
+
+void ACoopHUD::BeginPlay()
+{
+	Super::BeginPlay();
+	if (APlayerController* PC = GetOwningPlayerController())
+	{
+		PC->SetInputMode(FInputModeGameOnly());
+		PC->SetShowMouseCursor(false);
+	}
+}
 
 void ACoopHUD::DrawHUD()
 {

@@ -9,6 +9,7 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Components/Slider.h"
+#include "Components/EditableTextBox.h"
 #include "MediaPlayer.h"
 #include "MediaTexture.h"
 #include "FileMediaSource.h"
@@ -114,6 +115,7 @@ void UCoopMainMenuWidget::BuildUI()
 	MainBox = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass());
 	CampaignBox = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass());
 	SettingsBox = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass());
+	JoinBox = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass());
 
 	auto AnchorBottomLeft = [&](UWidget* W)
 	{
@@ -126,9 +128,12 @@ void UCoopMainMenuWidget::BuildUI()
 	AnchorBottomLeft(MainBox);
 	AnchorBottomLeft(CampaignBox);
 	AnchorBottomLeft(SettingsBox);
+	AnchorBottomLeft(JoinBox);
 
 	UButton* BtnCampanha = MakeMenuButton(MainBox, TEXT("INICIAR CAMPANHA"), true);
 	BtnCampanha->OnClicked.AddDynamic(this, &UCoopMainMenuWidget::OnCampanhaClicked);
+	UButton* BtnJoin = MakeMenuButton(MainBox, TEXT("ENTRAR EM PARTIDA"), true);
+	BtnJoin->OnClicked.AddDynamic(this, &UCoopMainMenuWidget::OnJoinMenuClicked);
 	UButton* BtnConfig = MakeMenuButton(MainBox, TEXT("CONFIGURAÇÕES"), false);
 	BtnConfig->OnClicked.AddDynamic(this, &UCoopMainMenuWidget::OnConfigClicked);
 
@@ -138,6 +143,21 @@ void UCoopMainMenuWidget::BuildUI()
 	Btn3->OnClicked.AddDynamic(this, &UCoopMainMenuWidget::On3PlayersClicked);
 	UButton* BtnBack1 = MakeMenuButton(CampaignBox, TEXT("VOLTAR"), false);
 	BtnBack1->OnClicked.AddDynamic(this, &UCoopMainMenuWidget::OnBackClicked);
+
+	// Entrar em partida: IP do host (Radmin)
+	UTextBlock* JoinLbl = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+	JoinLbl->SetText(FText::FromString(TEXT("IP do host (Radmin):")));
+	JoinLbl->SetFont(FCoreStyle::GetDefaultFontStyle(TEXT("Regular"), 18));
+	JoinLbl->SetColorAndOpacity(FSlateColor(FLinearColor::White));
+	JoinBox->AddChildToVerticalBox(JoinLbl);
+	IpBox = WidgetTree->ConstructWidget<UEditableTextBox>(UEditableTextBox::StaticClass());
+	IpBox->SetHintText(FText::FromString(TEXT("26.x.x.x")));
+	UVerticalBoxSlot* IpSlot = JoinBox->AddChildToVerticalBox(IpBox);
+	IpSlot->SetPadding(FMargin(0.f, 6.f, 0.f, 6.f));
+	UButton* BtnConnect = MakeMenuButton(JoinBox, TEXT("CONECTAR"), true);
+	BtnConnect->OnClicked.AddDynamic(this, &UCoopMainMenuWidget::OnConnectClicked);
+	UButton* BtnBack3 = MakeMenuButton(JoinBox, TEXT("VOLTAR"), false);
+	BtnBack3->OnClicked.AddDynamic(this, &UCoopMainMenuWidget::OnBackClicked);
 
 	BuildSettingsPanel();
 }
@@ -202,21 +222,42 @@ void UCoopMainMenuWidget::BuildSettingsPanel()
 
 void UCoopMainMenuWidget::ShowMain()
 {
+	JoinBox->SetVisibility(ESlateVisibility::Collapsed);
 	MainBox->SetVisibility(ESlateVisibility::Visible);
 	CampaignBox->SetVisibility(ESlateVisibility::Collapsed);
 	SettingsBox->SetVisibility(ESlateVisibility::Collapsed);
 }
 void UCoopMainMenuWidget::ShowCampaign()
 {
+	JoinBox->SetVisibility(ESlateVisibility::Collapsed);
 	MainBox->SetVisibility(ESlateVisibility::Collapsed);
 	CampaignBox->SetVisibility(ESlateVisibility::Visible);
 	SettingsBox->SetVisibility(ESlateVisibility::Collapsed);
 }
 void UCoopMainMenuWidget::ShowSettings()
 {
+	JoinBox->SetVisibility(ESlateVisibility::Collapsed);
 	MainBox->SetVisibility(ESlateVisibility::Collapsed);
 	CampaignBox->SetVisibility(ESlateVisibility::Collapsed);
 	SettingsBox->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UCoopMainMenuWidget::ShowJoin()
+{
+	MainBox->SetVisibility(ESlateVisibility::Collapsed);
+	CampaignBox->SetVisibility(ESlateVisibility::Collapsed);
+	SettingsBox->SetVisibility(ESlateVisibility::Collapsed);
+	JoinBox->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UCoopMainMenuWidget::OnJoinMenuClicked() { ShowJoin(); }
+
+void UCoopMainMenuWidget::OnConnectClicked()
+{
+	FString Ip = IpBox ? IpBox->GetText().ToString().TrimStartAndEnd() : FString();
+	if (Ip.IsEmpty()) return;
+	if (!Ip.Contains(TEXT(":"))) Ip += TEXT(":7777");
+	if (APlayerController* PC = GetOwningPlayer()) PC->ClientTravel(Ip, ETravelType::TRAVEL_Absolute);
 }
 
 void UCoopMainMenuWidget::StartCampaign(int32 NumPlayers)

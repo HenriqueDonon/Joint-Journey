@@ -10,4 +10,6 @@ class JOGOCOOP_API ACoopHUD : public AHUD
 	GENERATED_BODY()
 public:
 	virtual void DrawHUD() override;
+protected:
+	virtual void BeginPlay() override;
 };

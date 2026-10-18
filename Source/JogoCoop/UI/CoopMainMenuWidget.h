@@ -9,6 +9,7 @@ class UImage;
 class UButton;
 class UTextBlock;
 class USlider;
+class UEditableTextBox;
 class UPanelWidget;
 class UMediaPlayer;
 class UMediaTexture;
@@ -30,10 +31,13 @@ private:
 	void ShowMain();
 	void ShowCampaign();
 	void ShowSettings();
+	void ShowJoin();
 	void StartCampaign(int32 NumPlayers);
 
 	UFUNCTION() void OnCampanhaClicked();
 	UFUNCTION() void OnConfigClicked();
+	UFUNCTION() void OnJoinMenuClicked();
+	UFUNCTION() void OnConnectClicked();
 	UFUNCTION() void OnBackClicked();
 	UFUNCTION() void On2PlayersClicked();
 	UFUNCTION() void On3PlayersClicked();
@@ -50,6 +54,8 @@ private:
 	UPROPERTY() UVerticalBox* MainBox;
 	UPROPERTY() UVerticalBox* CampaignBox;
 	UPROPERTY() UVerticalBox* SettingsBox;
+	UPROPERTY() UVerticalBox* JoinBox;
+	UPROPERTY() UEditableTextBox* IpBox;
 	UPROPERTY() UMediaPlayer* MediaPlayer;
 	UPROPERTY() UMediaTexture* MediaTexture;
 	UPROPERTY() UFileMediaSource* MediaSource;
