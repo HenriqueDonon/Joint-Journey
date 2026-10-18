@@ -24,7 +24,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Role) ECoopRole CoopRole = ECoopRole::Neon;
 	UPROPERTY(EditAnywhere) float AbilityRange = 8000.f;
-	UPROPERTY(EditAnywhere) float DestructRange = 1500.f;
+	UPROPERTY(EditAnywhere) float DestructRange = 2000.f;
 	UFUNCTION() void OnRep_Role();
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Mode) bool bPortalMode = false;
 	UFUNCTION() void OnRep_Mode();
