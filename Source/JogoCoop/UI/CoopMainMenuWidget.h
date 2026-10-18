@@ -20,6 +20,7 @@ class JOGOCOOP_API UCoopMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
 
 private:

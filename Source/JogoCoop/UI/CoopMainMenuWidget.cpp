@@ -20,11 +20,17 @@
 #include "Styling/CoreStyle.h"
 #include "Brushes/SlateColorBrush.h"
 
+void UCoopMainMenuWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	SetIsFocusable(true);
+	BuildUI();
+	ShowMain();
+}
+
 void UCoopMainMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	BuildUI();
-	ShowMain();
 
 	if (APlayerController* PC = GetOwningPlayer())
 	{
