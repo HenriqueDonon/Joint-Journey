@@ -45,7 +45,7 @@ void ACoopBlock::OnRep_Setup()
 				ModelComp->RegisterComponent();
 			}
 			ModelComp->SetStaticMesh(SM);
-			ModelComp->SetWorldScale3D(FVector(1.f));
+			ModelComp->SetWorldScale3D(ModelScale);
 			ModelComp->SetWorldLocationAndRotation(GetActorLocation() - FVector(0, 0, Size.Z * 0.5f), GetActorRotation());
 			Mesh->SetVisibility(false);
 		}
@@ -63,4 +63,5 @@ void ACoopBlock::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(ACoopBlock, bGhost);
 	DOREPLIFETIME(ACoopBlock, Model);
 	DOREPLIFETIME(ACoopBlock, bNoCollide);
+	DOREPLIFETIME(ACoopBlock, ModelScale);
 }

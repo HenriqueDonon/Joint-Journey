@@ -23,7 +23,9 @@ public:
 	// A colisao continua sendo a do bloco-placeholder. bNoCollide = decoracao sem colisao (replicado).
 	UPROPERTY(ReplicatedUsing=OnRep_Setup) FName Model = NAME_None;
 	UPROPERTY(ReplicatedUsing=OnRep_Setup) bool bNoCollide = false;
+	UPROPERTY(ReplicatedUsing=OnRep_Setup) FVector ModelScale = FVector(1.f); // escala extra do modelo (tiles/lava)
 	UPROPERTY() UStaticMeshComponent* ModelComp = nullptr;
+	void SetModelScale(FVector S) { ModelScale = S; OnRep_Setup(); }
 	void SetOpts(FName InModel, bool bInNoCollide) { Model = InModel; bNoCollide = bInNoCollide; OnRep_Setup(); }
 	UFUNCTION() void OnRep_Setup();
 };

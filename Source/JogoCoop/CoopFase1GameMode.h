@@ -15,6 +15,7 @@ public:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 	// Teste manual (tecla F4): forca ponte inteira/quebrada (ignora o material compartilhado). Retorna true se ficou inteira.
 	bool ToggleTestBridge();
+	virtual void Tick(float DeltaSeconds) override;
 private:
 	void BuildLevel();
 	void CheckFall();

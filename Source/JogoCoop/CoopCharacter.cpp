@@ -24,6 +24,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "Animation/AnimSequence.h"
+#include "Components/PointLightComponent.h"
 
 ACoopCharacter::ACoopCharacter()
 {
@@ -166,12 +167,40 @@ ACoopCharacter::ACoopCharacter()
 	GetMesh()->SetVisibility(false);
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
 
+	// arma: pivo = empunhadura (fica na mao direita); X = frente
 	GunPivot = Pv(TEXT("GunPivot"), Cap, FVector(30, 34, 24));
-	GunBody = Mk(TEXT("GunBody"), GunPivot, FVector(22, 0, 0), Z0, JJShape(24, 6.5f, 8, 0.5f, 0.5f, 1, 12, 8), Dummy);
-	GunBarrel = Mk(TEXT("GunBarrel"), GunPivot, FVector(55, 0, 0), FRotator(90, 0, 0), JJShape(4.5f, 4.5f, 16, 0.6f, 1, 1, 12, 8), Dummy);
-	GunTip = Mk(TEXT("GunTip"), GunPivot, FVector(76, 0, 0), Z0, JJShape(6.5f, 6.5f, 6.5f, 1, 1, 1, 12, 8), Dummy);
-	ProngA = Mk(TEXT("ProngA"), GunPivot, FVector(62, 0, 10), Z0, JJShape(14, 2.5f, 2, 0.5f, 0.5f, 1, 8, 4), Dummy);
-	ProngB = Mk(TEXT("ProngB"), GunPivot, FVector(62, 0, -10), Z0, JJShape(14, 2.5f, 2, 0.5f, 0.5f, 1, 8, 4), Dummy);
+	GunBody = Mk(TEXT("GunBody"), GunPivot, FVector(14, 0, 7), Z0, JJShape(19, 6.2f, 6.8f, 0.45f, 0.55f, 1, 16, 10), GunWhite);
+	Mk(TEXT("GunShell"), GunPivot, FVector(12, 0, 3), Z0, JJShape(17, 6.8f, 3.6f, 0.4f, 0.5f, 1, 14, 6), GunDark);        // casco inferior grafite
+	Mk(TEXT("GunGrip"), GunPivot, FVector(-1, 0, -3), FRotator(-12, 0, 0), JJShape(3.6f, 3.2f, 7.5f, 0.6f, 0.8f, 0.9f, 10, 8), GunDark);
+	Mk(TEXT("GunRearCap"), GunPivot, FVector(-5.5f, 0, 7), FRotator(90, 0, 0), JJShape(6.6f, 6.6f, 2.2f, 0.4f, 1, 1, 18, 6), GunDark);
+	Mk(TEXT("GunRearRing"), GunPivot, FVector(-7.6f, 0, 7), FRotator(90, 0, 0), JJShape(5.2f, 5.2f, 1.f, 0.35f, 1, 1, 18, 6), GunGlow);
+	Mk(TEXT("GunRearCore"), GunPivot, FVector(-8.2f, 0, 7), FRotator(90, 0, 0), JJShape(3.f, 3.f, 1.f, 0.6f, 1, 1, 14, 6), GunDark);
+	Mk(TEXT("GunCore"), GunPivot, FVector(10, 0, 13.5f), Z0, JJShape(5.f, 3.6f, 3.2f, 0.8f, 1, 1, 14, 8), GunGlow);       // camara de energia no topo
+	Mk(TEXT("GunStripeL"), GunPivot, FVector(12, -6.4f, 8), Z0, JJShape(13, 0.8f, 0.9f, 0.4f, 0.4f, 1, 10, 4), GunGlow);
+	Mk(TEXT("GunStripeR"), GunPivot, FVector(12, 6.4f, 8), Z0, JJShape(13, 0.8f, 0.9f, 0.4f, 0.4f, 1, 10, 4), GunGlow);
+	Mk(TEXT("GunFinL"), GunPivot, FVector(4, -7.2f, 4), Z0, JJShape(7, 1.2f, 3.5f, 0.5f, 0.5f, 1, 8, 4), GunDark);
+	Mk(TEXT("GunFinR"), GunPivot, FVector(4, 7.2f, 4), Z0, JJShape(7, 1.2f, 3.5f, 0.5f, 0.5f, 1, 8, 4), GunDark);
+	GunBarrel = Mk(TEXT("GunBarrel"), GunPivot, FVector(37, 0, 7), FRotator(90, 0, 0), JJShape(3.6f, 3.6f, 7, 0.6f, 1, 1, 14, 8), GunDark);
+	GunTip = Mk(TEXT("GunTip"), GunPivot, FVector(45, 0, 7), Z0, JJShape(4.4f, 4.4f, 4.4f, 1, 1, 1, 14, 8), Dummy);
+	ProngA = Mk(TEXT("ProngA"), GunPivot, FVector(38, 0, 13.5f), Z0, JJShape(9, 1.8f, 1.4f, 0.5f, 0.5f, 1, 8, 4), Dummy);
+	ProngB = Mk(TEXT("ProngB"), GunPivot, FVector(38, 0, 0.5f), Z0, JJShape(9, 1.8f, 1.4f, 0.5f, 0.5f, 1, 8, 4), Dummy);
+	GunParts.Append(GunWhite); GunParts.Append(GunDark); GunParts.Append(GunGlow);
+	GunParts.Add(GunTip); GunParts.Add(ProngA); GunParts.Add(ProngB);
+
+	// luz do rosto da Ruina: sem sombra (atravessa a aba do chapeu), so no canal de luz 1 (so ilumina o personagem)
+	FaceLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("FaceLight"));
+	FaceLight->SetupAttachment(Cap);
+	FaceLight->SetRelativeLocation(FVector(40, 0, 60));
+	FaceLight->SetCastShadows(false);
+	FaceLight->SetIntensityUnits(ELightUnits::Lumens);
+	FaceLight->SetIntensity(160.f);
+	FaceLight->SetAttenuationRadius(110.f);
+	FaceLight->SetSourceRadius(12.f);
+	FaceLight->SetLightColor(FLinearColor(1.f, 0.93f, 0.85f));
+	FaceLight->LightingChannels.bChannel0 = false;
+	FaceLight->LightingChannels.bChannel1 = true;
+	FaceLight->SetVisibility(false);
+	GetMesh()->LightingChannels.bChannel1 = true;
 }
 
 void ACoopCharacter::BuildAll()
@@ -237,11 +266,12 @@ void ACoopCharacter::OnRep_Role()
 	const bool bVMesh = GetMesh()->GetSkeletalMeshAsset() != nullptr;
 	TArray<UProceduralMeshComponent*> Parts; GetComponents<UProceduralMeshComponent>(Parts);
 	for (UProceduralMeshComponent* C : Parts)
-		if (C && C != GunBody && C != GunBarrel && C != GunTip && C != ProngA && C != ProngB) C->SetVisibility(!bVMesh);
+		if (C && !GunParts.Contains(C)) C->SetVisibility(!bVMesh);
 	for (UMeshComponent* C : VertOnly) if (C) C->SetVisibility(bV && !bVMesh);
 	if (bVMesh) { for (UMeshComponent* C : NeonOnly) if (C) C->SetVisibility(false); for (UMeshComponent* C : RuinaOnly) if (C) C->SetVisibility(false); }
 	GetMesh()->SetVisibility(bVMesh);
 	if (bVMesh) { VAnimCur = nullptr; UpdateVerticeAnim(); }
+	if (FaceLight) FaceLight->SetVisibility(CoopRole == ECoopRole::Ruina && bVMesh);
 	if (bV)
 	{
 		// Vértice: armadura branca acetinada, grafite, detalhes laranja/âmbar, cachecol laranja
@@ -289,10 +319,15 @@ void ACoopCharacter::AnimateBody(float DT)
 	const float Flutter = FMath::Sin(AnimTime * 7.f) * 4.f * AnimSpeed;
 	CapePivot->SetRelativeRotation(FRotator(FMath::Clamp(-(Fwd / 600.f) * 38.f - 6.f - AirBlend * 25.f + Flutter, -75.f, 8.f), 0, 0));
 
-	// arma segue a mira, na mão direita
-	const FRotator Aim = GetBaseAimRotation();
-	GunPivot->SetWorldLocation(ArmRPivot->GetComponentLocation() + Aim.Vector() * 46.f);
+	// arma segue a mira e fica NA MAO direita (osso hand_r da malha importada; sem malha usa o braco procedural)
+	const FRotator Aim = bFreeCam ? GetActorRotation() : GetBaseAimRotation();
+	USkeletalMeshComponent* SK = GetMesh();
+	const bool bSK = SK && SK->IsVisible() && SK->GetSkeletalMeshAsset() && SK->DoesSocketExist(TEXT("hand_r"));
+	const FVector Hand = bSK ? SK->GetSocketLocation(TEXT("hand_r")) + Aim.Vector() * 4.f : ArmRPivot->GetComponentLocation() + Aim.Vector() * 46.f;
+	GunPivot->SetWorldLocation(Hand);
 	GunPivot->SetWorldRotation(Aim);
+	if (FaceLight && FaceLight->IsVisible() && bSK && SK->DoesSocketExist(TEXT("head")))
+		FaceLight->SetWorldLocation(SK->GetSocketLocation(TEXT("head")) + GetActorForwardVector() * 38.f + FVector(0, 0, 10.f));
 }
 
 void ACoopCharacter::ClientSetupCamera_Implementation()
@@ -316,6 +351,8 @@ void ACoopCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACoopCharacter, CoopRole);
 	DOREPLIFETIME(ACoopCharacter, bPortalMode);
+	DOREPLIFETIME(ACoopCharacter, bCrushed);
+	DOREPLIFETIME(ACoopCharacter, bFreeCam);
 }
 
 void ACoopCharacter::SetupPlayerInputComponent(UInputComponent* I)
@@ -331,6 +368,7 @@ void ACoopCharacter::SetupPlayerInputComponent(UInputComponent* I)
 	I->BindKey(EKeys::F1, IE_Pressed, this, &ACoopCharacter::ShowHelp);
 	I->BindKey(EKeys::F, IE_Pressed, this, &ACoopCharacter::DestructPower);
 	I->BindKey(EKeys::F4, IE_Pressed, this, &ACoopCharacter::TestBridge);
+	I->BindKey(EKeys::C, IE_Pressed, this, &ACoopCharacter::ToggleFreeCam);
 	I->BindAxisKey(EKeys::MouseX, this, &ACoopCharacter::LookX);
 	I->BindAxisKey(EKeys::MouseY, this, &ACoopCharacter::LookY);
 }
@@ -465,6 +503,7 @@ void ACoopCharacter::ShowHelp()
 		CoopRole == ECoopRole::Neon ? TEXT("Voce e o NEON: poder inverte a gravidade do cubo mirado") : CoopRole == ECoopRole::Vertice ? TEXT("Voce e o VERTICE (poder em breve)") : TEXT("Voce e a RUINA: poder congela o cubo, Q rebobina 5s"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, TEXT("F3 (teste): alterna NEON -> RUINA -> VERTICE"));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Magenta, TEXT("F: NOVO PODER - Ruina destroi / Neon reconstroi o bloco roxo"));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("C: camera livre (gire o mouse para se ver de frente) - C de novo volta ao normal"));
 }
 
 void ACoopCharacter::ApplyGunLook()
@@ -472,8 +511,12 @@ void ACoopCharacter::ApplyGunLook()
 	if (!GunBody) return;
 	const FLinearColor G(0.1f, 0.9f, 0.4f), P(0.7f, 0.3f, 1.f), Blue(0.1f, 0.5f, 1.f), Orange(1.f, 0.45f, 0.05f);
 	const FLinearColor RC = CoopRole == ECoopRole::Neon ? G : CoopRole == ECoopRole::Vertice ? Orange : P;
-	UMaterialInstanceDynamic* W = JJ::Mat(this, FLinearColor(0.8f, 0.8f, 0.84f), FLinearColor::Black, 0.3f, 0.5f);
-	GunBody->SetMaterial(0, W); GunBarrel->SetMaterial(0, W);
+	UMaterialInstanceDynamic* W = JJ::Mat(this, FLinearColor(0.78f, 0.79f, 0.82f), FLinearColor::Black, 0.28f, 0.35f);
+	UMaterialInstanceDynamic* Dk = JJ::Mat(this, FLinearColor(0.045f, 0.047f, 0.055f), FLinearColor::Black, 0.38f, 0.75f);
+	UMaterialInstanceDynamic* Gl = JJ::Mat(this, FLinearColor(0.02f, 0.02f, 0.02f), (bPortalMode ? FLinearColor(0.6f, 0.8f, 1.f) : RC) * 3.f, 0.2f);
+	for (UMeshComponent* C : GunWhite) if (C) C->SetMaterial(0, W);
+	for (UMeshComponent* C : GunDark) if (C) C->SetMaterial(0, Dk);
+	for (UMeshComponent* C : GunGlow) if (C) C->SetMaterial(0, Gl);
 	GunTip->SetMaterial(0, JJ::Mat(this, FLinearColor::Black, bPortalMode ? FLinearColor::White * 3.f : RC * 4.f, 0.2f));
 	ProngA->SetMaterial(0, JJ::Mat(this, FLinearColor::Black, (bPortalMode ? Blue : RC) * 4.f, 0.2f));
 	ProngB->SetMaterial(0, JJ::Mat(this, FLinearColor::Black, (bPortalMode ? Orange : RC) * 4.f, 0.2f));
@@ -590,4 +633,39 @@ void ACoopCharacter::ServerToggleTestBridge_Implementation()
 	if (ACoopFase1GameMode* GM = GetWorld()->GetAuthGameMode<ACoopFase1GameMode>())
 		ClientToast(GM->ToggleTestBridge() ? TEXT("TESTE: ponte INTEIRA forcada (F4 alterna)") : TEXT("TESTE: ponte quebrada de novo"));
 	else ClientToast(TEXT("F4 so funciona no mapa Fase1_Teste"));
+}
+
+void ACoopCharacter::SetCrushed(bool b)
+{
+	if (!HasAuthority() || bCrushed == b) return;
+	bCrushed = b;
+	if (b) { GetCharacterMovement()->StopMovementImmediately(); GetCharacterMovement()->DisableMovement(); ClientToast(TEXT("ESMAGADO pelo teto!")); }
+	else GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+	OnRep_Crushed();
+}
+
+void ACoopCharacter::OnRep_Crushed()
+{
+	// achata o boneco a partir dos pes (a malha tem origem nos pes) e esconde a arma
+	USkeletalMeshComponent* SK = GetMesh();
+	if (bCrushed && !bSquashed) { MeshScale0 = SK->GetRelativeScale3D(); SK->SetRelativeScale3D(MeshScale0 * FVector(1.35f, 1.35f, 0.18f)); bSquashed = true; }
+	else if (!bCrushed && bSquashed) { SK->SetRelativeScale3D(MeshScale0); bSquashed = false; }
+	if (UpperPivot) UpperPivot->SetRelativeScale3D(bCrushed ? FVector(1.3f, 1.3f, 0.15f) : FVector(1.f));
+	for (UMeshComponent* C : GunParts) if (C) C->SetHiddenInGame(bCrushed);
+}
+
+void ACoopCharacter::ToggleFreeCam()
+{
+	const bool bNew = !bFreeCam;
+	if (!HasAuthority()) { bFreeCam = bNew; OnRep_FreeCam(); } // aplica na hora no cliente (o servidor confirma)
+	ServerSetFreeCam(bNew);
+	ClientToast(bNew ? TEXT("CAMERA LIVRE: gire o mouse para se ver de frente (C volta)") : TEXT("Camera normal"));
+}
+
+void ACoopCharacter::ServerSetFreeCam_Implementation(bool b) { bFreeCam = b; OnRep_FreeCam(); }
+
+void ACoopCharacter::OnRep_FreeCam()
+{
+	// com camera livre o boneco nao gira junto com o mouse; ao sair, volta a olhar para onde a camera aponta
+	bUseControllerRotationYaw = !bFreeCam;
 }

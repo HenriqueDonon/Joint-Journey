@@ -29,6 +29,13 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Mode) bool bPortalMode = false;
 	UFUNCTION() void OnRep_Mode();
 	bool IsAimOnProp() const { return TraceProp() != nullptr; }
+	// Esmagado pelo teto (Fase 1): boneco achatado e parado ate a fase reiniciar
+	UPROPERTY(ReplicatedUsing=OnRep_Crushed) bool bCrushed = false;
+	UFUNCTION() void OnRep_Crushed();
+	void SetCrushed(bool b);
+	// Camera livre (tecla C): a camera gira em volta sem virar o boneco (para se ver de frente)
+	UPROPERTY(ReplicatedUsing=OnRep_FreeCam) bool bFreeCam = false;
+	UFUNCTION() void OnRep_FreeCam();
 
 private:
 	UPROPERTY(VisibleAnywhere) class USpringArmComponent* Boom;
@@ -86,6 +93,15 @@ private:
 	UPROPERTY() class UProceduralMeshComponent* GunTip;
 	UPROPERTY() class UProceduralMeshComponent* ProngA;
 	UPROPERTY() class UProceduralMeshComponent* ProngB;
+	UPROPERTY() TArray<class UMeshComponent*> GunParts;   // todas as pecas da arma (nunca escondidas pelo papel)
+	UPROPERTY() TArray<class UMeshComponent*> GunWhite;
+	UPROPERTY() TArray<class UMeshComponent*> GunDark;
+	UPROPERTY() TArray<class UMeshComponent*> GunGlow;
+	UPROPERTY() class UPointLightComponent* FaceLight;     // luz suave no rosto da Ruina (atravessa a aba do chapeu)
+	FVector MeshScale0 = FVector(1.f);
+	bool bSquashed = false;
+	void ToggleFreeCam();
+	UFUNCTION(Server, Reliable) void ServerSetFreeCam(bool b);
 
 	TArray<TPair<class UProceduralMeshComponent*, FJJShape>> Pending;
 	bool bBuilt = false;

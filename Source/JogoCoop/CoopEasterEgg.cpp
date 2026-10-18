@@ -2,6 +2,7 @@
 #include "CoopCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -48,6 +49,17 @@ void ACoopEasterEgg::BeginPlay()
 	Tint(TipA,    FLinearColor(0.85f, 0.80f, 0.65f));
 	Tint(TipB,    FLinearColor(0.80f, 0.74f, 0.58f));
 	Tint(Filling, FLinearColor(0.25f, 0.15f, 0.06f));   // fumo
+	// modelo do Blender (Joint Model): se foi importado, substitui o cigarro feito de cilindros
+	if (UStaticMesh* SM = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Fase1/Joint_EasterEgg/SM_Joint_EasterEgg.SM_Joint_EasterEgg"), nullptr, LOAD_Quiet | LOAD_NoWarn))
+	{
+		UStaticMeshComponent* M = NewObject<UStaticMeshComponent>(this, TEXT("JointModel"));
+		M->SetupAttachment(Root);
+		M->SetStaticMesh(SM);
+		M->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		M->SetRelativeScale3D(FVector(1.3f));
+		M->RegisterComponent();
+		for (UStaticMeshComponent* C : { Paper, TipA, TipB, Filling }) if (C) C->SetVisibility(false);
+	}
 	if (HasAuthority()) Trigger->OnComponentBeginOverlap.AddDynamic(this, &ACoopEasterEgg::OnBegin);
 }
 

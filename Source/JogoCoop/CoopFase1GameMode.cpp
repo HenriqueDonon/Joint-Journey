@@ -8,6 +8,8 @@
 #include "CoopCeiling.h"
 #include "CoopLamp.h"
 #include "CoopFog.h"
+#include "CoopEasterEgg.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameFramework/PlayerController.h"
@@ -33,6 +35,24 @@ ACoopFase1GameMode::ACoopFase1GameMode()
 	DefaultPawnClass = ACoopCharacter::StaticClass();
 	HUDClass = ACoopHUD::StaticClass();
 	GameStateClass = ACoopGameState::StaticClass();
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+// Teto desabando esmaga quem estiver embaixo (checado todo frame no servidor, sem atravessar o boneco)
+static constexpr float RoofBottom = 568.f, RoofDrop = 545.f, RoofFallSecs = 0.8f;
+void ACoopFase1GameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (Phase != 2) return;
+	const float A = FMath::Clamp((GetWorld()->GetTimeSeconds() - PhaseT0) / RoofFallSecs, 0.f, 1.f);
+	const float Bottom = RoofBottom - RoofDrop * A * A;
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr;
+		if (!C || C->bCrushed) continue;
+		const float Top = C->GetActorLocation().Z + C->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+		if (C->GetActorLocation().Z > -120.f && Bottom <= Top) C->SetCrushed(true);
+	}
 }
 
 AActor* ACoopFase1GameMode::ChoosePlayerStart_Implementation(AController* Player)
@@ -76,7 +96,10 @@ void ACoopFase1GameMode::BuildLevel()
 	// E. plataforma de saida: X 1000..2400, topo Z=+40 (elevada 40cm; degrau < MaxStepHeight 45)
 	M(B(TEXT("F1_PlataformaSaida"), FVector(1700, 0, -280), FVector(1400, 1000, 640), Floor2), TEXT("Plataforma_Saida"));
 	// C. vao central X 0..1000 (10m), fundo de lava com topo em Z=-350 (queda 3,5m)
-	M(B(TEXT("F1_Lava"), FVector(500, 0, -400), FVector(1000, 1000, 100), FLinearColor(0.25f, 0.04f, 0.01f), false, FLinearColor(1.0f, 0.28f, 0.03f) * 2.5f, 0.6f), TEXT("Lava"));
+	B(TEXT("F1_Lava"), FVector(500, 0, -400), FVector(1000, 1000, 100), FLinearColor(0.25f, 0.04f, 0.01f), false, FLinearColor(1.0f, 0.28f, 0.03f) * 2.5f, 0.6f);
+	// superficie de lava (modelo do Blender, face brilhante para cima), fina e maior que o vao para nao mostrar bordas
+	if (ACoopBlock* Lv = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(750, 0, -386 + 11), FRotator::ZeroRotator))
+	{ Lv->Setup(FVector(1500, 1500, 22), FLinearColor::Black); Lv->SetOpts(TEXT("Lava"), true); Lv->SetModelScale(FVector(1.25f, 1.25f, 0.2f)); Lbl(Lv, TEXT("F1_LavaSuperficie")); }
 	// G. paredes/teto
 	M(B(TEXT("F1_ParedeLateralEsq"), FVector(500, -520, 50), FVector(3850, 40, 1300), Wall), TEXT("Parede_Lateral_Esq"));
 	M(B(TEXT("F1_ParedeLateralDir"), FVector(500, 520, 50), FVector(3850, 40, 1300), Wall), TEXT("Parede_Lateral_Dir"));
@@ -93,12 +116,17 @@ void ACoopFase1GameMode::BuildLevel()
 	for (float X : {-1200.f, -800.f, 300.f, 700.f, 1100.f, 1500.f, 1900.f, 2250.f})
 		for (float Y : {-250.f, 250.f})
 		{
-			Roofed(TEXT("F1_PainelLuz"), FVector(X, Y, 596), FVector(160, 50, 8), FLinearColor(0.8f, 0.8f, 0.75f), FLinearColor(1.f, 0.95f, 0.8f) * 3.f);
-			if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(X, Y, 540)), FRotator::ZeroRotator)) L->Setup(X > 900.f ? FLinearColor(0.82f, 0.9f, 1.f) : FLinearColor(1.f, 0.9f, 0.78f), 7000.f * KLUM, 900.f * KXY);
+			Roofed(TEXT("F1_PainelLuz"), FVector(X, Y, 520), FVector(160, 50, 8), FLinearColor(0.8f, 0.8f, 0.75f), FLinearColor(1.f, 0.95f, 0.8f) * 3.f);
+			if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(X, Y, 500)), FRotator::ZeroRotator)) L->Setup(X > 900.f ? FLinearColor(0.82f, 0.9f, 1.f) : FLinearColor(1.f, 0.9f, 0.78f), 7000.f * KLUM, 900.f * KXY);
 		}
-	if (ACoopCeiling* T = Roofed(TEXT("F1_TetoEstrutural"), FVector(-200, 0, 590), FVector(600, 1000, 60), FLinearColor(0.26f, 0.27f, 0.30f))) T->SetOpts(TEXT("Teto_Estrutural"), false);
+	if (ACoopCeiling* T = Roofed(TEXT("F1_TetoEstrutural"), FVector(-200, 0, 520), FVector(600, 1000, 60), FLinearColor(0.26f, 0.27f, 0.30f))) T->SetOpts(TEXT("Teto_Estrutural"), false);
+	// forro de paineis do Blender (lado detalhado com grade e luzes para baixo), base em Z=580; cai junto no colapso
+	for (int32 ix = 0; ix < 10; ++ix)
+		for (int32 iy = -1; iy <= 1; ++iy)
+			if (ACoopCeiling* c = W->SpawnActor<ACoopCeiling>(ACoopCeiling::StaticClass(), FVector(-2145.f + 291.75f + 583.5f * ix, 540.f * iy, 620.f), FRotator::ZeroRotator))
+			{ c->Setup(FVector(583.5f, 540.f, 80.f), FLinearColor(0.1f, 0.11f, 0.12f)); c->SetOpts(TEXT("Teto_Painel"), true); Lbl(c, TEXT("F1_TetoPainel")); Roof.Add(c); }
 	// luz sob o teto estrutural (ilumina a coluna) e brilho da lava (sem sombras)
-	if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(-200, 0, 500)), FRotator::ZeroRotator)) L->Setup(FLinearColor(1.f, 0.95f, 0.85f), 9000.f * KLUM, 900.f * KXY);
+	if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(-200, 0, 470)), FRotator::ZeroRotator)) L->Setup(FLinearColor(1.f, 0.95f, 0.85f), 9000.f * KLUM, 900.f * KXY);
 	if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(500, 0, -250)), FRotator::ZeroRotator)) L->Setup(FLinearColor(1.f, 0.35f, 0.08f), 40000.f * KLUM, 1600.f * KXY);
 	// B. coluna estrutural DESTRUTIVEL: ao lado do caminho da ponte (Y=-330), 160x160x560, sustenta o teto estrutural
 	if (ACoopDestructible* Col = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(Sc(FVector(-200, -330, 280)))))
@@ -240,12 +268,14 @@ void ACoopFase1GameMode::TickCollapse()
 		if (El >= CollapseSecs)
 		{
 			Phase = 2; PhaseT0 = Now;
-			for (ACoopCeiling* C : Roof) if (C) C->StartFall(0.8f, 560.f * KZ);
+			for (ACoopCeiling* C : Roof) if (C) C->StartFall(RoofFallSecs, RoofDrop);
 			Announce(TEXT("O TETO DESABOU!"));
 		}
 	}
 	else if (Phase == 2 && Now - PhaseT0 >= 1.4f)
 	{
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+			if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) C->SetCrushed(false);
 		SendAllToStart();                    // todos voltam ao inicio
 		ClearCracks();
 		for (ACoopCeiling* C : Roof) if (C) C->ResetPos();
@@ -275,9 +305,6 @@ void ACoopFase1GameMode::BuildDecor()
 	for (int32 s = -1; s <= 1; s += 2)
 	{
 		const float Y = s * 497.f;
-		D(TEXT("Parede_Rodape"), FVector(500, s * 495.f, 75), FVector(3800, 8, 150), Rust);                 // rodape enferrujado
-		for (float X = -1300.f; X <= 2300.f; X += 250.f)
-			D(TEXT("Parede_Junta"), FVector(X, Y, 300), FVector(5, 3, 500), Dark);                          // juntas dos paineis
 		int32 k = 0;
 		for (float X = -1300.f; X <= 2300.f; X += 300.f)
 		{
@@ -293,9 +320,9 @@ void ACoopFase1GameMode::BuildDecor()
 		}
 	}
 	// canos no teto + vigas quebradas penduradas sobre o vao + gotejo de lava
-	D(TEXT("Cano_Teto"), FVector(500, -380, 565), FVector(3700, 36, 36), Rust);
-	D(TEXT("Cano_Teto"), FVector(500, 380, 565), FVector(3700, 36, 36), Rust);
-	D(TEXT("Cano_Grosso"), FVector(500, 0, 575), FVector(3700, 56, 56), Steel);
+	D(TEXT("Cano_Teto"), FVector(500, -380, 480), FVector(3700, 36, 36), Rust);
+	D(TEXT("Cano_Teto"), FVector(500, 380, 480), FVector(3700, 36, 36), Rust);
+	D(TEXT("Cano_Grosso"), FVector(500, 0, 475), FVector(3700, 56, 56), Steel);
 	D(TEXT("Viga_Quebrada"), FVector(250, -120, 470), FVector(340, 26, 26), Rust, FLinearColor::Black, FRotator(-28.f, 15.f, 0.f));
 	D(TEXT("Viga_Quebrada"), FVector(700, 150, 500), FVector(300, 26, 26), Steel, FLinearColor::Black, FRotator(24.f, -25.f, 0.f));
 	D(TEXT("Viga_Quebrada"), FVector(480, 20, 430), FVector(280, 22, 22), Rust, FLinearColor::Black, FRotator(-12.f, 40.f, 8.f));
@@ -344,6 +371,9 @@ void ACoopFase1GameMode::BuildDecor()
 		const float Z0 = EdgeX > 500.f ? 40.f : 0.f;
 		D(TEXT("Corrimao"), FVector(EdgeX, -320, Z0 + 100), FVector(5, 360, 5), Orange * 0.6f, FLinearColor::Black);
 		D(TEXT("Corrimao"), FVector(EdgeX, 320, Z0 + 100), FVector(5, 360, 5), Orange * 0.6f, FLinearColor::Black);
+		for (float Y : {-320.f, 320.f})
+			if (ACoopBlock* G = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(FVector(EdgeX, Y, Z0 + 60)), FRotator::ZeroRotator))
+			{ G->Setup(Sc(FVector(12, 360, 120)), FLinearColor::Black, true); Lbl(G, TEXT("F1_GuardaCorpo_Colisao")); }
 		for (float Y : {-480.f, -360.f, -240.f, 240.f, 360.f, 480.f}) D(TEXT("Corrimao_Poste"), FVector(EdgeX, Y, Z0 + 50), FVector(6, 6, 100), Rust);
 	}
 	// sinalizacao de saida (EXIT) + moldura da porta
@@ -367,8 +397,8 @@ void ACoopFase1GameMode::BuildDecor()
 	for (float X : {-1100.f, 2200.f, 3050.f})
 	{
 		const float Z0 = X > 1500.f ? ZE : ZS;
-		Prop(TEXT("Fachada_Queimada"), FVector(X, -711, Z0), FVector(380, 70, 300), FRotator(0, 0, 0), true);
-		Prop(TEXT("Fachada_Queimada"), FVector(X, 711, Z0), FVector(380, 70, 300), FRotator(0, 180, 0), true);
+		Prop(TEXT("Fachada_Queimada"), FVector(X, -700, Z0), FVector(380, 70, 300), FRotator(0, 0, 0), true);
+		Prop(TEXT("Fachada_Queimada"), FVector(X, 700, Z0), FVector(380, 70, 300), FRotator(0, 180, 0), true);
 	}
 	Prop(TEXT("Cabine_Fortaleza"), FVector(-1850, 560, ZS), FVector(300, 264, 273), FRotator(0, 180, 0), true);
 	Prop(TEXT("Pilar_Ruido"), FVector(-1300, 600, ZS), FVector(143, 124, 260), FRotator(0, 30, 0), true);
@@ -377,7 +407,7 @@ void ACoopFase1GameMode::BuildDecor()
 	Prop(TEXT("Estrutura_Aco"), FVector(3450, 450, ZE), FVector(169, 139, 380), FRotator(0, 180, 0), true);
 	for (float X : {-1500.f, -900.f, 900.f, 2100.f, 2900.f})
 		for (float Sgn : {-1.f, 1.f})
-			Prop(TEXT("Suporte_Aco"), FVector(X, Sgn * 647.f, 575), FVector(18, 200, 93), FRotator(0, Sgn > 0 ? 180.f : 0.f, 0), false);
+			Prop(TEXT("Suporte_Aco"), FVector(X, Sgn * 647.f, 480), FVector(18, 200, 93), FRotator(0, Sgn > 0 ? 180.f : 0.f, 0), false);
 	for (float X : {-1950.f, -650.f, 2000.f, 3350.f})
 		for (float Sgn : {-1.f, 1.f})
 			Prop(TEXT("Cano_Parede"), FVector(X, Sgn * 717.f, 320), FVector(55, 55, 10), FRotator(90.f, 0, 0), false);
@@ -385,13 +415,13 @@ void ACoopFase1GameMode::BuildDecor()
 	Prop(TEXT("Cano_Curvo"), FVector(2700, 300, ZE), FVector(160, 105, 19), FRotator(0, -35, 0), false);
 	Prop(TEXT("Cabos"), FVector(-700, 400, ZS), FVector(200, 124, 20), FRotator(0, 10, 0), false);
 	Prop(TEXT("Cabos"), FVector(2400, -350, ZE), FVector(200, 124, 20), FRotator(0, 80, 0), false);
-	const FVector Piles[] = { FVector(-150, -640, ZS), FVector(-1500, -100, ZS), FVector(-900, 150, ZS), FVector(2200, 200, ZE), FVector(2900, -150, ZE), FVector(3300, 500, ZE) };
+	const FVector Piles[] = { FVector(-150, -640, ZS), FVector(-1500, -380, ZS), FVector(-900, 230, ZS), FVector(2200, 200, ZE), FVector(2900, -150, ZE), FVector(3300, 500, ZE) };
 	int32 pi = 0;
 	for (const FVector& P : Piles) Prop(TEXT("Pilha_Escombro"), P, FVector(130, 135, 85), FRotator(0, 47.f * (pi++), 0), false);
-	Prop(TEXT("Piso_Placa"), FVector(-1100, 0, ZS), FVector(220, 220, 5), FRotator(0, 0, 0), false);
-	Prop(TEXT("Piso_Placa"), FVector(2800, 0, ZE), FVector(220, 220, 5), FRotator(0, 0, 0), false);
-	Prop(TEXT("Piso_Grade"), FVector(-600, 0, ZS), FVector(300, 300, 6), FRotator(0, 0, 0), false);
-	Prop(TEXT("Piso_Grade"), FVector(3150, 0, ZE), FVector(300, 300, 6), FRotator(0, 0, 0), false);
+	Prop(TEXT("Piso_Placa"), FVector(-1100, 450, ZS), FVector(220, 220, 5), FRotator(0, 0, 0), false);
+	Prop(TEXT("Piso_Placa"), FVector(2800, 450, ZE), FVector(220, 220, 5), FRotator(0, 0, 0), false);
+	Prop(TEXT("Piso_Grade"), FVector(-600, -420, ZS), FVector(300, 300, 6), FRotator(0, 0, 0), false);
+	Prop(TEXT("Piso_Grade"), FVector(3150, -420, ZE), FVector(300, 300, 6), FRotator(0, 0, 0), false);
 	Prop(TEXT("Grade_Ralo"), FVector(-1500, -450, ZS), FVector(200, 200, 5), FRotator(0, 0, 0), false);
 	Prop(TEXT("Grade_Ralo"), FVector(2400, -450, ZE), FVector(200, 200, 5), FRotator(0, 0, 0), false);
 	Prop(TEXT("Caixa_Madeira"), FVector(-1580, 640, ZS), FVector(120, 120, 79), FRotator(0, 8, 0), true);
@@ -401,4 +431,28 @@ void ACoopFase1GameMode::BuildDecor()
 	Prop(TEXT("Arcade"), FVector(1800, -640, ZE), FVector(101, 142, 190), FRotator(0, 0, 0), true);
 	Prop(TEXT("Torre_PC"), FVector(1950, -640, ZE), FVector(24, 26, 62), FRotator(0, 0, 0), true);
 	Prop(TEXT("Botao_Vermelho"), FVector(3450, -300, ZE), FVector(50, 52, 19), FRotator(0, 0, 0), false);
+
+	// paineis de parede sci-fi (Blender): faixa inferior das 4 paredes. Frente = +Y local.
+	for (int32 i = 0; i < 10; ++i)
+	{
+		const float X = -2100.f + 285.f + 570.f * i, Z0 = X > 1500.f ? ZE : ZS;
+		Prop(TEXT("Painel_Parede"), FVector(X, -743, Z0), FVector(570, 14, 240), FRotator(0, 0, 0), false);
+		Prop(TEXT("Painel_Parede"), FVector(X, 743, Z0), FVector(570, 14, 240), FRotator(0, 180, 0), false);
+	}
+	for (float Y : {-500.f, 0.f, 500.f})
+		if (ACoopBlock* P = Prop(TEXT("Painel_Parede"), FVector(-2093, Y, ZS), FVector(570, 14, 240), FRotator(0, -90, 0), false)) P->SetModelScale(FVector(0.877f, 1.f, 1.f));
+	for (float Y : {-465.f, 465.f})
+		Prop(TEXT("Painel_Parede"), FVector(3593, Y, ZE), FVector(570, 14, 240), FRotator(0, 90, 0), false);
+	// passarela de placas industriais (coringa) levando a ponte, nas duas plataformas
+	for (int32 i = 0; i < 7; ++i)
+	{
+		Prop(TEXT("Placa_Industrial"), FVector(-2100.f + 150.f + 300.f * i, 0, ZS), FVector(300, 140, 4), FRotator(0, 0, 0), false);
+		Prop(TEXT("Placa_Industrial"), FVector(1500.f + 150.f + 300.f * i, 0, ZE), FVector(300, 140, 4), FRotator(0, 0, 0), false);
+	}
+
+	// easter eggs (Joint) - um em cada plataforma
+	if (ACoopEasterEgg* E1 = W->SpawnActor<ACoopEasterEgg>(ACoopEasterEgg::StaticClass(), FVector(-1700, -560, ZS), FRotator(0, 35, 0)))
+		E1->Message = TEXT("Easter egg 1/2 (Fase 1): um joint esquecido no meio dos escombros. Calma, ainda da tempo de salvar o teto.");
+	if (ACoopEasterEgg* E2 = W->SpawnActor<ACoopEasterEgg>(ACoopEasterEgg::StaticClass(), FVector(3200, -560, ZE), FRotator(0, -120, 0)))
+		E2->Message = TEXT("Easter egg 2/2 (Fase 1): passou pela ponte, ganhou o joint. Joint Journey: a jornada e conjunta.");
 }
