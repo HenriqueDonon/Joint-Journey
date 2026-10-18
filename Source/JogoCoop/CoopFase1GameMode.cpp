@@ -4,6 +4,7 @@
 #include "CoopHUD.h"
 #include "CoopBlock.h"
 #include "CoopSun.h"
+#include "CoopDestructible.h"
 #include "GameFramework/PlayerStart.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Character.h"
@@ -72,10 +73,25 @@ void ACoopFase1GameMode::BuildLevel()
 	B(TEXT("F1_ParedeFundoInicio"), FVector(-1420, 0, 50), FVector(40, 1080, 1300), Wall);
 	B(TEXT("F1_ParedeFundoSaida"), FVector(2420, 0, 50), FVector(40, 1080, 1300), Wall);
 	B(TEXT("F1_Teto"), FVector(500, 0, 620), FVector(3890, 1080, 40), Wall, true);
-	// B. coluna estrutural: junto a borda da plataforma inicial, encosta no teto (160x160x600)
-	B(TEXT("F1_Coluna"), FVector(-200, 0, 300), FVector(160, 160, 600), FLinearColor(0.62f, 0.62f, 0.64f), false, FLinearColor(0.35f, 0.12f, 0.02f), 0.8f);
+	// B. coluna estrutural DESTRUTIVEL: ao lado do caminho da ponte (Y=-330), 160x160x560, sustenta o teto estrutural
+	if (ACoopDestructible* Col = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(FVector(-200, -330, 280))))
+	{
+		Col->Setup(FVector(160, 160, 560), FLinearColor(0.62f, 0.62f, 0.64f));
+		Col->FinishSpawning(FTransform(FVector(-200, -330, 280)));
+		Lbl(Col, TEXT("F1_Coluna")); Column = Col;
+	}
+	// teto estrutural visivel apoiado pela coluna (X -500..100, base em Z=560 = topo da coluna)
+	B(TEXT("F1_TetoEstrutural"), FVector(-200, 0, 590), FVector(600, 1000, 60), FLinearColor(0.26f, 0.27f, 0.30f));
 	// D. ponte danificada: toco ligado ao lado direito (X 850..1000, largura 250) + laje caida no vao
-	B(TEXT("F1_Ponte_Toco"), FVector(925, 0, 25), FVector(150, 250, 30), FLinearColor(0.55f, 0.52f, 0.46f));
+	B(TEXT("F1_Ponte_Toco"), FVector(925, 0, 26), FVector(150, 240, 24), FLinearColor(0.55f, 0.52f, 0.46f));
+	// ponte DESTRUTIVEL: nasce destruida (escombros na lava); Neon so a constroi depois que a coluna cair
+	if (ACoopDestructible* Br = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(FVector(500, 0, 25))))
+	{
+		Br->Setup(FVector(1000, 250, 30), FLinearColor(0.55f, 0.52f, 0.46f), 360.f, 350.f, true);
+		Br->FinishSpawning(FTransform(FVector(500, 0, 25)));
+		Lbl(Br, TEXT("F1_Ponte")); Bridge = Br;
+	}
+	if (Column && Bridge) { Column->Partner = Bridge; Bridge->Partner = Column; }
 	if (ACoopBlock* Slab = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(780, 0, -140), FRotator(-35.f, 0.f, 0.f)))
 	{ Slab->Setup(FVector(150, 250, 30), FLinearColor(0.45f, 0.42f, 0.38f)); Lbl(Slab, TEXT("F1_Ponte_LajeCaida")); }
 	// F. saida: porta emissiva na parede do fundo da plataforma de saida
@@ -90,23 +106,20 @@ void ACoopFase1GameMode::BuildLevel()
 
 bool ACoopFase1GameMode::ToggleTestBridge()
 {
-	UWorld* W = GetWorld();
-	if (FullBridge && IsValid(FullBridge))
-	{
-		FullBridge->Destroy(); FullBridge = nullptr;
-		SpawnBarrier();
-		return false;
-	}
-	if (Barrier && IsValid(Barrier)) { Barrier->Destroy(); Barrier = nullptr; }
-	// ponte completa: X 0..1000, largura 250, topo Z=+40 (liga a borda esquerda ao lado direito)
-	ACoopBlock* Br = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(500, 0, 25), FRotator::ZeroRotator);
-	if (Br) { Br->Setup(FVector(1000, 250, 30), FLinearColor(0.55f, 0.52f, 0.46f)); Lbl(Br, TEXT("F1_Ponte_Completa")); }
-	FullBridge = Br;
-	return true;
+	if (!Bridge) return false;
+	Bridge->ServerForce(!Bridge->IsDestroyed());
+	return !Bridge->IsDestroyed();
 }
 
 void ACoopFase1GameMode::CheckFall()
 {
+	// barreira invisivel do vao existe so enquanto a ponte nao existe
+	if (Bridge)
+	{
+		const bool bHasBarrier = Barrier && IsValid(Barrier);
+		if (Bridge->IsDestroyed() && !bHasBarrier) SpawnBarrier();
+		else if (!Bridge->IsDestroyed() && bHasBarrier) { Barrier->Destroy(); Barrier = nullptr; }
+	}
 	if (Starts.Num() == 0) return;
 	int32 i = 0;
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It, ++i)

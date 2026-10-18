@@ -13,14 +13,15 @@ class JOGOCOOP_API ACoopFase1GameMode : public AGameModeBase
 public:
 	ACoopFase1GameMode();
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
-	// Teste manual (tecla F4): liga/desliga a ponte completa. Retorna true se a ponte ficou completa.
+	// Teste manual (tecla F4): forca ponte inteira/quebrada (ignora o material compartilhado). Retorna true se ficou inteira.
 	bool ToggleTestBridge();
 private:
 	void BuildLevel();
 	void CheckFall();
 	void SpawnBarrier();
 	UPROPERTY() TArray<AActor*> Starts;
-	UPROPERTY() AActor* FullBridge = nullptr;
+	UPROPERTY() class ACoopDestructible* Column = nullptr;
+	UPROPERTY() class ACoopDestructible* Bridge = nullptr;
 	UPROPERTY() AActor* Barrier = nullptr;
 	FTimerHandle FallTimer;
 	int32 NextStart = 0;

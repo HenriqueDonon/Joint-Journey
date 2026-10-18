@@ -588,6 +588,6 @@ void ACoopCharacter::TestBridge() { ServerToggleTestBridge(); }
 void ACoopCharacter::ServerToggleTestBridge_Implementation()
 {
 	if (ACoopFase1GameMode* GM = GetWorld()->GetAuthGameMode<ACoopFase1GameMode>())
-		ClientToast(GM->ToggleTestBridge() ? TEXT("TESTE: ponte COMPLETA ativada (F4 desfaz)") : TEXT("TESTE: ponte quebrada de novo"));
+		ClientToast(GM->ToggleTestBridge() ? TEXT("TESTE: ponte INTEIRA forcada (F4 alterna)") : TEXT("TESTE: ponte quebrada de novo"));
 	else ClientToast(TEXT("F4 so funciona no mapa Fase1_Teste"));
 }

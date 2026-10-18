@@ -18,7 +18,11 @@ ACoopDestructible::ACoopDestructible()
 	Mesh->SetMobility(EComponentMobility::Movable);
 }
 
-void ACoopDestructible::Setup(FVector InSize, FLinearColor InColor) { Size = InSize; Color = InColor; }
+void ACoopDestructible::Setup(FVector InSize, FLinearColor InColor, float InDrop, float InSpreadX, bool bStartDestroyed)
+{
+	Size = InSize; Color = InColor; DebrisDrop = InDrop; DebrisSpreadX = InSpreadX;
+	if (bStartDestroyed) bDestroyed = true;
+}
 
 void ACoopDestructible::BeginPlay()
 {
@@ -50,7 +54,9 @@ void ACoopDestructible::BuildChunks()
 		C->RegisterComponent();
 		const float S = R.FRandRange(0.18f, 0.42f);
 		C->SetWorldScale3D(FVector(S, S * R.FRandRange(0.6f, 1.4f), S * R.FRandRange(0.5f, 1.f)));
-		const FVector Off(R.FRandRange(-0.6f, 0.6f) * Size.X, R.FRandRange(-1.2f, 1.2f) * Size.Y, -Size.Z * 0.5f + S * 40.f);
+		const float OffX = DebrisSpreadX > 0.f ? R.FRandRange(-1.f, 1.f) * DebrisSpreadX : R.FRandRange(-0.6f, 0.6f) * Size.X;
+		const float OffY = R.FRandRange(-1.2f, 1.2f) * Size.Y;
+		const FVector Off(OffX, OffY, -Size.Z * 0.5f + S * 40.f - DebrisDrop);
 		C->SetWorldLocation(GetActorLocation() + Off);
 		C->SetWorldRotation(FRotator(R.FRandRange(-25.f, 25.f), R.FRandRange(0.f, 360.f), R.FRandRange(-25.f, 25.f)));
 		Chunks.Add(C);
@@ -88,6 +94,7 @@ bool ACoopDestructible::ServerRebuild(FString& OutWhy)
 {
 	if (!HasAuthority()) { OutWhy = TEXT("sem autoridade"); return false; }
 	if (!bDestroyed) { OutWhy = TEXT("Objeto ja esta intacto"); return false; }
+	if (Partner && !Partner->IsDestroyed()) { OutWhy = TEXT("Sem material: destrua a outra estrutura primeiro"); return false; }
 	// nao reconstruir em cima de alguem (evita prender jogador dentro da colisao)
 	TArray<FOverlapResult> Hits;
 	FCollisionObjectQueryParams Obj; Obj.AddObjectTypesToQuery(ECC_Pawn);
@@ -100,10 +107,20 @@ bool ACoopDestructible::ServerRebuild(FString& OutWhy)
 	return true;
 }
 
+void ACoopDestructible::ServerForce(bool bBreak)
+{
+	if (!HasAuthority() || bDestroyed == bBreak) return;
+	bDestroyed = bBreak;
+	ApplyState(true);
+	ForceNetUpdate();
+}
+
 void ACoopDestructible::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACoopDestructible, bDestroyed);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, Size, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, Color, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ACoopDestructible, DebrisDrop, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ACoopDestructible, DebrisSpreadX, COND_InitialOnly);
 }
