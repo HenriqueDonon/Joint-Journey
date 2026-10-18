@@ -11,9 +11,12 @@ class JOGOCOOP_API ACoopBurst : public AActor
 public:
 	ACoopBurst();
 	void Init(FLinearColor Col, FVector BeamFrom, int32 NumSparks = 28);
+	void SetStartComp(USceneComponent* C) { StartComp = C; }
 	virtual void Tick(float DeltaTime) override;
 private:
 	float Age = 0.f;
+	TWeakObjectPtr<USceneComponent> StartComp;
+	FVector EndPt = FVector::ZeroVector, StartPt = FVector::ZeroVector;
 	UPROPERTY() TArray<UStaticMeshComponent*> Parts;
 	UPROPERTY() UStaticMeshComponent* Beam = nullptr;
 	TArray<FVector> Dirs;

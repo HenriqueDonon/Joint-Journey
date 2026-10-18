@@ -106,10 +106,11 @@ void ACoopFase1GameMode::BuildLevel()
 	M(B(TEXT("F1_ParedeLateralEsq"), FVector(500, -520, 50), FVector(3850, 40, 1300), Wall), TEXT("Parede_Lateral_Esq"));
 	M(B(TEXT("F1_ParedeLateralDir"), FVector(500, 520, 50), FVector(3850, 40, 1300), Wall), TEXT("Parede_Lateral_Dir"));
 	M(B(TEXT("F1_ParedeFundoInicio"), FVector(-1420, 0, 50), FVector(40, 1080, 1300), Wall), TEXT("Parede_Fundo_Inicio"));
-	// parede do fundo da saida com ABERTURA para a porta (300 x 286 cm, do piso ate Z=330)
-	B(TEXT("F1_ParedeFundoSaida_Esq"), FVector(2420, -320, 50), FVector(40, 440, 1300), Wall);
-	B(TEXT("F1_ParedeFundoSaida_Dir"), FVector(2420, 320, 50), FVector(40, 440, 1300), Wall);
-	B(TEXT("F1_ParedeFundoSaida_Topo"), FVector(2420, 0, 500), FVector(40, 1080, 400), Wall);
+	// parede do fundo da saida com ABERTURA do tamanho da porta (Y -69..57, ate Z=236); coordenadas reais em cm
+	auto WallPiece = [&](const TCHAR* N, FVector C, FVector Sz) { if (ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), C, FRotator::ZeroRotator)) { b->Setup(Sz, Wall); Lbl(b, N); } };
+	WallPiece(TEXT("F1_ParedeFundoSaida_Esq"), FVector(3630, -439.5f, 55), FVector(60, 741, 1430));
+	WallPiece(TEXT("F1_ParedeFundoSaida_Dir"), FVector(3630, 433.5f, 55), FVector(60, 753, 1430));
+	WallPiece(TEXT("F1_ParedeFundoSaida_Topo"), FVector(3630, 0, 503), FVector(60, 1620, 534));
 	// teto cobrindo a sala toda (visual, cai no colapso) + paineis de luz + luzes sem sombra
 	auto Roofed = [&](const TCHAR* Name, FVector C, FVector S, FLinearColor Col, FLinearColor Em = FLinearColor::Black) -> ACoopCeiling*
 	{
@@ -155,9 +156,25 @@ void ACoopFase1GameMode::BuildLevel()
 	if (Column && Bridge) { Column->Partner = Bridge; Bridge->Partner = Column; }
 	if (ACoopBlock* Slab = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(FVector(780, 0, -140)), FRotator(-35.f, 0.f, 0.f)))
 	{ Slab->Setup(Sc(FVector(150, 250, 30)), FLinearColor(0.45f, 0.42f, 0.38f)); Lbl(Slab, TEXT("F1_Ponte_LajeCaida")); }
-	// F. saida: porta que SOBE quando todos os jogadores estao perto (ver TickExit)
-	if (ACoopExitDoor* Dr = W->SpawnActor<ACoopExitDoor>(ACoopExitDoor::StaticClass(), Sc(FVector(2395, 0, 170)), FRotator::ZeroRotator))
-	{ Dr->Setup(Sc(FVector(10, 200, 260)), FLinearColor(0.02f, 0.1f, 0.05f), false, FLinearColor(0.1f, 1.f, 0.4f) * 1.5f); Dr->SetOpts(TEXT("Porta_Saida"), false); Lbl(Dr, TEXT("F1_PortaSaida")); ExitDoor = Dr; }
+	// F. saida: moldura (modelo, so visual) + duas folhas que DESLIZAM para os lados quando todos estao perto (ver TickExit)
+	{
+		const float FX = 3576.f, FY = 0.f, FZ = 44.f;
+		ExitCenter = FVector(FX, FY, FZ + 100.f);
+		if (ACoopBlock* Fr = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(FX, FY, FZ + 143.f), FRotator::ZeroRotator))
+		{ Fr->Setup(FVector(56.6f, 280.4f, 286.f), FLinearColor(0.1f, 0.1f, 0.12f)); Fr->SetOpts(TEXT("Porta_Quadro"), true); Lbl(Fr, TEXT("F1_PortaQuadro")); }
+		// os pilares da moldura avancam para dentro da sala: colisao invisivel para nao atravessar
+		for (const FVector2D& P : { FVector2D(-104.5f, 71.f), FVector2D(98.5f, 83.f) })
+			if (ACoopBlock* G = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(FX, FY + P.X, FZ + 143.f), FRotator::ZeroRotator))
+			{ G->Setup(FVector(57.f, P.Y, 286.f), FLinearColor::Black, true); Lbl(G, TEXT("F1_PortaPilar_Colisao")); }
+		auto Leaf = [&](const TCHAR* Slot, FVector Cen, FVector Sz, float Dir) -> ACoopExitDoor*
+		{
+			ACoopExitDoor* L = W->SpawnActor<ACoopExitDoor>(ACoopExitDoor::StaticClass(), Cen, FRotator::ZeroRotator);
+			if (L) { L->Setup(Sz, FLinearColor(0.12f, 0.13f, 0.15f), false, FLinearColor::Black, 0.6f, 0.5f); L->SetOpts(FName(Slot), false); L->SetSlide(FVector(0, Dir, 0), 66.f); Lbl(L, Slot); }
+			return L;
+		};
+		ExitDoor = Leaf(TEXT("Porta_Folha_Esq"), FVector(FX + 0.5f, FY - 36.4f, FZ + 95.f), FVector(54.2f, 60.7f, 190.f), -1.f);
+		ExitDoor2 = Leaf(TEXT("Porta_Folha_Dir"), FVector(FX + 1.4f, FY + 24.3f, FZ + 95.f), FVector(50.3f, 60.6f, 190.f), 1.f);
+	}
 	BuildTransition();
 
 	SpawnBarrier();
@@ -291,6 +308,7 @@ void ACoopFase1GameMode::TickCollapse()
 		if (Bridge) Bridge->ServerForce(true);
 		Phase = 0;
 		if (ExitDoor) ExitDoor->SetOpen(false);
+		if (ExitDoor2) ExitDoor2->SetOpen(false);
 		bDoorLatched = false; bPhaseDone = false;
 		Announce(TEXT("Fase reiniciada"));
 	}
@@ -321,17 +339,18 @@ void ACoopFase1GameMode::BuildTransition()
 	// tiras de luz no teto + lampadas
 	for (float X = TrX0 + 200.f; X < X1; X += 400.f)
 	{
-		Blk(TEXT("F1_Trans_Luz"), FVector(X, 0, TrFloorTop + TrH - 4.f), FVector(180.f, 40.f, 6.f), FLinearColor(0.8f, 0.85f, 0.9f), FLinearColor(0.85f, 0.95f, 1.f) * 3.f);
-		if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(X, 0, TrFloorTop + TrH - 50.f), FRotator::ZeroRotator)) L->Setup(FLinearColor(0.75f, 0.9f, 1.f), 9000.f, 800.f);
+		Blk(TEXT("F1_Trans_Luz"), FVector(X, 0, TrFloorTop + TrH - 84.f), FVector(180.f, 40.f, 6.f), FLinearColor(0.8f, 0.85f, 0.9f), FLinearColor(0.85f, 0.95f, 1.f) * 3.f);
+		if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(X, 0, TrFloorTop + TrH - 120.f), FRotator::ZeroRotator)) L->Setup(FLinearColor(0.75f, 0.9f, 1.f), 9000.f, 800.f);
 	}
 	// faixas de chao guiando ate o portal
 	for (float Sg : {-1.f, 1.f})
 		Blk(TEXT("F1_Trans_Guia"), FVector(CX, Sg * 150.f, TrFloorTop + 0.5f), FVector(TrLen - 100.f, 8.f, 1.f), FLinearColor(0.02f, 0.05f, 0.08f), FLinearColor(0.1f, 0.8f, 1.f) * 2.f);
 	// modelos do Blender: paineis nas paredes e placas no piso
-	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot)
+	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot, FVector Scl = FVector(1.f), bool bCollide = false)
 	{
 		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Base + FVector(0, 0, Size.Z * 0.5f), Rot);
-		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), true); Lbl(b, Slot); }
+		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); if (!Scl.Equals(FVector(1.f))) b->SetModelScale(Scl); Lbl(b, Slot); }
+		return b;
 	};
 	for (int32 i = 0; i < 3; ++i)
 	{
@@ -340,13 +359,41 @@ void ACoopFase1GameMode::BuildTransition()
 		Prop(TEXT("Painel_Parede"), FVector(X, TrHalfW - 7.f, TrFloorTop), FVector(570, 14, 240), FRotator(0, 180, 0));
 	}
 	for (int32 i = 0; i < 5; ++i) Prop(TEXT("Placa_Industrial"), FVector(TrX0 + 150.f + 300.f * i, 0, TrFloorTop), FVector(300, 140, 4), FRotator(0, 0, 0));
+	// segunda fileira de paineis de parede (mais alta), forro de paineis de teto do Blender
+	for (int32 i = 0; i < 3; ++i)
+	{
+		const float X = TrX0 + 285.f + 570.f * i;
+		Prop(TEXT("Painel_Parede"), FVector(X, -(TrHalfW - 7.f), TrFloorTop + 240.f), FVector(570, 14, 200), FRotator(0, 0, 0), FVector(1.f, 1.f, 0.83f));
+		Prop(TEXT("Painel_Parede"), FVector(X, TrHalfW - 7.f, TrFloorTop + 240.f), FVector(570, 14, 200), FRotator(0, 180, 0), FVector(1.f, 1.f, 0.83f));
+		for (float Sg : {-1.f, 1.f})
+			Prop(TEXT("Teto_Painel"), FVector(TrX0 + 285.f + 570.f * i, Sg * 210.f, TrFloorTop + TrH - 80.f), FVector(570, 421, 80), FRotator(0, 0, 0), FVector(0.977f, 0.78f, 1.f));
+	}
+	// painel de cada lado do portal, na parede do fundo (olhando para a entrada)
+	for (float Sg : {-1.f, 1.f})
+		Prop(TEXT("Painel_Parede"), FVector(X1 - 7.f, Sg * 312.f, TrFloorTop), FVector(570, 14, 240), FRotator(0, 90, 0), FVector(0.38f, 1.f, 1.f));
+	// estruturas de aco flanqueando o portal, pilares de ruido, cabos e canos
+	Prop(TEXT("Estrutura_Aco"), FVector(X1 - 110.f, -330.f, TrFloorTop), FVector(169, 139, 380), FRotator(0, 180, 0), FVector(1.f, 1.f, 0.95f), true);
+	Prop(TEXT("Estrutura_Aco"), FVector(X1 - 110.f, 330.f, TrFloorTop), FVector(169, 139, 380), FRotator(0, 180, 0), FVector(1.f, 1.f, 0.95f), true);
+	Prop(TEXT("Pilar_Ruido"), FVector(TrX0 + 430.f, 330.f, TrFloorTop), FVector(143, 124, 260), FRotator(0, 20, 0), FVector(1.f), true);
+	Prop(TEXT("Pilar_Ruido"), FVector(TrX0 + 1000.f, -330.f, TrFloorTop), FVector(143, 124, 260), FRotator(0, -35, 0), FVector(1.f), true);
+	Prop(TEXT("Cabos"), FVector(TrX0 + 700.f, 280.f, TrFloorTop), FVector(200, 124, 20), FRotator(0, 15, 0));
+	Prop(TEXT("Cabos"), FVector(TrX0 + 1300.f, -250.f, TrFloorTop), FVector(200, 124, 20), FRotator(0, 100, 0));
+	Prop(TEXT("Cano_Curvo"), FVector(TrX0 + 250.f, -300.f, TrFloorTop), FVector(160, 105, 19), FRotator(0, 25, 0));
+	Prop(TEXT("Cano_Teto"), FVector(CX, -250.f, TrFloorTop + 330.f), FVector(1700, 60, 61), FRotator(0, 0, 0), FVector(0.3f, 1.f, 1.f));
+	Prop(TEXT("Cano_Teto"), FVector(CX, 250.f, TrFloorTop + 330.f), FVector(1700, 60, 61), FRotator(0, 0, 0), FVector(0.3f, 1.f, 1.f));
+	for (float X : {TrX0 + 350.f, TrX0 + 950.f, TrX0 + 1450.f})
+		for (float Sg : {-1.f, 1.f}) Prop(TEXT("Suporte_Aco"), FVector(X, Sg * 250.f, TrFloorTop + 320.f), FVector(18, 200, 93), FRotator(0, 90, 0));
+	Prop(TEXT("Arcade"), FVector(TrX0 + 1150.f, 340.f, TrFloorTop), FVector(101, 142, 190), FRotator(0, 180, 0), FVector(1.f), true);
+	Prop(TEXT("Caixa_Madeira"), FVector(TrX0 + 120.f, 340.f, TrFloorTop), FVector(120, 120, 79), FRotator(0, 12, 0), FVector(1.f), true);
+	Prop(TEXT("Piso_Grade"), FVector(X1 - 380.f, 0, TrFloorTop + 4.f), FVector(300, 300, 6), FRotator(0, 0, 0));
+	Prop(TEXT("Grade_Ralo"), FVector(TrX0 + 700.f, -300.f, TrFloorTop), FVector(200, 200, 5), FRotator(0, 0, 0));
 }
 
 // Porta: abre quando TODOS os jogadores (min. 1) estao perto dela; fica aberta. Fim da fase: todos na zona do portal.
 void ACoopFase1GameMode::TickExit()
 {
 	if (!ExitDoor) return;
-	const FVector DoorLoc = ExitDoor->GetActorLocation();
+	const FVector DoorLoc = ExitCenter;
 	int32 N = 0, Near = 0, InZone = 0;
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
@@ -360,7 +407,7 @@ void ACoopFase1GameMode::TickExit()
 	if (N == 0) return;
 	if (!bDoorLatched && Near == N)
 	{
-		bDoorLatched = true; ExitDoor->SetOpen(true);
+		bDoorLatched = true; ExitDoor->SetOpen(true); if (ExitDoor2) ExitDoor2->SetOpen(true);
 		Announce(N > 1 ? TEXT("Todos juntos: PORTA ABERTA!") : TEXT("PORTA ABERTA!"));
 	}
 	if (bDoorLatched && !bPhaseDone && InZone == N)

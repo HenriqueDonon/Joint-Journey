@@ -18,5 +18,5 @@ void ACoopExitDoor::Tick(float DT)
 	const float Target = bOpen ? 1.f : 0.f;
 	if (FMath::IsNearlyEqual(Open01, Target)) return;
 	Open01 = FMath::FInterpConstantTo(Open01, Target, DT, 0.7f);
-	SetActorLocation(Home + FVector(0, 0, (Size.Z + 12.f) * Open01));
+	SetActorLocation(Home + SlideDir * SlideDist * Open01);
 }

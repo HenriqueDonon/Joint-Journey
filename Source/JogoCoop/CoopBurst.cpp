@@ -34,6 +34,7 @@ void ACoopBurst::Init(FLinearColor Col, FVector From, int32 NumSparks)
 	Beam->SetMaterial(0, M);
 	Beam->RegisterComponent();
 	const FVector To = GetActorLocation();
+	EndPt = To; StartPt = From;
 	const FVector D = To - From;
 	Beam->SetWorldLocationAndRotation((From + To) * 0.5f, D.Rotation());
 	Beam->SetWorldScale3D(FVector(FMath::Max(D.Size(), 1.f) / 100.f, 0.06f, 0.06f));
@@ -51,10 +52,13 @@ void ACoopBurst::Tick(float DT)
 	}
 	if (Beam)
 	{
-		const float B = FMath::Clamp(1.f - Age / 0.3f, 0.f, 1.f);
+		const float B = FMath::Clamp(1.f - Age / 0.4f, 0.f, 1.f);
 		Beam->SetVisibility(B > 0.f);
-		const FVector S = Beam->GetComponentScale();
-		Beam->SetWorldScale3D(FVector(S.X, 0.07f * B, 0.07f * B));
+		FVector From = StartPt;
+		if (StartComp.IsValid()) From = StartComp->GetComponentLocation(); // o laser acompanha a arma/mira enquanto dura
+		const FVector D = EndPt - From;
+		Beam->SetWorldLocationAndRotation((From + EndPt) * 0.5f, D.Rotation());
+		Beam->SetWorldScale3D(FVector(FMath::Max(D.Size(), 1.f) / 100.f, 0.05f * B, 0.05f * B));
 	}
 	if (Age > 0.8f) Destroy();
 }

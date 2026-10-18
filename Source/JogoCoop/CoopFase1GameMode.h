@@ -38,6 +38,8 @@ private:
 	UPROPERTY() class ACoopDestructible* Bridge = nullptr;
 	UPROPERTY() AActor* Barrier = nullptr;
 	UPROPERTY() class ACoopExitDoor* ExitDoor = nullptr;
+	UPROPERTY() class ACoopExitDoor* ExitDoor2 = nullptr;
+	FVector ExitCenter = FVector::ZeroVector;
 	void TickExit();
 	bool bDoorLatched = false, bPhaseDone = false;
 	FTimerHandle FallTimer;

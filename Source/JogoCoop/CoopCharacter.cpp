@@ -330,7 +330,7 @@ void ACoopCharacter::AnimateBody(float DT)
 	{
 		BeamAt = -1.f;
 		const FVector From = GunTip ? GunTip->GetComponentLocation() : GetActorLocation();
-		if (ACoopBurst* Bu = GetWorld()->SpawnActor<ACoopBurst>(ACoopBurst::StaticClass(), BeamEnd, FRotator::ZeroRotator)) Bu->Init(BeamCol, From, BeamHit ? 28 : 5);
+		if (ACoopBurst* Bu = GetWorld()->SpawnActor<ACoopBurst>(ACoopBurst::StaticClass(), BeamEnd, FRotator::ZeroRotator)) { Bu->Init(BeamCol, From, BeamHit ? 28 : 5); Bu->SetStartComp(GunTip); }
 	}
 	FRotator Aim = bFreeCam ? GetActorRotation() : GetBaseAimRotation();
 	USkeletalMeshComponent* SK = GetMesh();
@@ -471,24 +471,24 @@ void ACoopCharacter::ServerUseAbility_Implementation(ACoopProp* T, bool bSeconda
 
 ACoopDestructible* ACoopCharacter::TraceDestructible() const
 {
-	// mira por angulo (funciona tambem com o objeto destruido, que nao tem colisao)
+	// raio exato da mira (centro da tela) contra a caixa do objeto: so acerta o que esta realmente sob a mira
 	if (!Controller) return nullptr;
 	FVector Loc; FRotator Rot;
 	Controller->GetPlayerViewPoint(Loc, Rot);
-	const FVector Dir = Rot.Vector();
+	const FVector Dir = Rot.Vector(), End = Loc + Dir * (DestructRange + 500.f);
 	FCollisionQueryParams P(NAME_None, false, this);
-	ACoopDestructible* Best = nullptr;
-	float BestDot = FMath::Cos(FMath::DegreesToRadians(25.f)); // cone mais largo: mais facil de mirar
+	ACoopDestructible* Best = nullptr; float BestT = BIG_NUMBER;
 	for (TActorIterator<ACoopDestructible> It(GetWorld()); It; ++It)
 	{
-		const FVector To = It->GetActorLocation() - Loc;
-		const float D = To.Size();
-		if (D < 1.f || D > DestructRange + 400.f) continue;
-		const float Dot = FVector::DotProduct(Dir, To / D);
-		if (Dot < BestDot) continue;
+		const FVector C = It->GetActorLocation();
+		const FBox Box(C - It->Size * 0.5f - FVector(25.f), C + It->Size * 0.5f + FVector(25.f));
+		FVector HitL, HitN; float T = 0.f;
+		if (!FMath::LineExtentBoxIntersection(Box, Loc, End, FVector::ZeroVector, HitL, HitN, T)) continue;
+		const float Dist = FVector::Dist(Loc, HitL);
+		if (Dist >= BestT) continue;
 		FHitResult H;
-		if (GetWorld()->LineTraceSingleByChannel(H, Loc, It->GetActorLocation(), ECC_Visibility, P) && H.GetActor() != *It) continue;
-		BestDot = Dot; Best = *It;
+		if (GetWorld()->LineTraceSingleByChannel(H, Loc, HitL, ECC_Visibility, P) && H.GetActor() != *It && H.Distance < Dist - 40.f) continue;
+		BestT = Dist; Best = *It;
 	}
 	return Best;
 }
@@ -502,7 +502,7 @@ void ACoopCharacter::PowerShot()
 	const bool bBlock = GetWorld()->LineTraceSingleByChannel(Hit, Loc, Loc + Rot.Vector() * 3000.f, ECC_Visibility, P);
 	FVector End = bBlock ? Hit.ImpactPoint : Loc + Rot.Vector() * 3000.f;
 	ACoopDestructible* T = (CoopRole == ECoopRole::Vertice) ? nullptr : TraceDestructible();
-	if (T) End = T->GetActorLocation();
+	if (T) { const FVector C = T->GetActorLocation(); End = Loc + Rot.Vector() * FMath::Max(FVector::DotProduct(C - Loc, Rot.Vector()), 50.f); } // ponto da mira dentro do objeto
 	ServerPowerShot(T, End);
 }
 
