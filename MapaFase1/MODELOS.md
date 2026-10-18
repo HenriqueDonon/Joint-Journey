@@ -36,3 +36,10 @@ modelo `/Game/Fase1/<Slot>/SM_<Slot>`, ele aparece no lugar do placeholder autom
 `Porta_Moldura`, `Mezanino`, `Mezanino_Corrimao`, `Mezanino_Pilar`.
 
 > Sala ampliada: dimensoes das pecas (tabela acima) valem x1.5 em X/Y e x1.1 em Z (ex.: ponte 1500x375x33 cm, coluna 240x240x616). Colapso: 12 s. Alcance dos poderes: 30 m.
+
+## Modelos do Blender ja exportados (ImportFase1\<Slot>\, ja dimensionados em cm)
+Estruturais: Coluna_Inteira (212x229x616), Ponte_Inteira (1500x375, tabuleiro no topo), Ponte_Quebrada, Plataforma_Inicial (2100x1500x660), Plataforma_Saida (2100x1500x704), Lava (1500x1500x110), Porta_Saida (com placa EXIT).
+Decoracao: Corrimao, Mezanino_Pilar, Viga_Quebrada, Cano_Teto, Cano_Grosso, Cano_Parede (vertical, pitch 90).
+Props novos (colocados em `BuildDecor`, bloco "Props do Blender"): Fachada_Queimada, Cabine_Fortaleza, Pilar_Ruido, Estrutura_Aco, Suporte_Aco, Cano_Curvo, Cabos, Pilha_Escombro, Piso_Placa, Piso_Grade, Grade_Ralo, Caixa_Madeira, Cubo_Steampunk, Arcade, Torre_PC, Botao_Vermelho.
+Sem modelo (continuam placeholder): paredes, teto, janelas, neon, fogo. O objeto "Joint Model (Easter Eggs)" nao foi usado no mapa.
+Orientacao: frente do modelo = +Y no Unreal (Yaw 180 = olha para -Y). Se algum modelo aparecer virado, ajuste o Yaw na linha dele em `CoopFase1GameMode.cpp`.

@@ -295,7 +295,7 @@ void ACoopFase1GameMode::BuildDecor()
 	// canos no teto + vigas quebradas penduradas sobre o vao + gotejo de lava
 	D(TEXT("Cano_Teto"), FVector(500, -380, 565), FVector(3700, 36, 36), Rust);
 	D(TEXT("Cano_Teto"), FVector(500, 380, 565), FVector(3700, 36, 36), Rust);
-	D(TEXT("Cano_Teto"), FVector(500, 0, 575), FVector(3700, 56, 56), Steel);
+	D(TEXT("Cano_Grosso"), FVector(500, 0, 575), FVector(3700, 56, 56), Steel);
 	D(TEXT("Viga_Quebrada"), FVector(250, -120, 470), FVector(340, 26, 26), Rust, FLinearColor::Black, FRotator(-28.f, 15.f, 0.f));
 	D(TEXT("Viga_Quebrada"), FVector(700, 150, 500), FVector(300, 26, 26), Steel, FLinearColor::Black, FRotator(24.f, -25.f, 0.f));
 	D(TEXT("Viga_Quebrada"), FVector(480, 20, 430), FVector(280, 22, 22), Rust, FLinearColor::Black, FRotator(-12.f, 40.f, 8.f));
@@ -347,10 +347,58 @@ void ACoopFase1GameMode::BuildDecor()
 		for (float Y : {-480.f, -360.f, -240.f, 240.f, 360.f, 480.f}) D(TEXT("Corrimao_Poste"), FVector(EdgeX, Y, Z0 + 50), FVector(6, 6, 100), Rust);
 	}
 	// sinalizacao de saida (EXIT) + moldura da porta
-	D(TEXT("Placa_Saida"), FVector(2393, 0, 345), FVector(6, 170, 44), FLinearColor(0.8f, 0.8f, 0.8f), FLinearColor(1.f, 1.f, 1.f) * 2.5f);
+	// (a placa EXIT agora faz parte do modelo da porta)
 	D(TEXT("Porta_Moldura"), FVector(2396, 0, 175), FVector(8, 240, 300), Dark);
 	// mezanino lateral (visual) com corrimao, ao fundo da area de saida
 	D(TEXT("Mezanino"), FVector(1900, -400, 395), FVector(900, 190, 20), Steel);
 	D(TEXT("Mezanino_Corrimao"), FVector(1900, -310, 440), FVector(900, 4, 60), Orange * 0.6f);
 	for (float X : {1500.f, 1900.f, 2300.f}) D(TEXT("Mezanino_Pilar"), FVector(X, -330, 210), FVector(24, 24, 400), Rust);
+
+	// ---- Props do Blender (tamanhos em cm reais; Base = centro da base do modelo; Size = tamanho exportado) ----
+	// Modelo "de frente" = +Y local (Yaw 0). Yaw 180 = de frente para -Y.
+	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot, bool bCollide)
+	{
+		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Base + FVector(0, 0, Size.Z * 0.5f), Rot);
+		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); Lbl(b, Slot); }
+		return b;
+	};
+	const float ZS = 0.f, ZE = 44.f;   // topo do piso: plataforma inicial / de saida
+	// fachadas de laboratorio queimado nas paredes laterais (parede Y- olha para +Y, parede Y+ olha para -Y)
+	for (float X : {-1100.f, 2200.f, 3050.f})
+	{
+		const float Z0 = X > 1500.f ? ZE : ZS;
+		Prop(TEXT("Fachada_Queimada"), FVector(X, -711, Z0), FVector(380, 70, 300), FRotator(0, 0, 0), true);
+		Prop(TEXT("Fachada_Queimada"), FVector(X, 711, Z0), FVector(380, 70, 300), FRotator(0, 180, 0), true);
+	}
+	Prop(TEXT("Cabine_Fortaleza"), FVector(-1850, 560, ZS), FVector(300, 264, 273), FRotator(0, 180, 0), true);
+	Prop(TEXT("Pilar_Ruido"), FVector(-1300, 600, ZS), FVector(143, 124, 260), FRotator(0, 30, 0), true);
+	Prop(TEXT("Pilar_Ruido"), FVector(2600, -600, ZE), FVector(143, 124, 260), FRotator(0, -20, 0), true);
+	Prop(TEXT("Estrutura_Aco"), FVector(-1980, -480, ZS), FVector(169, 139, 380), FRotator(0, 0, 0), true);
+	Prop(TEXT("Estrutura_Aco"), FVector(3450, 450, ZE), FVector(169, 139, 380), FRotator(0, 180, 0), true);
+	for (float X : {-1500.f, -900.f, 900.f, 2100.f, 2900.f})
+		for (float Sgn : {-1.f, 1.f})
+			Prop(TEXT("Suporte_Aco"), FVector(X, Sgn * 647.f, 575), FVector(18, 200, 93), FRotator(0, Sgn > 0 ? 180.f : 0.f, 0), false);
+	for (float X : {-1950.f, -650.f, 2000.f, 3350.f})
+		for (float Sgn : {-1.f, 1.f})
+			Prop(TEXT("Cano_Parede"), FVector(X, Sgn * 717.f, 320), FVector(55, 55, 10), FRotator(90.f, 0, 0), false);
+	Prop(TEXT("Cano_Curvo"), FVector(-1200, -300, ZS), FVector(160, 105, 19), FRotator(0, 20, 0), false);
+	Prop(TEXT("Cano_Curvo"), FVector(2700, 300, ZE), FVector(160, 105, 19), FRotator(0, -35, 0), false);
+	Prop(TEXT("Cabos"), FVector(-700, 400, ZS), FVector(200, 124, 20), FRotator(0, 10, 0), false);
+	Prop(TEXT("Cabos"), FVector(2400, -350, ZE), FVector(200, 124, 20), FRotator(0, 80, 0), false);
+	const FVector Piles[] = { FVector(-150, -640, ZS), FVector(-1500, -100, ZS), FVector(-900, 150, ZS), FVector(2200, 200, ZE), FVector(2900, -150, ZE), FVector(3300, 500, ZE) };
+	int32 pi = 0;
+	for (const FVector& P : Piles) Prop(TEXT("Pilha_Escombro"), P, FVector(130, 135, 85), FRotator(0, 47.f * (pi++), 0), false);
+	Prop(TEXT("Piso_Placa"), FVector(-1100, 0, ZS), FVector(220, 220, 5), FRotator(0, 0, 0), false);
+	Prop(TEXT("Piso_Placa"), FVector(2800, 0, ZE), FVector(220, 220, 5), FRotator(0, 0, 0), false);
+	Prop(TEXT("Piso_Grade"), FVector(-600, 0, ZS), FVector(300, 300, 6), FRotator(0, 0, 0), false);
+	Prop(TEXT("Piso_Grade"), FVector(3150, 0, ZE), FVector(300, 300, 6), FRotator(0, 0, 0), false);
+	Prop(TEXT("Grade_Ralo"), FVector(-1500, -450, ZS), FVector(200, 200, 5), FRotator(0, 0, 0), false);
+	Prop(TEXT("Grade_Ralo"), FVector(2400, -450, ZE), FVector(200, 200, 5), FRotator(0, 0, 0), false);
+	Prop(TEXT("Caixa_Madeira"), FVector(-1580, 640, ZS), FVector(120, 120, 79), FRotator(0, 8, 0), true);
+	Prop(TEXT("Caixa_Madeira"), FVector(-1450, 640, ZS), FVector(120, 120, 79), FRotator(0, -5, 0), true);
+	Prop(TEXT("Caixa_Madeira"), FVector(2000, 640, ZE), FVector(120, 120, 79), FRotator(0, 12, 0), true);
+	Prop(TEXT("Cubo_Steampunk"), FVector(-1350, -600, ZS), FVector(86, 87, 120), FRotator(0, 15, 0), true);
+	Prop(TEXT("Arcade"), FVector(1800, -640, ZE), FVector(101, 142, 190), FRotator(0, 0, 0), true);
+	Prop(TEXT("Torre_PC"), FVector(1950, -640, ZE), FVector(24, 26, 62), FRotator(0, 0, 0), true);
+	Prop(TEXT("Botao_Vermelho"), FVector(3450, -300, ZE), FVector(50, 52, 19), FRotator(0, 0, 0), false);
 }
