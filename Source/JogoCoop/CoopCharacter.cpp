@@ -539,7 +539,13 @@ void ACoopCharacter::LoadPapel()
 	const FString Pasta = bR ? TEXT("Ruina") : bN ? TEXT("Neon") : TEXT("Vertice");
 	const FString Pre = bR ? TEXT("RUI_") : bN ? TEXT("NEO_") : TEXT("VRT_");
 	USkeletalMesh* SK = LoadObject<USkeletalMesh>(nullptr, *FString::Printf(TEXT("/Game/%s/Mesh/SK_%s.SK_%s"), *Pasta, *Pasta, *Pasta));
-	if (!SK) return;
+	PapelMalha = (uint8)CoopRole; // marca como tentado mesmo se falhar, pra nao travar no papel anterior
+	if (!SK)
+	{
+		if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Red, FString::Printf(TEXT("ERRO: nao achei /Game/%s/Mesh/SK_%s"), *Pasta, *Pasta));
+		GetMesh()->SetSkeletalMesh(nullptr); // cai pro corpo procedural em vez de ficar preso na malha anterior
+		return;
+	}
 	GetMesh()->SetSkeletalMesh(SK);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationSingleNode);
@@ -547,7 +553,6 @@ void ACoopCharacter::LoadPapel()
 	VAnimIdle = LA(TEXT("Idle")); VAnimWalk = LA(TEXT("Walk_InPlace")); VAnimRun = LA(TEXT("Run_Fwd"));
 	VAnimJump = LA(TEXT("Jump")); VAnimFall = LA(TEXT("Fall_Loop"));
 	VAnimCur = nullptr;
-	PapelMalha = (uint8)CoopRole;
 }
 
 void ACoopCharacter::PlayV(UAnimSequence* A, bool bLoop, float Rate)
