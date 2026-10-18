@@ -75,6 +75,8 @@ private:
 	void PlayV(class UAnimSequence* A, bool bLoop, float Rate = 1.f);
 	void TestVertice();                                   // F3: alterna entre Neon/Ruina/Vertice (teste solo, 1 janela)
 	UFUNCTION(Server, Reliable) void ServerSetRole(ECoopRole NewRole);
+	void TestBridge();                                    // F4: liga/desliga ponte completa (so mapa Fase1_Teste)
+	UFUNCTION(Server, Reliable) void ServerToggleTestBridge();
 	UPROPERTY() TArray<class UMeshComponent*> RuinaOnly;
 
 	// Arma

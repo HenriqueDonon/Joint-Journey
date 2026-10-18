@@ -1,6 +1,7 @@
 #include "CoopCharacter.h"
 #include "CoopGameUserSettings.h"
 #include "CoopDestructible.h"
+#include "CoopFase1GameMode.h"
 #include "CoopProp.h"
 #include "CoopBurst.h"
 #include "CoopPortal.h"
@@ -329,6 +330,7 @@ void ACoopCharacter::SetupPlayerInputComponent(UInputComponent* I)
 	I->BindKey(EKeys::F3, IE_Pressed, this, &ACoopCharacter::TestVertice);
 	I->BindKey(EKeys::F1, IE_Pressed, this, &ACoopCharacter::ShowHelp);
 	I->BindKey(EKeys::F, IE_Pressed, this, &ACoopCharacter::DestructPower);
+	I->BindKey(EKeys::F4, IE_Pressed, this, &ACoopCharacter::TestBridge);
 	I->BindAxisKey(EKeys::MouseX, this, &ACoopCharacter::LookX);
 	I->BindAxisKey(EKeys::MouseY, this, &ACoopCharacter::LookY);
 }
@@ -579,4 +581,13 @@ void ACoopCharacter::UpdateVerticeAnim()
 	else if (Sp < 340.f) PlayV(VAnimWalk, true, Dir * FMath::Clamp(Sp / 220.f, 0.5f, 1.5f));
 	else PlayV(VAnimRun, true, Dir * FMath::Clamp(Sp / 480.f, 0.6f, 1.4f));
 	bVWasFalling = bFalling;
+}
+
+void ACoopCharacter::TestBridge() { ServerToggleTestBridge(); }
+
+void ACoopCharacter::ServerToggleTestBridge_Implementation()
+{
+	if (ACoopFase1GameMode* GM = GetWorld()->GetAuthGameMode<ACoopFase1GameMode>())
+		ClientToast(GM->ToggleTestBridge() ? TEXT("TESTE: ponte COMPLETA ativada (F4 desfaz)") : TEXT("TESTE: ponte quebrada de novo"));
+	else ClientToast(TEXT("F4 so funciona no mapa Fase1_Teste"));
 }
