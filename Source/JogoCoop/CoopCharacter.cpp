@@ -339,9 +339,7 @@ void ACoopCharacter::AnimateBody(float DT)
 	FVector AimVec = Aim.Vector();
 	if (bSK)
 	{
-		const FVector Shoulder = SK->DoesSocketExist(TEXT("upperarm_r")) ? SK->GetSocketLocation(TEXT("upperarm_r")) : GetActorLocation();
-		if (ShootT > 0.f && !ShotEnd.IsZero()) AimVec = (ShotEnd - Shoulder).GetSafeNormal();
-		if (CSK) { CSK->AimDir = AimVec; CSK->AimAlpha = ArmAlpha; }
+				if (CSK) { CSK->AimDir = AimVec; CSK->AimAlpha = ArmAlpha; }
 		GunPivot->SetWorldLocation(SK->GetSocketLocation(TEXT("hand_r")) + AimVec * 6.f);
 		GunPivot->SetWorldRotation(AimVec.Rotation());
 	}

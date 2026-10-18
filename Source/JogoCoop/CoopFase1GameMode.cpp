@@ -18,6 +18,12 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
+#include "EngineUtils.h"
+#include "UnrealClient.h"
+#include "Misc/Paths.h"
+#include "Engine/Engine.h"
 #include "TimerManager.h"
 
 // Escala da sala: X/Y x1.5, altura x1.1 (degrau da saida 40*1.1=44 < MaxStepHeight 45). Tempo e alcance dos poderes escalam junto.
@@ -45,6 +51,53 @@ static constexpr float RoofBottom = 568.f, RoofDrop = 545.f, RoofFallSecs = 0.8f
 void ACoopFase1GameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	// modo de captura automatica (so com -AutoShot): teleporta o jogador e tira prints para conferir a porta
+	{
+		static const bool bAuto = FParse::Param(FCommandLine::Get(), TEXT("AutoShot"));
+		static float AT = 0.f; static int32 AS = 0;
+		if (bAuto)
+		{
+			AT += DeltaSeconds;
+			static bool bDumped = false;
+			if (!bDumped && AT > 3.f)
+			{
+				bDumped = true;
+				for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+				{
+					FVector O, E; It->GetActorBounds(false, O, E);
+					if (FMath::Abs(O.X - 3600.f) < E.X + 80.f && FMath::Abs(O.Y) < E.Y + 200.f && FMath::Abs(O.Z - 150.f) < E.Z + 200.f)
+					{
+						const ACoopBlock* Bk = Cast<ACoopBlock>(*It);
+						UE_LOG(LogTemp, Warning, TEXT("DUMP %s | %s | O=(%.0f,%.0f,%.0f) E=(%.0f,%.0f,%.0f) vis=%d ghost=%d model=%s"), *It->GetClass()->GetName(), *It->GetName(), O.X, O.Y, O.Z, E.X, E.Y, E.Z, Bk && Bk->Mesh ? (int)Bk->Mesh->IsVisible() : -1, Bk ? (int)Bk->bGhost : -1, Bk ? *Bk->Model.ToString() : TEXT("-"));
+					}
+				}
+			}
+			APlayerController* PC = GetWorld()->GetFirstPlayerController();
+			APawn* Pw = PC ? PC->GetPawn() : nullptr;
+			auto Tp = [&](float X, float Y, float Yaw) { if (Pw) { Pw->SetActorLocation(FVector(X, Y, 110.f)); PC->SetControlRotation(FRotator(-8.f, Yaw, 0.f)); } };
+			static int32 SN = 0;
+			auto Shot = [&]() { UE_LOG(LogTemp, Warning, TEXT("SHOTLOG pawn=%s leafE=%s leafD=%s latched=%d"), Pw ? *Pw->GetActorLocation().ToString() : TEXT("none"), ExitDoor ? *ExitDoor->GetActorLocation().ToString() : TEXT("-"), ExitDoor2 ? *ExitDoor2->GetActorLocation().ToString() : TEXT("-"), (int)bDoorLatched); FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/shot_%d.png"), ++SN), false, false); };
+			const float Ts[] = { 6.f, 8.f, 12.f, 14.f, 18.f, 20.f, 24.f, 26.f, 30.f };
+			if (AS < 9 && AT > Ts[AS])
+			{
+				switch (AS)
+				{
+				case 0: Tp(2880.f, 0.f, 0.f); break;                    // perto-ish, porta fechada
+				case 1: Shot(); break;
+				case 2: Tp(3180.f, 0.f, 0.f); break;
+				case 3: Shot(); break;
+				case 4: Tp(3250.f, 0.f, 0.f); Tp(3250.f, 0.f, 25.f); break;
+				case 5: Shot(); break;
+				case 6: Tp(3900.f, 0.f, 180.f); break;                  // dentro do tunel, olhando a parede da porta
+				case 7: Shot(); break;
+				case 8: Tp(3900.f, 0.f, 0.f); break;
+				}
+				++AS;
+			}
+			if (AS == 9 && AT > 34.f) { Shot(); AS = 10; }
+			if (AS == 10 && AT > 38.f) { GEngine->Exec(GetWorld(), TEXT("quit")); AS = 11; }
+		}
+	}
 	if (Phase != 2) return;
 	const float A = FMath::Clamp((GetWorld()->GetTimeSeconds() - PhaseT0) / RoofFallSecs, 0.f, 1.f);
 	const float Bottom = RoofBottom - RoofDrop * A * A;
@@ -371,6 +424,23 @@ void ACoopFase1GameMode::BuildTransition()
 	// painel de cada lado do portal, na parede do fundo (olhando para a entrada)
 	for (float Sg : {-1.f, 1.f})
 		Prop(TEXT("Painel_Parede"), FVector(X1 - 7.f, Sg * 312.f, TrFloorTop), FVector(570, 14, 240), FRotator(0, 90, 0), FVector(0.38f, 1.f, 1.f));
+	// parede de entrada (lado do tunel, em frente ao portal): paineis, moldura da porta e luz
+	{
+		const float EX = TrX0 + 7.f;
+		Prop(TEXT("Painel_Parede"), FVector(EX, -247.5f, TrFloorTop), FVector(570, 14, 240), FRotator(0, -90, 0), FVector(0.605f, 1.f, 1.f));
+		Prop(TEXT("Painel_Parede"), FVector(EX, 241.5f, TrFloorTop), FVector(570, 14, 240), FRotator(0, -90, 0), FVector(0.626f, 1.f, 1.f));
+		Prop(TEXT("Painel_Parede"), FVector(EX, -247.5f, TrFloorTop + 240.f), FVector(570, 14, 200), FRotator(0, -90, 0), FVector(0.605f, 1.f, 0.83f));
+		Prop(TEXT("Painel_Parede"), FVector(EX, 241.5f, TrFloorTop + 240.f), FVector(570, 14, 200), FRotator(0, -90, 0), FVector(0.626f, 1.f, 0.83f));
+		Prop(TEXT("Painel_Parede"), FVector(EX, -6.f, TrFloorTop + 205.f), FVector(570, 14, 240), FRotator(0, -90, 0), FVector(0.25f, 1.f, 0.9f));
+		Prop(TEXT("Painel_Parede"), FVector(EX, -6.f, TrFloorTop + 420.f), FVector(570, 14, 200), FRotator(0, -90, 0), FVector(0.25f, 1.f, 0.1f));
+		Prop(TEXT("Porta_Quadro"), FVector(TrX0 + 29.f, -11.f, TrFloorTop), FVector(56.6f, 280.4f, 286.f), FRotator(0, 180, 0));
+		for (const FVector2D& P : { FVector2D(-115.5f, 71.f), FVector2D(87.5f, 83.f) })
+			if (ACoopBlock* G = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(TrX0 + 29.f, P.X, TrFloorTop + 143.f), FRotator::ZeroRotator))
+			{ G->Setup(FVector(57.f, P.Y, 286.f), FLinearColor::Black, true); Lbl(G, TEXT("F1_Trans_PortaPilar_Colisao")); }
+		Blk(TEXT("F1_Trans_LuzPorta"), FVector(TrX0 + 60.f, -6.f, TrFloorTop + 300.f), FVector(6.f, 140.f, 5.f), FLinearColor(0.1f, 0.5f, 0.8f), FLinearColor(0.2f, 1.f, 2.5f) * 3.f);
+		Prop(TEXT("Estrutura_Aco"), FVector(TrX0 + 110.f, -330.f, TrFloorTop), FVector(169, 139, 380), FRotator(0, 0, 0), FVector(1.f, 1.f, 0.95f), true);
+		Prop(TEXT("Estrutura_Aco"), FVector(TrX0 + 110.f, 330.f, TrFloorTop), FVector(169, 139, 380), FRotator(0, 0, 0), FVector(1.f, 1.f, 0.95f), true);
+	}
 	// estruturas de aco flanqueando o portal, pilares de ruido, cabos e canos
 	Prop(TEXT("Estrutura_Aco"), FVector(X1 - 110.f, -330.f, TrFloorTop), FVector(169, 139, 380), FRotator(0, 180, 0), FVector(1.f, 1.f, 0.95f), true);
 	Prop(TEXT("Estrutura_Aco"), FVector(X1 - 110.f, 330.f, TrFloorTop), FVector(169, 139, 380), FRotator(0, 180, 0), FVector(1.f, 1.f, 0.95f), true);
@@ -514,7 +584,6 @@ void ACoopFase1GameMode::BuildDecor()
 	}
 	// sinalizacao de saida (EXIT) + moldura da porta
 	// (a placa EXIT agora faz parte do modelo da porta)
-	D(TEXT("Porta_Moldura"), FVector(2396, 0, 175), FVector(8, 240, 300), Dark);
 	// mezanino lateral (visual) com corrimao, ao fundo da area de saida
 	D(TEXT("Mezanino"), FVector(1900, -400, 395), FVector(900, 190, 20), Steel);
 	D(TEXT("Mezanino_Corrimao"), FVector(1900, -310, 440), FVector(900, 4, 60), Orange * 0.6f);
