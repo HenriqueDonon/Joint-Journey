@@ -408,22 +408,19 @@ void ACoopFase1GameMode::BuildTransition()
 	// paredes revestidas com placas industriais (Blender) lado a lado, em pe; piso todo de placas
 	auto Tile = [&](float X0, float Y0, bool bAlongX, float Len, float Z0, float Height, float Yaw)
 	{
-		const int32 Rows = FMath::Max(1, FMath::RoundToInt(Height / 140.f)), N = FMath::Max(1, FMath::CeilToInt(Len / 300.f));
-		const float RowH = Height / Rows, Sx = Len / (N * 300.f);
+		const int32 Rows = FMath::Max(1, FMath::RoundToInt(Height / 300.f)), N = FMath::Max(1, FMath::RoundToInt(Len / 140.f));
+		const float RowH = Height / Rows, Sx = RowH / 300.f, Sy = Len / (N * 140.f);
 		for (int32 r = 0; r < Rows; ++r)
 			for (int32 i = 0; i < N; ++i)
 			{
 				const float A = (i + 0.5f) * Len / N;
 				const FVector P(bAlongX ? X0 + A : X0, bAlongX ? Y0 : Y0 + A, Z0 + (r + 0.5f) * RowH - 2.f);
-				const FRotator R = (FQuat(FRotator(0, Yaw, 0)) * FQuat(FRotator(0, 0, 90)) * FQuat(FRotator(0, ((i + r) & 1) ? 180.f : 0.f, 0))).Rotator();
-				Prop(TEXT("Placa_Industrial"), P, FVector(300, 140, 4), R, FVector(Sx, RowH / 140.f, 1.f));
+				const FRotator R = (FQuat(FRotator(0, Yaw, 0)) * FQuat(FRotator(0, 0, 90)) * FQuat(FRotator(0, 90.f + (((i + r) & 1) ? 180.f : 0.f), 0))).Rotator();
+				Prop(TEXT("Placa_Industrial"), P, FVector(300, 140, 4), R, FVector(Sx, Sy, 1.f));
 			}
 	};
 	Tile(TrX0, -(TrHalfW - 4.f), true, TrLen, TrFloorTop, TrH, 0.f);
 	Tile(TrX0, TrHalfW - 4.f, true, TrLen, TrFloorTop, TrH, 180.f);
-	for (float Y : {-385.f, -280.f, -140.f, 140.f, 280.f, 385.f})
-		for (int32 i = 0; i < 6; ++i)
-			Prop(TEXT("Placa_Industrial"), FVector(TrX0 + 142.5f + 285.f * i, Y, TrFloorTop), FVector(300, 140, 4), FRotator(0, ((i + (Y > 0)) & 1) ? 180.f : 0.f, 0), FVector(0.95f, FMath::Abs(Y) > 300.f ? 0.5f : 1.f, 1.f));
 	for (int32 i = 0; i < 5; ++i) Prop(TEXT("Placa_Industrial"), FVector(TrX0 + 150.f + 300.f * i, 0, TrFloorTop), FVector(300, 140, 4), FRotator(0, 0, 0));
 	// segunda fileira de paineis de parede (mais alta), forro de paineis de teto do Blender
 	for (int32 i = 0; i < 3; ++i)
@@ -647,15 +644,15 @@ void ACoopFase1GameMode::BuildDecor()
 	// paredes revestidas de placas industriais (Blender) lado a lado, 4 fileiras, em todas as paredes
 	auto Tile = [&](float X0, float Y0, bool bAlongX, float Len, float Z0, float Height, float Yaw)
 	{
-		const int32 Rows = FMath::Max(1, FMath::RoundToInt(Height / 140.f)), N = FMath::Max(1, FMath::CeilToInt(Len / 300.f));
-		const float RowH = Height / Rows, Sx = Len / (N * 300.f);
+		const int32 Rows = FMath::Max(1, FMath::RoundToInt(Height / 300.f)), N = FMath::Max(1, FMath::RoundToInt(Len / 140.f));
+		const float RowH = Height / Rows, Sx = RowH / 300.f, Sy = Len / (N * 140.f);
 		for (int32 r = 0; r < Rows; ++r)
 			for (int32 i = 0; i < N; ++i)
 			{
 				const float A = (i + 0.5f) * Len / N;
 				const FVector P(bAlongX ? X0 + A : X0, bAlongX ? Y0 : Y0 + A, Z0 + (r + 0.5f) * RowH - 2.f);
-				const FRotator R = (FQuat(FRotator(0, Yaw, 0)) * FQuat(FRotator(0, 0, 90)) * FQuat(FRotator(0, ((i + r) & 1) ? 180.f : 0.f, 0))).Rotator();
-				if (ACoopBlock* T = Prop(TEXT("Placa_Industrial"), P, FVector(300, 140, 4), R, false)) T->SetModelScale(FVector(Sx, RowH / 140.f, 1.f));
+				const FRotator R = (FQuat(FRotator(0, Yaw, 0)) * FQuat(FRotator(0, 0, 90)) * FQuat(FRotator(0, 90.f + (((i + r) & 1) ? 180.f : 0.f), 0))).Rotator();
+				if (ACoopBlock* T = Prop(TEXT("Placa_Industrial"), P, FVector(300, 140, 4), R, false)) T->SetModelScale(FVector(Sx, Sy, 1.f));
 			}
 	};
 	Tile(-2100.f, -739.f, true, 3600.f, ZS, 560.f, 0.f);
@@ -663,15 +660,18 @@ void ACoopFase1GameMode::BuildDecor()
 	Tile(1500.f, -739.f, true, 2100.f, ZE, 560.f, 0.f);
 	Tile(1500.f, 739.f, true, 2100.f, ZE, 560.f, 180.f);
 	Tile(-2089.f, -739.f, false, 1478.f, ZS, 560.f, -90.f);
-	Tile(3589.f, -739.f, false, 1478.f, ZE, 560.f, 90.f);
+	Tile(3589.f, -739.f, false, 639.f, ZE, 560.f, 90.f);
+	Tile(3589.f, 76.f, false, 663.f, ZE, 560.f, 90.f);
+	Tile(3589.f, -100.f, false, 176.f, ZE + 290.f, 270.f, 90.f);
+	// janelas (poucas, a meia altura e meia distancia)
+	for (float WX : {-300.f, 2550.f})
+		for (float Sg : {-1.f, 1.f})
+			Prop(TEXT("Painel_Parede"), FVector(WX, Sg * 731.f, (WX > 1500.f ? ZE : ZS) + 190.f), FVector(570, 14, 240), Sg < 0 ? FRotator(0, 0, 0) : FRotator(0, 180, 0), false)->SetModelScale(FVector(0.5f, 1.f, 0.6f));
 	// passarela de placas industriais (coringa) levando a ponte, nas duas plataformas
 	for (int32 i = 0; i < 7; ++i)
 	{
-		for (float Yw : {-420.f, -280.f, -140.f, 0.f, 140.f, 280.f, 420.f})
-		{
-			Prop(TEXT("Placa_Industrial"), FVector(-2100.f + 150.f + 300.f * i, Yw, ZS), FVector(300, 140, 4), FRotator(0, ((i + (Yw > 0)) & 1) ? 180.f : 0.f, 0), false);
-			Prop(TEXT("Placa_Industrial"), FVector(1500.f + 150.f + 300.f * i, Yw, ZE), FVector(300, 140, 4), FRotator(0, ((i + (Yw > 0)) & 1) ? 180.f : 0.f, 0), false);
-		}
+		Prop(TEXT("Placa_Industrial"), FVector(-2100.f + 150.f + 300.f * i, 0, ZS), FVector(300, 140, 4), FRotator(0, 0, 0), false);
+		Prop(TEXT("Placa_Industrial"), FVector(1500.f + 150.f + 300.f * i, 0, ZE), FVector(300, 140, 4), FRotator(0, 0, 0), false);
 	}
 
 	// easter eggs (Joint) - um em cada plataforma
