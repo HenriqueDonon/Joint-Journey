@@ -6,4 +6,4 @@ if not exist "%EXE%" (
   pause
   exit /b 1
 )
-start "" "%EXE%" /Game/Maps/Fase1_Teste?listen -log -windowed -ResX=1280 -ResY=720
+start "" "%EXE%" /Game/Maps/Fase1_Editavel?listen -log -windowed -ResX=1280 -ResY=720

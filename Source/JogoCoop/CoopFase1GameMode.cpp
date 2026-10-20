@@ -27,12 +27,26 @@
 #include "TimerManager.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
+#include "Misc/FileHelper.h"
+#include "Engine/StaticMesh.h"
 
 // Escala da sala: X/Y x1.5, altura x1.1 (degrau da saida 40*1.1=44 < MaxStepHeight 45). Tempo e alcance dos poderes escalam junto.
 static constexpr float KXY = 1.5f, KZ = 1.1f, KLUM = 2.25f;
 static constexpr float CollapseSecs = 12.f; // 8s * 1.5
 static FVector Sc(const FVector& V) { return FVector(V.X * KXY, V.Y * KXY, V.Z * KZ); }
 
+// Mapa editavel (Fase1_Editavel): a decoracao com modelo ja esta no nivel como atores (tag F1Decor) -> o codigo nao a cria de novo.
+// Atores F1Ref sao so referencia para o Editor (plataformas, paredes, teto...) e sao removidos ao jogar.
+static bool GBaked = false;
+static bool HasModel(const TCHAR* Slot)
+{
+	static TMap<FString, bool> Cache;
+	if (const bool* B = Cache.Find(Slot)) return *B;
+	const FString P = FString::Printf(TEXT("/Game/Fase1/%s/SM_%s.SM_%s"), Slot, Slot, Slot);
+	const bool bHas = LoadObject<UStaticMesh>(nullptr, *P, nullptr, LOAD_NoWarn | LOAD_Quiet) != nullptr;
+	Cache.Add(Slot, bHas);
+	return bHas;
+}
 static void Lbl(AActor* A, const TCHAR* N)
 {
 #if WITH_EDITOR
@@ -50,9 +64,40 @@ ACoopFase1GameMode::ACoopFase1GameMode()
 
 // Teto desabando esmaga quem estiver embaixo (checado todo frame no servidor, sem atravessar o boneco)
 static constexpr float RoofBottom = 568.f, RoofDrop = 545.f, RoofFallSecs = 0.8f;
+static void DumpLayoutFile(UWorld* W)
+{
+	FString J = TEXT("[\n"); int32 N = 0;
+	for (TActorIterator<AActor> It(W); It; ++It)
+	{
+		AActor* A = *It;
+		if (A->IsA<APawn>() || A->IsA<ACameraActor>() || A->IsA<ACoopSun>() || A->IsHidden()) continue;
+		const bool bDecor = A->Tags.Contains(TEXT("F1Decor")), bCol = A->Tags.Contains(TEXT("F1Col"));
+		const ACoopBlock* Bk = Cast<ACoopBlock>(A);
+		const FString Slot = (Bk && Bk->Model != NAME_None) ? Bk->Model.ToString() : A->GetClass()->GetName().Replace(TEXT("Coop"), TEXT(""));
+		TArray<UStaticMeshComponent*> Comps; A->GetComponents(Comps);
+		for (UStaticMeshComponent* C : Comps)
+		{
+			if (!C || !C->GetStaticMesh() || !C->IsVisible()) continue;
+			const bool bEdit = bDecor && Bk && C == Bk->ModelComp;
+			const FString Folder = bEdit ? FString::Printf(TEXT("Decor/%s"), *Slot) : (A->IsA<ACoopCeiling>() ? FString(TEXT("Referencia/Teto")) : FString::Printf(TEXT("Referencia/%s"), *Slot));
+			const FVector L = C->GetComponentLocation(), S = C->GetComponentScale(); const FRotator R = C->GetComponentRotation();
+			J += FString::Printf(TEXT("%s{\"n\":\"%s\",\"f\":\"%s\",\"m\":\"%s\",\"d\":%d,\"c\":%d,\"l\":[%.2f,%.2f,%.2f],\"r\":[%.3f,%.3f,%.3f],\"s\":[%.4f,%.4f,%.4f]}\n"),
+				N++ ? TEXT(",") : TEXT(""), *Slot, *Folder, *C->GetStaticMesh()->GetPathName(), bEdit ? 1 : 0, (bEdit && bCol) ? 1 : 0, L.X, L.Y, L.Z, R.Pitch, R.Yaw, R.Roll, S.X, S.Y, S.Z);
+		}
+	}
+	J += TEXT("]\n");
+	FFileHelper::SaveStringToFile(J, *(FPaths::ProjectDir() / TEXT("MapaFase1/layout.json")), FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);
+	UE_LOG(LogTemp, Warning, TEXT("DUMPLAYOUT %d"), N);
+}
+
 void ACoopFase1GameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	{
+		static const bool bDump = FParse::Param(FCommandLine::Get(), TEXT("DumpLayout"));
+		static float DT = 0.f; static bool bDone = false;
+		if (bDump && !bDone && bBuilt && (DT += DeltaSeconds) > 4.f) { bDone = true; DumpLayoutFile(GetWorld()); GEngine->Exec(GetWorld(), TEXT("quit")); }
+	}
 	// modo de captura automatica (so com -AutoShot): vistas fixas de camera (antes/depois) + vista superior sem teto
 	{
 		static const bool bAuto = FParse::Param(FCommandLine::Get(), TEXT("AutoShot"));
@@ -139,6 +184,17 @@ void ACoopFase1GameMode::SpawnBarrier()
 void ACoopFase1GameMode::BuildLevel()
 {
 	UWorld* W = GetWorld();
+	{
+		GBaked = false;
+		TArray<AActor*> Refs;
+		for (TActorIterator<AActor> It(W); It; ++It)
+		{
+			if (It->Tags.Contains(TEXT("F1Decor"))) GBaked = true;
+			if (It->Tags.Contains(TEXT("F1Ref"))) Refs.Add(*It);
+		}
+		for (AActor* A : Refs) A->Destroy();
+		UE_LOG(LogTemp, Warning, TEXT("F1MAPA editavel=%d referencias_removidas=%d"), (int)GBaked, Refs.Num());
+	}
 	W->SpawnActor<ACoopSun>(ACoopSun::StaticClass(), FVector(0, 0, 1000), FRotator::ZeroRotator);
 
 	auto B = [&](const TCHAR* Name, FVector C, FVector S, FLinearColor Col, bool bGhost = false, FLinearColor Em = FLinearColor::Black, float Rough = 0.9f, float Metal = 0.f) -> ACoopBlock*
@@ -404,10 +460,11 @@ void ACoopFase1GameMode::BuildTransition()
 	for (float Sg : {-1.f, 1.f})
 		Blk(TEXT("F1_Trans_Guia"), FVector(CX, Sg * 150.f, TrFloorTop + 0.5f), FVector(TrLen - 100.f, 8.f, 1.f), FLinearColor(0.02f, 0.05f, 0.08f), FLinearColor(0.1f, 0.8f, 1.f) * 2.f);
 	// modelos do Blender: paineis nas paredes e placas no piso
-	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot, FVector Scl = FVector(1.f), bool bCollide = false)
+	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot, FVector Scl = FVector(1.f), bool bCollide = false) -> ACoopBlock*
 	{
+		if (GBaked) return nullptr;
 		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Base + FVector(0, 0, Size.Z * 0.5f), Rot);
-		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); if (!Scl.Equals(FVector(1.f))) b->SetModelScale(Scl); Lbl(b, Slot); }
+		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); if (!Scl.Equals(FVector(1.f))) b->SetModelScale(Scl); Lbl(b, Slot); b->Tags.Add(TEXT("F1Decor")); if (bCollide) b->Tags.Add(TEXT("F1Col")); }
 		return b;
 	};
 	// paredes revestidas com placas industriais (Blender) lado a lado, em pe; piso todo de placas
@@ -508,8 +565,10 @@ void ACoopFase1GameMode::BuildDecor()
 	UWorld* W = GetWorld();
 	auto D = [&](const TCHAR* Slot, FVector C, FVector S, FLinearColor Col, FLinearColor Em = FLinearColor::Black, FRotator Rot = FRotator::ZeroRotator, bool bCollide = false) -> ACoopBlock*
 	{
+		const bool bHasModel = HasModel(Slot);
+		if (GBaked && bHasModel) return nullptr;
 		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(C), Rot);
-		if (b) { b->Setup(Sc(S), Col, false, Em, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); Lbl(b, Slot); }
+		if (b) { b->Setup(Sc(S), Col, false, Em, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); Lbl(b, Slot); if (bHasModel) { b->Tags.Add(TEXT("F1Decor")); if (bCollide) b->Tags.Add(TEXT("F1Col")); } }
 		return b;
 	};
 	auto Lamp = [&](FVector P, FLinearColor C, float Lm, float Rad, float Fl) { if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(P), FRotator::ZeroRotator)) L->Setup(C, Lm * KLUM, Rad * KXY, Fl); };
@@ -566,10 +625,11 @@ void ACoopFase1GameMode::BuildDecor()
 
 	// ---- Props do Blender (tamanhos em cm reais; Base = centro da base do modelo; Size = tamanho exportado) ----
 	// Modelo "de frente" = +Y local (Yaw 0). Yaw 180 = de frente para -Y.
-	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot, bool bCollide)
+	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot, bool bCollide) -> ACoopBlock*
 	{
+		if (GBaked) return nullptr;
 		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Base + FVector(0, 0, Size.Z * 0.5f), Rot);
-		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); Lbl(b, Slot); }
+		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); Lbl(b, Slot); b->Tags.Add(TEXT("F1Decor")); if (bCollide) b->Tags.Add(TEXT("F1Col")); }
 		return b;
 	};
 	const float ZS = 0.f, ZE = 44.f;   // topo do piso: plataforma inicial / de saida
@@ -642,7 +702,7 @@ void ACoopFase1GameMode::BuildDecor()
 	// janelas (poucas, a meia altura e meia distancia)
 	for (float WX : {-300.f, 2550.f})
 		for (float Sg : {-1.f, 1.f})
-			Prop(TEXT("Painel_Parede"), FVector(WX, Sg * 731.f, (WX > 1500.f ? ZE : ZS) + 190.f), FVector(570, 14, 240), Sg < 0 ? FRotator(0, 0, 0) : FRotator(0, 180, 0), false)->SetModelScale(FVector(0.5f, 1.f, 0.6f));
+			if (ACoopBlock* Wn = Prop(TEXT("Painel_Parede"), FVector(WX, Sg * 731.f, (WX > 1500.f ? ZE : ZS) + 190.f), FVector(570, 14, 240), Sg < 0 ? FRotator(0, 0, 0) : FRotator(0, 180, 0), false)) Wn->SetModelScale(FVector(0.5f, 1.f, 0.6f));
 	// passarela de placas industriais (coringa) levando a ponte, nas duas plataformas
 	for (int32 i = 0; i < 7; ++i)
 	{

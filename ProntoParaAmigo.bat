@@ -15,6 +15,6 @@ echo [2/3] importando modelos... >> "%RES%"
 "%UE%\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "%PRJ%" -ExecutePythonScript="%~dp0ImportFase1\ImportarFase1.py" -unattended -nosplash -stdout -FullStdOutLogOutput > "%~dp0ImportFase1\import.log" 2>&1
 findstr /C:"[FASE1]" "%~dp0ImportFase1\import.log" >> "%RES%"
 echo [3/3] empacotando... >> "%RES%"
-call "%UE%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%PRJ%" -noP4 -platform=Win64 -clientconfig=Development -build -cook -stage -pak -map=MainMenu+Sala1+Fase1_Teste -archive -archivedirectory="%~dp0Build" -utf8output > "%~dp0empacotar.log" 2>&1
+call "%UE%\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project="%PRJ%" -noP4 -platform=Win64 -clientconfig=Development -build -cook -stage -pak -map=MainMenu+Sala1+Fase1_Teste+Fase1_Editavel -archive -archivedirectory="%~dp0Build" -utf8output > "%~dp0empacotar.log" 2>&1
 echo EMPACOTAR_EXIT %ERRORLEVEL% >> "%RES%"
 echo FIM %date% %time% >> "%RES%"
