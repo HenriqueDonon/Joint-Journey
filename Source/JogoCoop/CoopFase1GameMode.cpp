@@ -25,6 +25,8 @@
 #include "Misc/Paths.h"
 #include "Engine/Engine.h"
 #include "TimerManager.h"
+#include "Camera/CameraActor.h"
+#include "Camera/CameraComponent.h"
 
 // Escala da sala: X/Y x1.5, altura x1.1 (degrau da saida 40*1.1=44 < MaxStepHeight 45). Tempo e alcance dos poderes escalam junto.
 static constexpr float KXY = 1.5f, KZ = 1.1f, KLUM = 2.25f;
@@ -51,51 +53,53 @@ static constexpr float RoofBottom = 568.f, RoofDrop = 545.f, RoofFallSecs = 0.8f
 void ACoopFase1GameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	// modo de captura automatica (so com -AutoShot): teleporta o jogador e tira prints para conferir a porta
+	// modo de captura automatica (so com -AutoShot): vistas fixas de camera (antes/depois) + vista superior sem teto
 	{
 		static const bool bAuto = FParse::Param(FCommandLine::Get(), TEXT("AutoShot"));
-		static float AT = 0.f; static int32 AS = 0;
+		static float AT = 0.f; static int32 AS = 0; static int32 SN = 0;
+		static ACameraActor* Cam = nullptr;
 		if (bAuto)
 		{
 			AT += DeltaSeconds;
-			static bool bDumped = false;
-			if (!bDumped && AT > 3.f)
-			{
-				bDumped = true;
-				for (TActorIterator<AActor> It(GetWorld()); It; ++It)
-				{
-					FVector O, E; It->GetActorBounds(false, O, E);
-					if (FMath::Abs(O.X - 3600.f) < E.X + 80.f && FMath::Abs(O.Y) < E.Y + 200.f && FMath::Abs(O.Z - 150.f) < E.Z + 200.f)
-					{
-						const ACoopBlock* Bk = Cast<ACoopBlock>(*It);
-						UE_LOG(LogTemp, Warning, TEXT("DUMP %s | %s | O=(%.0f,%.0f,%.0f) E=(%.0f,%.0f,%.0f) vis=%d ghost=%d model=%s"), *It->GetClass()->GetName(), *It->GetName(), O.X, O.Y, O.Z, E.X, E.Y, E.Z, Bk && Bk->Mesh ? (int)Bk->Mesh->IsVisible() : -1, Bk ? (int)Bk->bGhost : -1, Bk ? *Bk->Model.ToString() : TEXT("-"));
-					}
-				}
-			}
 			APlayerController* PC = GetWorld()->GetFirstPlayerController();
 			APawn* Pw = PC ? PC->GetPawn() : nullptr;
-			auto Tp = [&](float X, float Y, float Yaw) { if (Pw) { Pw->SetActorLocation(FVector(X, Y, 110.f)); PC->SetControlRotation(FRotator(-8.f, Yaw, 0.f)); } };
-			static int32 SN = 0;
-			auto Shot = [&]() { UE_LOG(LogTemp, Warning, TEXT("SHOTLOG pawn=%s leafE=%s leafD=%s latched=%d"), Pw ? *Pw->GetActorLocation().ToString() : TEXT("none"), ExitDoor ? *ExitDoor->GetActorLocation().ToString() : TEXT("-"), ExitDoor2 ? *ExitDoor2->GetActorLocation().ToString() : TEXT("-"), (int)bDoorLatched); FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/shot_%d.png"), ++SN), false, false); };
-			const float Ts[] = { 6.f, 8.f, 12.f, 14.f, 18.f, 20.f, 24.f, 26.f, 30.f };
-			if (AS < 9 && AT > Ts[AS])
+			struct FV { FVector L; FRotator R; int32 Hide; };
+			static const FV Views[] = {
+				{ FVector(-2050, 0, 480), FRotator(-14, 0, 0), 0 },    // 1 geral: do inicio para a saida
+				{ FVector(3500, 0, 480), FRotator(-14, 180, 0), 0 },   // 2 geral: da saida para o inicio
+				{ FVector(750, -700, 420), FRotator(-12, 90, 0), 0 },  // 3 lateral: parede Y+ e vao
+				{ FVector(750, 700, 420), FRotator(-12, -90, 0), 0 },  // 4 lateral: parede Y-
+				{ FVector(3150, 0, 200), FRotator(-4, 0, 0), 0 },      // 5 porta aberta e tunel
+				{ FVector(3700, 0, 220), FRotator(-6, 0, 0), 0 },      // 6 dentro do tunel
+				{ FVector(-800, 0, 560), FRotator(-35, 0, 0), 0 },     // 7 alto: ponte, vigas e canos
+				{ FVector(1640, 0, 4700), FRotator(-90, -90, 0), 1 },  // 8 superior sem forro (canos/vigas visiveis)
+				{ FVector(1640, 0, 4700), FRotator(-90, -90, 0), 2 },  // 9 superior: so o piso
+			};
+			const int32 NV = UE_ARRAY_COUNT(Views);
+			if (AS == 0 && AT > 5.f) { if (Pw) Pw->SetActorLocation(FVector(3300.f, 520.f, 110.f)); AS = 1; } // perto da porta: abre
+			else if (AS >= 1 && AS <= NV * 2 && AT > 7.f + AS * 1.5f)
 			{
-				switch (AS)
+				const int32 i = (AS - 1) / 2;
+				if (((AS - 1) & 1) == 0)
 				{
-				case 0: Tp(2880.f, 0.f, 0.f); break;                    // perto-ish, porta fechada
-				case 1: Shot(); break;
-				case 2: Tp(3180.f, 0.f, 0.f); break;
-				case 3: Shot(); break;
-				case 4: Tp(3250.f, 0.f, 0.f); Tp(3250.f, 0.f, 25.f); break;
-				case 5: Shot(); break;
-				case 6: Tp(3900.f, 0.f, 180.f); break;                  // dentro do tunel, olhando a parede da porta
-				case 7: Shot(); break;
-				case 8: Tp(3900.f, 0.f, 0.f); break;
+					if (!Cam) Cam = GetWorld()->SpawnActor<ACameraActor>(Views[i].L, Views[i].R);
+					if (Cam) Cam->SetActorLocationAndRotation(Views[i].L, Views[i].R);
+					if (Views[i].Hide)
+						for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+						{
+							if (*It == Cam) continue;
+							FVector O, E; It->GetActorBounds(false, O, E);
+							if (E.IsNearlyZero()) continue;
+							const float MinZ = O.Z - E.Z;
+							const bool bTun = O.X > 3640.f;
+							if ((bTun && MinZ >= 395.f) || (!bTun && MinZ >= (Views[i].Hide == 1 ? 530.f : 380.f))) It->SetActorHiddenInGame(true);
+						}
+					if (PC && Cam) PC->SetViewTargetWithBlend(Cam, 0.f);
 				}
+				else FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/shot_%d.png"), ++SN), false, false);
 				++AS;
 			}
-			if (AS == 9 && AT > 34.f) { Shot(); AS = 10; }
-			if (AS == 10 && AT > 38.f) { GEngine->Exec(GetWorld(), TEXT("quit")); AS = 11; }
+			else if (AS == NV * 2 + 1 && AT > 7.f + AS * 1.5f + 3.f) { GEngine->Exec(GetWorld(), TEXT("quit")); ++AS; }
 		}
 	}
 	if (Phase != 2) return;
@@ -164,6 +168,7 @@ void ACoopFase1GameMode::BuildLevel()
 	WallPiece(TEXT("F1_ParedeFundoSaida_Esq"), FVector(3630, -439.5f, 55), FVector(60, 741, 1430));
 	WallPiece(TEXT("F1_ParedeFundoSaida_Dir"), FVector(3630, 433.5f, 55), FVector(60, 753, 1430));
 	WallPiece(TEXT("F1_ParedeFundoSaida_Topo"), FVector(3630, 0, 503), FVector(60, 1620, 534));
+	WallPiece(TEXT("F1_PortaSoleira"), FVector(3630, -6, 29), FVector(60, 130, 30));
 	// teto cobrindo a sala toda (visual, cai no colapso) + paineis de luz + luzes sem sombra
 	auto Roofed = [&](const TCHAR* Name, FVector C, FVector S, FLinearColor Col, FLinearColor Em = FLinearColor::Black) -> ACoopCeiling*
 	{
@@ -197,7 +202,7 @@ void ACoopFase1GameMode::BuildLevel()
 	}
 	// teto estrutural visivel apoiado pela coluna (X -500..100, base em Z=560 = topo da coluna)
 	// D. ponte danificada: toco ligado ao lado direito (X 850..1000, largura 250) + laje caida no vao
-	M(B(TEXT("F1_Ponte_Toco"), FVector(925, 0, 26), FVector(150, 240, 24), FLinearColor(0.55f, 0.52f, 0.46f)), TEXT("Ponte_Quebrada"));
+	M(B(TEXT("F1_Ponte_Toco"), FVector(974, 0, 26), FVector(52, 240, 24), FLinearColor(0.55f, 0.52f, 0.46f)), TEXT("Ponte_Quebrada"));
 	// ponte DESTRUTIVEL: nasce destruida (escombros na lava); Neon so a constroi depois que a coluna cair
 	if (ACoopDestructible* Br = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(Sc(FVector(500, 0, 25)))))
 	{
@@ -512,30 +517,12 @@ void ACoopFase1GameMode::BuildDecor()
 	const FLinearColor Cyan(0.05f, 0.9f, 1.f), Orange(1.f, 0.4f, 0.05f), Fire(1.f, 0.3f, 0.04f);
 	FRandomStream R(4242);
 
-	for (int32 s = -1; s <= 1; s += 2)
-	{
-		const float Y = s * 497.f;
-		int32 k = 0;
-		for (float X = -1300.f; X <= 2300.f; X += 300.f)
-		{
-			if (X > -100.f && X < 1100.f) continue;
-			D(TEXT("Neon_Parede"), FVector(X, Y - s * 1.f, 300), FVector(200, 4, 8), Dark, ((k++ % 2) ? Orange : Cyan) * 2.5f); // faixas neon ciano/laranja
-		}
-		// janelas superiores: fogo do lado inicial, luz fria do lado da saida
-		for (float X : {-1100.f, -700.f, -300.f, 1300.f, 1700.f, 2100.f})
-		{
-			const bool bStart = X < 0.f;
-			D(TEXT("Janela_Moldura"), FVector(X, s * 494.f, 440), FVector(300, 6, 170), Dark);
-			D(TEXT("Janela_Vidro"), FVector(X, s * 491.f, 440), FVector(270, 3, 140), Dark, (bStart ? FLinearColor(1.f, 0.33f, 0.06f) * 1.6f : FLinearColor(0.5f, 0.75f, 1.f) * 1.1f));
-		}
-	}
 	// canos no teto + vigas quebradas penduradas sobre o vao + gotejo de lava
-	D(TEXT("Cano_Teto"), FVector(500, -380, 480), FVector(3700, 36, 36), Rust);
-	D(TEXT("Cano_Teto"), FVector(500, 380, 480), FVector(3700, 36, 36), Rust);
-	D(TEXT("Cano_Grosso"), FVector(500, 0, 475), FVector(3700, 56, 56), Steel);
+	D(TEXT("Cano_Teto"), FVector(500, 363.3f, 480), FVector(3700, 36, 36), Rust);      // Y +545 real
+	D(TEXT("Cano_Grosso"), FVector(500, -353.3f, 475), FVector(3700, 56, 56), Steel);  // Y -530 real
 	D(TEXT("Viga_Quebrada"), FVector(250, -120, 470), FVector(340, 26, 26), Rust, FLinearColor::Black, FRotator(-28.f, 15.f, 0.f));
 	D(TEXT("Viga_Quebrada"), FVector(700, 150, 500), FVector(300, 26, 26), Steel, FLinearColor::Black, FRotator(24.f, -25.f, 0.f));
-	D(TEXT("Viga_Quebrada"), FVector(480, 20, 430), FVector(280, 22, 22), Rust, FLinearColor::Black, FRotator(-12.f, 40.f, 8.f));
+	D(TEXT("Viga_Quebrada"), FVector(480, 20, 461), FVector(280, 22, 22), Rust, FLinearColor::Black, FRotator(-30.f, 40.f, 8.f));
 	D(TEXT("Viga_Quebrada"), FVector(850, -150, 520), FVector(240, 22, 22), Steel, FLinearColor::Black, FRotator(35.f, 10.f, 0.f));
 	D(TEXT("Lava_Gota"), FVector(560, 60, 400), FVector(8, 8, 360), FLinearColor::Black, Orange * 4.f);
 	// fluxos de lava + brilho vindo do fundo do vao
@@ -554,18 +541,6 @@ void ACoopFase1GameMode::BuildDecor()
 		}
 		Lamp(FVector(P.X, P.Y, Z0 + 110), FLinearColor(1.f, 0.4f, 0.08f), 14000.f, 750.f, 0.5f);
 	}
-	// escombros: base da coluna + espalhados
-	auto Rubble = [&](float CX, float CY, float Z0, float Rad, int32 N)
-	{
-		for (int32 i = 0; i < N; ++i)
-		{
-			const float S = R.FRandRange(12.f, 46.f), A = R.FRandRange(0.f, 6.283f), Dd = R.FRandRange(30.f, Rad);
-			D(TEXT("Escombro"), FVector(CX + FMath::Cos(A) * Dd, CY + FMath::Sin(A) * Dd, Z0 + S * 0.4f), FVector(S, S * R.FRandRange(0.6f, 1.4f), S * R.FRandRange(0.5f, 1.f)), (i % 3 == 0) ? Rust : Grime, FLinearColor::Black, FRotator(R.FRandRange(-20.f, 20.f), R.FRandRange(0.f, 360.f), R.FRandRange(-20.f, 20.f)));
-		}
-	};
-	Rubble(-200, -330, 0, 260, 18);
-	Rubble(-800, 0, 0, 450, 14);
-	Rubble(1500, 0, 40, 450, 12);
 	// juntas do piso (ladrilhos) e faixas de perigo nas bordas
 	for (int32 i = 0; i < 7; ++i) D(TEXT("Piso_Junta"), FVector(-1300.f + i * 200.f, 0, 0.6f), FVector(3, 1000, 1), Dark);
 	for (int32 i = 0; i < 4; ++i) D(TEXT("Piso_Junta"), FVector(-700, -300.f + i * 200.f, 0.6f), FVector(1400, 3, 1), Dark);
@@ -588,10 +563,6 @@ void ACoopFase1GameMode::BuildDecor()
 	}
 	// sinalizacao de saida (EXIT) + moldura da porta
 	// (a placa EXIT agora faz parte do modelo da porta)
-	// mezanino lateral (visual) com corrimao, ao fundo da area de saida
-	D(TEXT("Mezanino"), FVector(1900, -400, 395), FVector(900, 190, 20), Steel);
-	D(TEXT("Mezanino_Corrimao"), FVector(1900, -310, 440), FVector(900, 4, 60), Orange * 0.6f);
-	for (float X : {1500.f, 1900.f, 2300.f}) D(TEXT("Mezanino_Pilar"), FVector(X, -330, 210), FVector(24, 24, 400), Rust);
 
 	// ---- Props do Blender (tamanhos em cm reais; Base = centro da base do modelo; Size = tamanho exportado) ----
 	// Modelo "de frente" = +Y local (Yaw 0). Yaw 180 = de frente para -Y.
@@ -609,15 +580,17 @@ void ACoopFase1GameMode::BuildDecor()
 		Prop(TEXT("Fachada_Queimada"), FVector(X, -700, Z0), FVector(380, 70, 300), FRotator(0, 0, 0), true);
 		Prop(TEXT("Fachada_Queimada"), FVector(X, 700, Z0), FVector(380, 70, 300), FRotator(0, 180, 0), true);
 	}
-	Prop(TEXT("Cabine_Fortaleza"), FVector(-1850, 560, ZS), FVector(300, 264, 273), FRotator(0, 180, 0), true);
-	Prop(TEXT("Pilar_Ruido"), FVector(-1300, 600, ZS), FVector(143, 124, 260), FRotator(0, 30, 0), true);
-	Prop(TEXT("Pilar_Ruido"), FVector(2600, -600, ZE), FVector(143, 124, 260), FRotator(0, -20, 0), true);
+	Prop(TEXT("Cabine_Fortaleza"), FVector(-1850, 550, ZS), FVector(300, 264, 273), FRotator(0, 180, 0), true);
+	Prop(TEXT("Pilar_Ruido"), FVector(-350, 610, ZS), FVector(143, 124, 260), FRotator(0, 0, 0), true);     // eixo de colunas X -350 / Y +610 (coluna danificada perto do vao)
+	Prop(TEXT("Pilar_Ruido"), FVector(1850, 610, ZE), FVector(143, 124, 260), FRotator(0, 0, 0), true);     // eixo X 1850 / Y +610
+	for (const FVector2D& P : { FVector2D(1850, -610), FVector2D(3290, -610), FVector2D(3290, 610) })      // pilares (ex-mezanino) no eixo da plataforma final, sob a linha de canos
+		Prop(TEXT("Mezanino_Pilar"), FVector(P.X, P.Y, ZE), FVector(70, 76, 440), FRotator(0, 0, 0), true);
 	Prop(TEXT("Estrutura_Aco"), FVector(-1980, -480, ZS), FVector(169, 139, 380), FRotator(0, 0, 0), true);
 	Prop(TEXT("Estrutura_Aco"), FVector(3450, 450, ZE), FVector(169, 139, 380), FRotator(0, 180, 0), true);
-	for (float X : {-1500.f, -900.f, 900.f, 2100.f, 2900.f})
+	for (float X : {-1815.f, -960.f, -105.f, 750.f, 1605.f, 2460.f, 3315.f})
 		for (float Sgn : {-1.f, 1.f})
 			Prop(TEXT("Suporte_Aco"), FVector(X, Sgn * 647.f, 480), FVector(18, 200, 93), FRotator(0, Sgn > 0 ? 180.f : 0.f, 0), false);
-	for (float X : {-1950.f, -650.f, 2000.f, 3350.f})
+	for (float X : {-1950.f, -650.f, 1900.f, 3420.f})
 		for (float Sgn : {-1.f, 1.f})
 			Prop(TEXT("Cano_Parede"), FVector(X, Sgn * 717.f, 320), FVector(55, 55, 10), FRotator(90.f, 0, 0), false);
 	Prop(TEXT("Cano_Curvo"), FVector(-1200, -300, ZS), FVector(160, 105, 19), FRotator(0, 20, 0), false);
@@ -637,8 +610,8 @@ void ACoopFase1GameMode::BuildDecor()
 	Prop(TEXT("Caixa_Madeira"), FVector(-1450, 640, ZS), FVector(120, 120, 79), FRotator(0, -5, 0), true);
 	Prop(TEXT("Caixa_Madeira"), FVector(2000, 640, ZE), FVector(120, 120, 79), FRotator(0, 12, 0), true);
 	Prop(TEXT("Cubo_Steampunk"), FVector(-1350, -600, ZS), FVector(86, 87, 120), FRotator(0, 15, 0), true);
-	Prop(TEXT("Arcade"), FVector(1800, -640, ZE), FVector(101, 142, 190), FRotator(0, 0, 0), true);
-	Prop(TEXT("Torre_PC"), FVector(1950, -640, ZE), FVector(24, 26, 62), FRotator(0, 0, 0), true);
+	Prop(TEXT("Arcade"), FVector(1650, -640, ZE), FVector(101, 142, 190), FRotator(0, 0, 0), true);
+	Prop(TEXT("Torre_PC"), FVector(1730, -650, ZE), FVector(24, 26, 62), FRotator(0, 0, 0), true);
 	Prop(TEXT("Botao_Vermelho"), FVector(3450, -300, ZE), FVector(50, 52, 19), FRotator(0, 0, 0), false);
 
 	// paredes revestidas de placas industriais (Blender) lado a lado, 4 fileiras, em todas as paredes
@@ -660,6 +633,9 @@ void ACoopFase1GameMode::BuildDecor()
 	Tile(1500.f, -739.f, true, 2100.f, ZE, 560.f, 0.f);
 	Tile(1500.f, 739.f, true, 2100.f, ZE, 560.f, 180.f);
 	Tile(-2089.f, -739.f, false, 1478.f, ZS, 560.f, -90.f);
+	// laterais do vao (abaixo do piso, ate a lava): mesmas placas, sem trecho liso
+	Tile(0.f, -739.f, true, 1500.f, -560.f, 560.f, 0.f);
+	Tile(0.f, 739.f, true, 1500.f, -560.f, 560.f, 180.f);
 	Tile(3589.f, -739.f, false, 639.f, ZE, 560.f, 90.f);
 	Tile(3589.f, 76.f, false, 663.f, ZE, 560.f, 90.f);
 	Tile(3589.f, -100.f, false, 176.f, ZE + 290.f, 270.f, 90.f);
