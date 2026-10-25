@@ -239,7 +239,6 @@ void ACoopFase1GameMode::BuildLevel()
 			Roofed(TEXT("F1_PainelLuz"), FVector(X, Y, 520), FVector(160, 50, 8), FLinearColor(0.8f, 0.8f, 0.75f), FLinearColor(1.f, 0.95f, 0.8f) * 3.f);
 			if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), Sc(FVector(X, Y, 500)), FRotator::ZeroRotator)) L->Setup(X > 900.f ? FLinearColor(0.82f, 0.9f, 1.f) : FLinearColor(1.f, 0.9f, 0.78f), 7000.f * KLUM, 900.f * KXY);
 		}
-	if (ACoopCeiling* T = Roofed(TEXT("F1_TetoEstrutural"), FVector(-200, 0, 520), FVector(600, 1000, 60), FLinearColor(0.26f, 0.27f, 0.30f))) T->SetOpts(TEXT("Teto_Estrutural"), false);
 	// forro de paineis do Blender (lado detalhado com grade e luzes para baixo), base em Z=580; cai junto no colapso
 	for (int32 ix = 0; ix < 10; ++ix)
 		for (int32 iy = -1; iy <= 1; ++iy)
