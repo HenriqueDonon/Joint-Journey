@@ -583,7 +583,6 @@ void ACoopFase1GameMode::BuildDecor()
 	D(TEXT("Viga_Quebrada"), FVector(700, 150, 500), FVector(300, 26, 26), Steel, FLinearColor::Black, FRotator(24.f, -25.f, 0.f));
 	D(TEXT("Viga_Quebrada"), FVector(480, 20, 461), FVector(280, 22, 22), Rust, FLinearColor::Black, FRotator(-30.f, 40.f, 8.f));
 	D(TEXT("Viga_Quebrada"), FVector(850, -150, 520), FVector(240, 22, 22), Steel, FLinearColor::Black, FRotator(35.f, 10.f, 0.f));
-	D(TEXT("Lava_Gota"), FVector(560, 60, 400), FVector(8, 8, 360), FLinearColor::Black, Orange * 4.f);
 	// fluxos de lava + brilho vindo do fundo do vao
 	const FVector4 Flows[] = { FVector4(150, -150, 260, 380), FVector4(430, 200, 300, 330), FVector4(720, -90, 280, 420), FVector4(900, 230, 200, 300) };
 	for (const FVector4& F : Flows) D(TEXT("Lava_Fluxo"), FVector(F.X, F.Y, -349.f), FVector(F.Z, F.W, 2), FLinearColor::Black, FLinearColor(1.f, 0.5f, 0.05f) * 5.f);
