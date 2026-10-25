@@ -606,8 +606,6 @@ void ACoopFase1GameMode::BuildDecor()
 	for (int32 i = 0; i < 4; ++i) D(TEXT("Piso_Junta"), FVector(1700, -300.f + i * 200.f, 40.6f), FVector(1400, 3, 1), Dark);
 	D(TEXT("Faixa_Perigo"), FVector(-15, 0, 0.7f), FVector(24, 1000, 1), FLinearColor(0.9f, 0.7f, 0.05f));
 	D(TEXT("Faixa_Perigo"), FVector(1015, 0, 40.7f), FVector(24, 1000, 1), FLinearColor(0.9f, 0.7f, 0.05f));
-	// discos vermelhos no piso da saida
-	for (float Y : {-300.f, 0.f, 300.f}) D(TEXT("Disco_Piso"), FVector(1900, Y, 42.f), FVector(90, 90, 4), FLinearColor(0.3f, 0.03f, 0.02f), FLinearColor(1.f, 0.1f, 0.05f) * 1.5f);
 	// corrimao laranja nas bordas do vao (abertura de 280 para a ponte) - so visual
 	for (float EdgeX : {-6.f, 1006.f})
 	{
