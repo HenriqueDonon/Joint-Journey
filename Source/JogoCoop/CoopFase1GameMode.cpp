@@ -213,8 +213,8 @@ void ACoopFase1GameMode::BuildLevel()
 	// C. vao central X 0..1000 (10m), fundo de lava com topo em Z=-350 (queda 3,5m)
 	B(TEXT("F1_Lava"), FVector(500, 0, -400), FVector(1000, 1000, 100), FLinearColor(0.25f, 0.04f, 0.01f), false, FLinearColor(1.0f, 0.28f, 0.03f) * 2.5f, 0.6f);
 	// superficie de lava (modelo do Blender, face brilhante para cima), fina e maior que o vao para nao mostrar bordas
-	if (ACoopBlock* Lv = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(750, 0, -386 + 11), FRotator::ZeroRotator))
-	{ Lv->Setup(FVector(1500, 1500, 22), FLinearColor::Black); Lv->SetOpts(TEXT("Lava"), true); Lv->SetModelScale(FVector(1.25f, 1.25f, 0.2f)); Lbl(Lv, TEXT("F1_LavaSuperficie")); }
+	if (!GBaked) if (ACoopBlock* Lv = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(750, 0, -386 + 11), FRotator::ZeroRotator))
+	{ Lv->Setup(FVector(1500, 1500, 22), FLinearColor::Black); Lv->SetOpts(TEXT("Lava"), true); Lv->SetModelScale(FVector(1.25f, 1.25f, 0.2f)); Lbl(Lv, TEXT("F1_LavaSuperficie")); Lv->Tags.Add(TEXT("F1Decor")); }
 	// G. paredes/teto
 	M(B(TEXT("F1_ParedeLateralEsq"), FVector(500, -520, 50), FVector(3850, 40, 1300), Wall), TEXT("Parede_Lateral_Esq"));
 	M(B(TEXT("F1_ParedeLateralDir"), FVector(500, 520, 50), FVector(3850, 40, 1300), Wall), TEXT("Parede_Lateral_Dir"));
