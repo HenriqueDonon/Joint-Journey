@@ -9,6 +9,8 @@
 #include "Net/UnrealNetwork.h"
 #include "Engine/World.h"
 #include "Engine/OverlapResult.h"
+#include "TimerManager.h"
+#include "Components/BoxComponent.h"
 
 ACoopDestructible::ACoopDestructible()
 {
@@ -48,8 +50,95 @@ void ACoopDestructible::BeginPlay()
 			ModelComp->SetWorldLocationAndRotation(GetActorLocation() - FVector(0, 0, Size.Z * 0.5f), GetActorRotation());
 		}
 	}
-	BuildChunks();
+	// coluna: fragmentos do proprio modelo (SM_ColFrag_01..); sem eles, mantem os pedacos-cubo antigos
+	if (Model == FName(TEXT("Coluna_Inteira")))
+		for (int32 i = 1; i <= 24; ++i)
+		{
+			const FString FP = FString::Printf(TEXT("/Game/Fase1/ColunaFrag/SM_ColFrag_%02d.SM_ColFrag_%02d"), i, i);
+			UStaticMesh* FM = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *FP, nullptr, LOAD_Quiet | LOAD_NoWarn));
+			if (!FM) break;
+			FragMeshes.Add(FM);
+		}
+	if (FragMeshes.Num() == 0) BuildChunks();
 	ApplyState(false);
+}
+
+void ACoopDestructible::EndPlay(const EEndPlayReason::Type Reason)
+{
+	ClearFrags();
+	Super::EndPlay(Reason);
+}
+
+void ACoopDestructible::ClearFrags()
+{
+	if (UWorld* W = GetWorld()) W->GetTimerManager().ClearTimer(FragTimer);
+	for (UStaticMeshComponent* F : Frags) if (F) F->DestroyComponent();
+	for (UBoxComponent* B : FragBodies) if (B) B->DestroyComponent();
+	Frags.Reset(); FragBodies.Reset();
+}
+
+void ACoopDestructible::SpawnFrags()
+{
+	ClearFrags();
+	const FVector Base = GetActorLocation() - FVector(0, 0, Size.Z * 0.5f);
+	const FRotator Rot = GetActorRotation();
+	UMaterialInterface* Mat = ModelComp ? ModelComp->GetMaterial(0) : nullptr;
+	FRandomStream R(FMath::Rand());
+	for (UStaticMesh* FM : FragMeshes)
+	{
+		const FBox LB = FM->GetBoundingBox();          // em cm, relativo a base da coluna
+		const FVector Cen = LB.GetCenter(), Ext = LB.GetExtent();
+		UBoxComponent* B = NewObject<UBoxComponent>(this);
+		B->SetMobility(EComponentMobility::Movable);
+		B->SetBoxExtent(Ext * 0.8f);                    // um pouco menor que a peca (encaixe visual no chao)
+		B->SetWorldLocationAndRotation(Base + Rot.RotateVector(Cen), Rot);
+		B->SetHiddenInGame(true);
+		B->SetCollisionObjectType(ECC_PhysicsBody);
+		B->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		B->SetCollisionResponseToAllChannels(ECR_Block);
+		B->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);       // nunca prende/empurra jogador
+		B->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+		B->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);  // nao atrapalha a mira dos poderes
+		B->SetCollisionResponseToChannel(ECC_PhysicsBody, ECR_Ignore); // pedacos nao se empurram (nascem encostados)
+		B->RegisterComponent();
+		UStaticMeshComponent* F = NewObject<UStaticMeshComponent>(this);
+		F->SetMobility(EComponentMobility::Movable);
+		F->SetStaticMesh(FM);
+		if (Mat) F->SetMaterial(0, Mat);
+		F->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		F->SetupAttachment(B);
+		F->SetRelativeLocation(-Cen);
+		F->RegisterComponent();
+		FragBodies.Add(B); Frags.Add(F);
+		const float H = Cen.Z / FMath::Max(Size.Z, 1.f); // 0 = base, 1 = topo
+		if (H < 0.1f) { B->SetCollisionEnabled(ECollisionEnabled::NoCollision); continue; } // toco da base fica no lugar
+		B->SetSimulatePhysics(true);
+		B->SetLinearDamping(0.15f); B->SetAngularDamping(0.4f);
+		FVector Out = Rot.RotateVector(FVector(Cen.X, Cen.Y, 0.f)).GetSafeNormal();
+		if (Out.IsNearlyZero()) Out = FVector(R.FRandRange(-1.f, 1.f), R.FRandRange(-1.f, 1.f), 0.f).GetSafeNormal();
+		Out = Out.RotateAngleAxis(R.FRandRange(-25.f, 25.f), FVector::UpVector);
+		const FVector V = Out * R.FRandRange(140.f, 300.f) + FVector(0, 0, R.FRandRange(60.f, 220.f) * (0.4f + H));
+		B->SetPhysicsLinearVelocity(V);
+		B->SetPhysicsAngularVelocityInDegrees(FVector(R.FRandRange(-160.f, 160.f), R.FRandRange(-160.f, 160.f), R.FRandRange(-90.f, 90.f)));
+	}
+	GetWorldTimerManager().SetTimer(FragTimer, this, &ACoopDestructible::SettleFrags, 5.f, false);
+}
+
+void ACoopDestructible::SettleFrags()
+{
+	// apos 5 s: para a fisica e vira entulho estatico sem colisao (some ao reconstruir); o que caiu na lava e removido
+	for (int32 i = FragBodies.Num() - 1; i >= 0; --i)
+	{
+		UBoxComponent* B = FragBodies[i];
+		if (!B) continue;
+		B->SetSimulatePhysics(false);
+		B->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		if (B->GetComponentLocation().Z < -200.f)
+		{
+			if (Frags.IsValidIndex(i) && Frags[i]) Frags[i]->DestroyComponent();
+			B->DestroyComponent(); FragBodies.RemoveAt(i); if (Frags.IsValidIndex(i)) Frags.RemoveAt(i);
+		}
+	}
 }
 
 void ACoopDestructible::BuildChunks()
@@ -87,6 +176,11 @@ void ACoopDestructible::ApplyState(bool bWithFx)
 	else Mesh->SetVisibility(!bDestroyed, false);
 	Mesh->SetCollisionEnabled(bDestroyed ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
 	for (UStaticMeshComponent* C : Chunks) if (C) C->SetVisibility(bDestroyed);
+	if (FragMeshes.Num() > 0 && GetNetMode() != NM_DedicatedServer)
+	{
+		if (!bDestroyed) ClearFrags();
+		else if (Frags.Num() == 0) SpawnFrags();
+	}
 	if (bWithFx && GetNetMode() != NM_DedicatedServer)
 	{
 		const FLinearColor Fx = bDestroyed ? FLinearColor(0.7f, 0.3f, 1.f) : FLinearColor(0.1f, 1.f, 0.4f);

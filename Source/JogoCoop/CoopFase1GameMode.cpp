@@ -98,6 +98,32 @@ void ACoopFase1GameMode::Tick(float DeltaSeconds)
 		static float DT = 0.f; static bool bDone = false;
 		if (bDump && !bDone && bBuilt && (DT += DeltaSeconds) > 4.f) { bDone = true; DumpLayoutFile(GetWorld()); GEngine->Exec(GetWorld(), TEXT("quit")); }
 	}
+	// teste da quebra da coluna (so com -ColunaShot): camera fixa, quebra a coluna e tira capturas em sequencia
+	{
+		static const bool bCol = FParse::Param(FCommandLine::Get(), TEXT("ColunaShot"));
+		static float CT = 0.f; static int32 CS = 0; static int32 CN = 0; static ACameraActor* CCam = nullptr;
+		if (bCol && bBuilt)
+		{
+			CT += DeltaSeconds;
+			static const float Ts[] = { 5.f, 7.f, 8.f, 8.12f, 8.4f, 8.8f, 9.5f, 11.f, 14.f, 16.f };
+			if (CS < 10 && CT > Ts[CS])
+			{
+				APlayerController* PC = GetWorld()->GetFirstPlayerController();
+				switch (CS)
+				{
+				case 0:
+					if (PC && PC->GetPawn()) PC->GetPawn()->SetActorLocation(FVector(-1500.f, 300.f, 110.f));
+					CCam = GetWorld()->SpawnActor<ACameraActor>(FVector(520, 330, 360), FRotator(-9.f, -135.f, 0.f));
+					if (PC && CCam) PC->SetViewTargetWithBlend(CCam, 0.f);
+					break;
+				case 2: if (Column) Column->ServerForce(true); break;
+				case 9: GEngine->Exec(GetWorld(), TEXT("quit")); break;
+				default: FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/coluna_%d.png"), ++CN), false, false); break;
+				}
+				++CS;
+			}
+		}
+	}
 	// modo de captura automatica (so com -AutoShot): vistas fixas de camera (antes/depois) + vista superior sem teto
 	{
 		static const bool bAuto = FParse::Param(FCommandLine::Get(), TEXT("AutoShot"));

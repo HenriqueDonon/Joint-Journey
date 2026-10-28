@@ -42,6 +42,15 @@ private:
 	void BuildChunks();
 
 	UPROPERTY() TArray<class UStaticMeshComponent*> Chunks;
+	// Fragmentos reais do modelo (cortados no Blender, /Game/Fase1/<Model>Frag/...): so visual, fisica local em cada maquina
+	UPROPERTY() TArray<class UStaticMesh*> FragMeshes;
+	UPROPERTY() TArray<class UStaticMeshComponent*> Frags;
+	UPROPERTY() TArray<class UBoxComponent*> FragBodies; // corpo fisico (caixa) de cada fragmento; a malha vai presa nele
+	FTimerHandle FragTimer;
+	void SpawnFrags();
+	void SettleFrags();
+	void ClearFrags();
+	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	UPROPERTY() class UMaterialInstanceDynamic* BodyMat = nullptr;
 	bool bApplied = false;
 };
