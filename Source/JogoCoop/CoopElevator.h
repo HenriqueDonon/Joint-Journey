@@ -31,8 +31,16 @@ public:
 	UPROPERTY(EditAnywhere, Category="Elevador") float Rise = 600.f;          // curso (cm)
 	UPROPERTY(EditAnywhere, Category="Elevador") float TravelSeconds = 5.f;   // duracao do curso
 	UPROPERTY(EditAnywhere, Category="Elevador") float DwellSeconds = 1.5f;   // tempo com todos a bordo antes de partir
-	UPROPERTY(EditAnywhere, Category="Elevador") float LeadSeconds = 0.4f;    // antecedencia do T0 (cliente recebe antes de comecar)
-	UPROPERTY(EditAnywhere, Category="Elevador") FVector2D HalfArea = FVector2D(110.f, 110.f); // area "a bordo" (cm)
+	UPROPERTY(EditAnywhere, Category="Elevador") float LeadSeconds = 0.6f;    // antecedencia do T0 (cliente recebe antes; portas fecham antes de partir)
+	UPROPERTY(EditAnywhere, Category="Elevador") FVector2D HalfArea = FVector2D(90.f, 90.f);   // area "a bordo" (cm): centro do personagem; a capsula (r=34) nao encosta nas portas (Y/X 125)
+
+	// ---- PORTAS (simples, sem animacao elaborada): paineis sobem para abrir; so abrem com o elevador PARADO ----
+	UPROPERTY(EditAnywhere, Category="Portas") bool bSideDoorsOpenAtTop = true;     // portas esquerda/direita (+Y/-Y): abrem parado no andar de separacao (topo)
+	UPROPERTY(EditAnywhere, Category="Portas") bool bFrontGateOpenAtBottom = true;  // portao de entrada (-X): abre parado embaixo
+	UPROPERTY(EditAnywhere, Category="Portas") float DoorSeconds = 0.35f;           // tempo de abrir/fechar
+	UPROPERTY(EditAnywhere, Category="Portas") float DoorOpenDelay = 0.3f;          // atraso apos parar para comecar a abrir
+	float SideDoorAlpha() const { return SideAlpha; }
+	float FrontGateAlpha() const { return FrontAlpha; }
 
 	bool IsMoving() const;
 	bool IsTargetTop() const { return Cmd.bUp; }
@@ -43,6 +51,12 @@ public:
 private:
 	UPROPERTY(ReplicatedUsing=OnRep_Cmd) FElevCmd Cmd;
 	UFUNCTION() void OnRep_Cmd() {}
+	UPROPERTY() class UStaticMeshComponent* DoorN = nullptr;   // +Y
+	UPROPERTY() class UStaticMeshComponent* DoorS = nullptr;   // -Y
+	UPROPERTY() class UStaticMeshComponent* GateW = nullptr;   // -X (entrada)
+	UPROPERTY() class UStaticMeshComponent* WallE = nullptr;   // +X (fixa)
+	float SideAlpha = 0.f, FrontAlpha = 1.f;
+	void UpdateDoors(float Dt);
 	FVector Home = FVector::ZeroVector;
 	float DwellAcc = 0.f;
 	bool bArmed = true;
