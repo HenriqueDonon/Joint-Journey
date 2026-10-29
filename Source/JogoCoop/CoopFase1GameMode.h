@@ -44,6 +44,8 @@ private:
 	// ---- layout alternativo por MARCADORES (mapa Fase1_Arquitetura): atores com tags F1L_* definem onde ficam coluna,
 	// ponte, porta/tunel, inicio, barreira, teto que desaba e rachaduras. Sem marcadores = layout original (inalterado).
 	bool bLayout2 = false;
+	UPROPERTY() class ACoopCollapseRig* Rig = nullptr;   // estrutura sustentada + colapso progressivo (so no layout 2, se existir no mapa)
+	bool bRigCrushed = false;
 	FVector L2Off = FVector::ZeroVector;                                   // deslocamento da porta/tunel em relacao ao original
 	FVector BarrierLoc = FVector(750.f, 0.f, 137.5f), BarrierSize = FVector(30.f, 1500.f, 1045.f);   // = Sc(500,0,125) / Sc(20,1000,950)
 	FBox CrackBox = FBox(ForceInit); float CrackWallY = 0.f;              // rachaduras do layout 2 (parede de normal Y)

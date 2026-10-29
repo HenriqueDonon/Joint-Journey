@@ -1,0 +1,75 @@
+EVT t=28.89 srvT=28.89 fase 0->1 2 jogadores
+t=29.06 ph=1 Neon pos=(-1875,-225,90) coluna=inteira ponte=DESTRUIDA
+t=29.57 ph=1 Neon pos=(-1647,-183,90) coluna=inteira ponte=DESTRUIDA
+t=30.10 ph=1 Neon pos=(-1339,-125,90) coluna=inteira ponte=DESTRUIDA
+t=30.82 ph=1 Neon pos=(-913,-46,90) coluna=inteira ponte=DESTRUIDA
+t=31.48 ph=1 Neon pos=(-523,27,90) coluna=inteira ponte=DESTRUIDA
+t=32.09 ph=1 Neon pos=(-162,94,90) coluna=inteira ponte=DESTRUIDA
+t=32.72 ph=1 Neon pos=(-266,75,90) coluna=inteira ponte=DESTRUIDA
+t=33.39 ph=1 Neon pos=(21,128,83) coluna=inteira ponte=DESTRUIDA
+t=34.01 ph=1 Neon pos=(-237,80,90) coluna=inteira ponte=DESTRUIDA
+EVT t=34.34 srvT=34.34 fase 1->2 na borda da plataforma inicial
+t=34.72 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=35.22 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=35.74 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=36.31 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=36.90 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=37.41 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=37.92 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=38.44 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=38.95 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=39.46 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+t=39.97 ph=2 Neon pos=(-147,97,90) coluna=inteira ponte=DESTRUIDA
+EVT t=40.23 srvT=40.23 fase 2->3 Neon: coluna caiu -> constroi a ponte
+EVT t=40.36 srvT=40.37 fase 3->4 ponte CONSTRUIDA -> atravessar
+t=40.47 ph=4 Neon pos=(-135,97,90) coluna=DESTRUIDA ponte=inteira
+t=40.98 ph=4 Neon pos=(138,97,134) coluna=DESTRUIDA ponte=inteira
+t=41.50 ph=4 Neon pos=(453,98,134) coluna=DESTRUIDA ponte=inteira
+t=42.04 ph=4 Neon pos=(777,98,134) coluna=DESTRUIDA ponte=inteira
+t=42.58 ph=4 Neon pos=(1099,99,134) coluna=DESTRUIDA ponte=inteira
+t=43.10 ph=4 Neon pos=(1413,99,134) coluna=DESTRUIDA ponte=inteira
+t=43.68 ph=4 Neon pos=(1761,100,134) coluna=DESTRUIDA ponte=inteira
+EVT t=43.68 srvT=43.68 fase 4->5 do outro lado
+EVT t=43.99 srvT=43.99 fase 5->6 Neon: ponte caiu -> reconstroi a coluna
+EVT t=44.01 srvT=44.01 fase 6->7 coluna RECONSTRUIDA (teto estabilizado)
+t=44.19 ph=7 Neon pos=(1813,100,134) coluna=inteira ponte=DESTRUIDA
+t=44.76 ph=7 Neon pos=(2144,100,134) coluna=inteira ponte=DESTRUIDA
+t=45.28 ph=7 Neon pos=(2456,100,134) coluna=inteira ponte=DESTRUIDA
+t=45.79 ph=7 Neon pos=(2759,100,134) coluna=inteira ponte=DESTRUIDA
+t=46.29 ph=7 Neon pos=(3061,100,134) coluna=inteira ponte=DESTRUIDA
+EVT t=46.66 srvT=46.66 fase 7->8 diante da porta
+t=46.80 ph=8 Neon pos=(3292,100,134) coluna=inteira ponte=DESTRUIDA
+t=47.32 ph=8 Neon pos=(3292,100,134) coluna=inteira ponte=DESTRUIDA
+t=47.84 ph=8 Neon pos=(3292,100,134) coluna=inteira ponte=DESTRUIDA
+t=48.36 ph=8 Neon pos=(3292,100,134) coluna=inteira ponte=DESTRUIDA
+t=48.94 ph=8 Neon pos=(3376,81,134) coluna=inteira ponte=DESTRUIDA
+t=49.45 ph=8 Neon pos=(3612,7,134) coluna=inteira ponte=DESTRUIDA
+t=50.01 ph=8 Neon pos=(3944,3,134) coluna=inteira ponte=DESTRUIDA
+t=50.57 ph=8 Neon pos=(4281,44,134) coluna=inteira ponte=DESTRUIDA
+t=51.10 ph=8 Neon pos=(4596,82,134) coluna=inteira ponte=DESTRUIDA
+t=51.62 ph=8 Neon pos=(4908,120,134) coluna=inteira ponte=DESTRUIDA
+EVT t=52.01 srvT=52.01 fase 8->10 fim do tunel
+t=52.13 ph=10 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=52.63 ph=10 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=53.21 ph=10 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+RESULTADO: SUCESSO (jogadores no fim do tunel: 2 de 2)
+EVT t=53.31 srvT=53.31 fase 10->11 fim
+t=53.76 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=54.29 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=54.79 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=55.36 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=55.86 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=56.41 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=56.91 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=57.44 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=57.94 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=58.45 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=58.95 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=59.45 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=59.95 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=60.45 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=60.96 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=61.46 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=61.96 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=62.46 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA
+t=62.97 ph=11 Neon pos=(5149,150,135) coluna=inteira ponte=DESTRUIDA

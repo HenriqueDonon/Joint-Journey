@@ -36,6 +36,13 @@ static const FTourKey GTour2[] = {
 	{ FVector(2000, 0, 950), 0, -42 }, { FVector(2900, 650, 520), -12, -10 }, { FVector(3400, 0, 470), 0, -5 },
 	{ FVector(3900, 0, 540), 0, -3 }, { FVector(3650, 900, 700), 195, -12 }, { FVector(2700, -950, 650), 168, -9 } };
 
+// trajeto "estrutura" (coluna + o que ela sustenta): posicao -> alvo
+struct FLookKey { FVector P, Tg; };
+static const FLookKey GTourEst[] = {
+	{ FVector(2700, 800, 700), FVector(900, -700, 800) }, { FVector(1900, -100, 520), FVector(1000, -600, 520) },
+	{ FVector(1380, -330, 260), FVector(1000, -600, 640) }, { FVector(1950, -1150, 1050), FVector(1000, -650, 1150) },
+	{ FVector(2300, 300, 1150), FVector(900, -800, 1200) }, { FVector(-100, 450, 650), FVector(900, -800, 900) } };
+
 void ACoopF1Tour::Tick(float Dt)
 {
 	Super::Tick(Dt);
@@ -52,6 +59,18 @@ void ACoopF1Tour::Tick(float Dt)
 	const float U = FMath::Clamp((T - 4.f) / Dur, 0.f, 1.f) * (NK - 1);
 	const int32 I = FMath::Min((int32)U, NK - 2); const float A = U - I;
 	auto K = [&](int32 i) { return Keys[FMath::Clamp(i, 0, NK - 1)]; };
+	if (Tag == TEXT("estrutura"))
+	{
+		const int32 NE = UE_ARRAY_COUNT(GTourEst); const float DE = 20.f;
+		const float UE_ = FMath::Clamp((T - 4.f) / DE, 0.f, 1.f) * (NE - 1); const int32 J = FMath::Min((int32)UE_, NE - 2); const float B = UE_ - J;
+		auto E = [&](int32 i) { return GTourEst[FMath::Clamp(i, 0, NE - 1)]; };
+		const FVector Pe = FMath::CubicCRSplineInterp(E(J - 1).P, E(J).P, E(J + 1).P, E(J + 2).P, 0.f, 1.f, 2.f, 3.f, 1.f + B);
+		const FVector Te = FMath::CubicCRSplineInterp(E(J - 1).Tg, E(J).Tg, E(J + 1).Tg, E(J + 2).Tg, 0.f, 1.f, 2.f, 3.f, 1.f + B);
+		Cam->SetActorLocationAndRotation(Pe, FRotationMatrix::MakeFromX(Te - Pe).Rotator());
+		FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/%s/f_%05d.jpg"), *Tag, Frame++), false, false);
+		if (T > 4.f + DE + 0.2f) GEngine->Exec(GetWorld(), TEXT("quit"));
+		return;
+	}
 	const FVector P = FMath::CubicCRSplineInterp(K(I - 1).P, K(I).P, K(I + 1).P, K(I + 2).P, 0.f, 1.f, 2.f, 3.f, 1.f + A);
 	const float S = A * A * (3 - 2 * A);
 	Cam->SetActorLocationAndRotation(P, FRotator(FMath::Lerp(K(I).Pitch, K(I + 1).Pitch, S), FMath::Lerp(K(I).Yaw, K(I + 1).Yaw, S), 0));
@@ -113,7 +132,14 @@ void ACoopF1Flow::Tick(float Dt)
 		if (D.Size() > 25.f) { Me->AddMovementInput(FVector(D.X, D.Y, 0).GetSafeNormal(), 1.f); PC->SetControlRotation(FRotator(-10.f, FMath::RadiansToDegrees(FMath::Atan2(D.Y, D.X)), 0)); }
 		return D.Size();
 	};
-	if (Ph >= 1 && ShotT >= 0.25f) { ShotT = 0.f; FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f1fluxo/%s/f_%05d.jpg"), *Tag, Shots++), false, false); }
+	static const bool bInsp = FParse::Param(FCommandLine::Get(), TEXT("InspCam"));
+	if (bInsp && Tag == TEXT("host") && Ph >= 1)
+	{
+		static ACameraActor* IC = nullptr;
+		if (!IC) { const FVector CP(2150, 450, 640), CT(850, -750, 520); IC = W->SpawnActor<ACameraActor>(CP, FRotationMatrix::MakeFromX(CT - CP).Rotator()); IC->GetCameraComponent()->SetFieldOfView(72.f); }
+		if (PC->GetViewTarget() != IC) PC->SetViewTargetWithBlend(IC, 0.f);
+	}
+	if (Ph >= 1 && ShotT >= ((bInsp && Tag == TEXT("host")) ? 0.1f : 0.25f)) { ShotT = 0.f; FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f1fluxo/%s/f_%05d.jpg"), *Tag, Shots++), false, false); }
 	if (Ph >= 1 && SaveT > 0.5f)
 	{
 		SaveT = 0.f; const FVector L = Me->GetActorLocation();
@@ -122,14 +148,36 @@ void ACoopF1Flow::Tick(float Dt)
 		Save();
 	}
 	// ---- variantes: -F1Teste=colapso (coluna nao e reconstruida -> teto desaba e a fase reinicia) | atalho (tentativas de pulo pelo vao) ----
-	const FString Var = FParse::Param(FCommandLine::Get(), TEXT("F1Colapso")) ? TEXT("colapso") : FParse::Param(FCommandLine::Get(), TEXT("F1Atalho")) ? TEXT("atalho") : TEXT("");
+	const FString Var = FParse::Param(FCommandLine::Get(), TEXT("F1Colapso")) ? TEXT("colapso") : FParse::Param(FCommandLine::Get(), TEXT("F1Atalho")) ? TEXT("atalho") : FParse::Param(FCommandLine::Get(), TEXT("F1Salvar")) ? TEXT("salvar") : TEXT("");
+	if (Var == TEXT("salvar") && Ph >= 2 && Ph < 9)
+	{
+		// 2 ciclos: Ruina destroi; Neon reconstroi aos 8,0 s (ciclo 1) e aos 11,6 s (ciclo 2, perto do limite de 12 s)
+		static int32 Cyc = 0; static float TDown = -1.f; static bool bAnyCrush = false;
+		for (TActorIterator<ACoopCharacter> It(W); It; ++It) if (It->bCrushed) bAnyCrush = true;
+		const float Lim[2] = { 8.0f, 11.6f };
+		if (Ph == 2) { if (Walk(FVector2D(620.f, -700.f + Oy)) < 25.f && PhT > 3.f) SetPh(3, TEXT("sob a estrutura")); return; }
+		if (Ph == 3)
+		{
+			if (!bNeon && !Col->IsDestroyed() && PhT > 1.f && PhT < 1.f + Dt * 1.5f) Fire(Me, Col);
+			if (Col->IsDestroyed() && TDown < 0.f) { TDown = Total; Log += FString::Printf(TEXT("EVT ciclo %d: coluna DESTRUIDA t=%.2f\n"), Cyc + 1, Total); }
+			if (TDown >= 0.f && bNeon && Col->IsDestroyed() && Total - TDown >= Lim[Cyc]) Fire(Me, Col);
+			if (TDown >= 0.f && !Col->IsDestroyed())
+			{
+				Log += FString::Printf(TEXT("RESULTADO ciclo %d: coluna RECONSTRUIDA %.2f s apos a quebra (limite 12) | esmagado=%d\n"), Cyc + 1, Total - TDown, (int32)bAnyCrush);
+				TDown = -1.f; ++Cyc; SetPh(Cyc >= 2 ? 4 : 3, TEXT("estabilizado")); Save();
+			}
+			return;
+		}
+		if (Ph == 4 && PhT > 8.f) { Log += FString::Printf(TEXT("RESULTADO SALVAMENTO: queda/esmagamento depois da reconstrucao = %s\n"), bAnyCrush ? TEXT("SIM (FALHA)") : TEXT("NAO (OK)")); Save(); SetPh(11, TEXT("fim salvar")); }
+		return;
+	}
 	if (Var == TEXT("colapso") && Ph >= 2 && Ph < 9)
 	{
 		static FVector StartPos = FVector::ZeroVector;
 		if (Ph == 2 && PhT < Dt + 0.001f) StartPos = Me->GetActorLocation();
 		if (Ph == 2 && !bNeon && !Col->IsDestroyed() && PhT > 2.f && PhT < 2.f + Dt * 1.5f) Fire(Me, Col);
 		if (Ph == 2 && Col->IsDestroyed()) { SetPh(3, TEXT("coluna DESTRUIDA; ninguem reconstroi")); }
-		if (Ph == 3) Walk(FVector2D(StartPos.X + 400.f, StartPos.Y));   // afasta-se da borda (o teto cai em todos)
+		if (Ph == 3) Walk(FVector2D(620.f, -700.f + Oy));   // fica sob a estrutura sustentada pela coluna
 		if (Ph == 3 && PhT > 18.f)
 		{
 			const bool bReset = !Col->IsDestroyed() && Br->IsDestroyed();

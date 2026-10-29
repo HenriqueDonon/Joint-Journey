@@ -10,6 +10,7 @@
 #include "CoopFog.h"
 #include "CoopEasterEgg.h"
 #include "CoopExitDoor.h"
+#include "CoopCollapseRig.h"
 #include "Misc/PackageName.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -198,7 +199,7 @@ void ACoopFase1GameMode::Tick(float DeltaSeconds)
 			else if (AS == NV * 2 + 1 && AT > 7.f + AS * 1.5f + 3.f) { GEngine->Exec(GetWorld(), TEXT("quit")); ++AS; }
 		}
 	}
-	if (Phase != 2) return;
+	if (Phase != 2 || Rig) return;   // com rig (layout 2) o impacto e tratado em TickCollapse
 	const float A = FMath::Clamp((GetWorld()->GetTimeSeconds() - PhaseT0) / RoofFallSecs, 0.f, 1.f);
 	const float Bottom = RoofBottom - RoofDrop * A * A;
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
@@ -273,8 +274,9 @@ bool ACoopFase1GameMode::BuildLevelLayout2()
 		{ Br->Setup(FVector(Len, 375.f, 33.f), FLinearColor(0.55f, 0.52f, 0.46f), 360.f * KZ, 350.f * KXY, true); Br->Model = TEXT("Ponte_Inteira"); Br->FinishSpawning(FTransform(B)); Lbl(Br, TEXT("F1_Ponte")); Bridge = Br; }
 		if (Column && Bridge) { Column->Partner = Bridge; Bridge->Partner = Column; }
 	}
-	// teto estrutural que desaba (apoiado na coluna): paineis do Blender, mesma queda/esmagamento do original
-	if (AActor* MT = One(TEXT("F1L_Teto")))
+	for (TActorIterator<ACoopCollapseRig> It(W); It; ++It) { Rig = *It; break; }
+	// teto estrutural que desaba (apoiado na coluna): paineis do Blender, mesma queda/esmagamento do original (sem rig no mapa)
+	if (AActor* MT = Rig ? nullptr : One(TEXT("F1L_Teto")))
 	{
 		const FVector O = MT->GetActorLocation(), S = MT->GetActorScale3D() * 100.f;
 		const int32 NX = FMath::Max(1, FMath::RoundToInt(S.X / 583.5f)), NY = FMath::Max(1, FMath::RoundToInt(S.Y / 540.f));
@@ -526,11 +528,11 @@ void ACoopFase1GameMode::TickCollapse()
 	const bool bColDown = Column->IsDestroyed();
 	if (Phase == 0)
 	{
-		if (bColDown) { Phase = 1; PhaseT0 = Now; CracksSpawned = 0; LastSecShown = -1; }
+		if (bColDown) { Phase = 1; PhaseT0 = Now; CracksSpawned = 0; LastSecShown = -1; if (Rig) Rig->ServerBeginInstability(CollapseSecs); }
 	}
 	else if (Phase == 1)
 	{
-		if (!bColDown) { Phase = 0; ClearCracks(); Announce(TEXT("Coluna restaurada: teto estabilizado")); return; }
+		if (!bColDown) { Phase = 0; ClearCracks(); if (Rig) Rig->ServerStabilize(); Announce(TEXT("Coluna restaurada: teto estabilizado")); return; }
 		const float El = Now - PhaseT0;
 		const int32 Left = FMath::CeilToInt(CollapseSecs - El);
 		if (Left != LastSecShown && Left > 0) { LastSecShown = Left; Announce(FString::Printf(TEXT("TETO INSTAVEL! Desaba em %d s - reconstrua a coluna!"), Left)); }
@@ -540,16 +542,25 @@ void ACoopFase1GameMode::TickCollapse()
 		{
 			Phase = 2; PhaseT0 = Now;
 			for (ACoopCeiling* C : Roof) if (C) C->StartFall(RoofFallSecs, RoofDrop);
+			if (Rig) { Rig->ServerBeginFall(); bRigCrushed = false; }
 			Announce(TEXT("O TETO DESABOU!"));
 		}
 	}
-	else if (Phase == 2 && Now - PhaseT0 >= 1.4f)
+	else if (Phase == 2 && Rig && !bRigCrushed && Now - PhaseT0 >= Rig->ImpactDelay())
+	{
+		// layout 2: o esmagamento acontece no impacto visivel da secao do teto (servidor), nao antes
+		bRigCrushed = true;
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+			if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) C->SetCrushed(true);
+	}
+	else if (Phase == 2 && Now - PhaseT0 >= (Rig ? Rig->ImpactDelay() + 2.5f : 1.4f))   // layout 2: reinicia so depois do impacto ser visto
 	{
 		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 			if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) C->SetCrushed(false);
 		SendAllToStart();                    // todos voltam ao inicio
 		ClearCracks();
 		for (ACoopCeiling* C : Roof) if (C) C->ResetPos();
+		if (Rig) Rig->ServerReset();
 		Column->ServerForce(false);          // estruturas voltam ao estado inicial
 		if (Bridge) Bridge->ServerForce(true);
 		Phase = 0;
