@@ -98,6 +98,31 @@ void ACoopFase1GameMode::Tick(float DeltaSeconds)
 		static float DT = 0.f; static bool bDone = false;
 		if (bDump && !bDone && bBuilt && (DT += DeltaSeconds) > 4.f) { bDone = true; DumpLayoutFile(GetWorld()); GEngine->Exec(GetWorld(), TEXT("quit")); }
 	}
+	// video da coluna (so com -ColunaVideo): 1 captura por frame; quebra em 2s, reconstroi em 6.5s, termina em 9.5s
+	{
+		static const bool bVid = FParse::Param(FCommandLine::Get(), TEXT("ColunaVideo"));
+		static float VT = 0.f; static int32 VN = 0; static int32 VS = 0; static bool bBroke = false, bRebuilt = false; static ACameraActor* VCam = nullptr;
+		if (bVid && bBuilt)
+		{
+			VT += DeltaSeconds;
+			APlayerController* PC = GetWorld()->GetFirstPlayerController();
+			if (VS == 0 && VT > 1.f)
+			{
+				if (PC && PC->GetPawn()) PC->GetPawn()->SetActorLocation(FVector(-1500.f, 300.f, 110.f));
+				VCam = GetWorld()->SpawnActor<ACameraActor>(FVector(520, 330, 360), FRotator(-9.f, -135.f, 0.f));
+				if (PC && VCam) PC->SetViewTargetWithBlend(VCam, 0.f);
+				VS = 1; VT = 0.f;
+			}
+			else if (VS == 1)
+			{
+				if (VT > 2.f && !bBroke && Column) { Column->ServerForce(true); bBroke = true; }
+				FString Why;
+				if (VT > 6.5f && !bRebuilt && Column) { Column->ServerRebuild(Why); bRebuilt = true; }
+				if (VT > 1.5f && VT < 9.5f) FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/video/f_%04d.png"), VN++), false, false);
+				if (VT > 9.5f) { GEngine->Exec(GetWorld(), TEXT("quit")); VS = 2; }
+			}
+		}
+	}
 	// teste da quebra da coluna (so com -ColunaShot): camera fixa, quebra a coluna e tira capturas em sequencia
 	{
 		static const bool bCol = FParse::Param(FCommandLine::Get(), TEXT("ColunaShot"));
