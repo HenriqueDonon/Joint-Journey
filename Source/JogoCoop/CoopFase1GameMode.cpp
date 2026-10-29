@@ -222,13 +222,97 @@ AActor* ACoopFase1GameMode::ChoosePlayerStart_Implementation(AController* Player
 	return Starts[NextStart++ % Starts.Num()];
 }
 
+void ACoopFase1GameMode::BuildExitDoor(float FX, float FY, float FZ)
+{
+	UWorld* W = GetWorld();
+	// F. saida: moldura (modelo, so visual) + duas folhas que DESLIZAM para os lados quando todos estao perto (ver TickExit)
+	{
+		ExitCenter = FVector(FX, FY, FZ + 100.f);
+		if (ACoopBlock* Fr = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(FX, FY, FZ + 143.f), FRotator::ZeroRotator))
+		{ Fr->Setup(FVector(56.6f, 280.4f, 286.f), FLinearColor(0.1f, 0.1f, 0.12f)); Fr->SetOpts(TEXT("Porta_Quadro"), true); Lbl(Fr, TEXT("F1_PortaQuadro")); }
+		// os pilares da moldura avancam para dentro da sala: colisao invisivel para nao atravessar
+		for (const FVector2D& P : { FVector2D(-104.5f, 71.f), FVector2D(98.5f, 83.f) })
+			if (ACoopBlock* G = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(FX, FY + P.X, FZ + 143.f), FRotator::ZeroRotator))
+			{ G->Setup(FVector(57.f, P.Y, 286.f), FLinearColor::Black, true); Lbl(G, TEXT("F1_PortaPilar_Colisao")); }
+		auto Leaf = [&](const TCHAR* Slot, FVector Cen, FVector Sz, float Dir) -> ACoopExitDoor*
+		{
+			ACoopExitDoor* L = W->SpawnActor<ACoopExitDoor>(ACoopExitDoor::StaticClass(), Cen, FRotator::ZeroRotator);
+			if (L) { L->Setup(Sz, FLinearColor(0.12f, 0.13f, 0.15f), false, FLinearColor::Black, 0.6f, 0.5f); L->SetOpts(FName(Slot), false); L->SetSlide(FVector(0, Dir, 0), 66.f); Lbl(L, Slot); }
+			return L;
+		};
+		ExitDoor = Leaf(TEXT("Porta_Folha_Esq"), FVector(FX + 0.5f, FY - 36.4f, FZ + 95.f), FVector(54.2f, 60.7f, 190.f), -1.f);
+		ExitDoor2 = Leaf(TEXT("Porta_Folha_Dir"), FVector(FX + 1.4f, FY + 24.3f, FZ + 95.f), FVector(50.3f, 60.6f, 190.f), 1.f);
+	}
+}
+
+// ================= LAYOUT 2 (arquitetura importada; posicoes vindas de marcadores no mapa) =================
+// Marcadores (qualquer ator; normalmente TargetPoint) com tag:
+//  F1L_Coluna (base da coluna) | F1L_Ponte (centro do topo; escala X*100 = comprimento) | F1L_Porta (piso no centro da moldura)
+//  F1L_Inicio (1..3 pontos de inicio) | F1L_Barreira (centro; escala*100 = tamanho) | F1L_Teto (centro da face de baixo do
+//  teto que desaba; escala X/Y*100 = area) | F1L_Rachaduras (centro na parede; escala X/Z*100 = area; Y = plano da parede)
+bool ACoopFase1GameMode::BuildLevelLayout2()
+{
+	UWorld* W = GetWorld();
+	TMap<FName, TArray<AActor*>> Mk;
+	for (TActorIterator<AActor> It(W); It; ++It)
+		for (const FName& T : It->Tags) if (T.ToString().StartsWith(TEXT("F1L_"))) Mk.FindOrAdd(T).Add(*It);
+	auto One = [&](const TCHAR* N) -> AActor* { const TArray<AActor*>* A = Mk.Find(FName(N)); return (A && A->Num()) ? (*A)[0] : nullptr; };
+	AActor *MCol = One(TEXT("F1L_Coluna")), *MBr = One(TEXT("F1L_Ponte")), *MDoor = One(TEXT("F1L_Porta"));
+	if (!MCol || !MBr || !MDoor) return false;
+	bLayout2 = true;
+	UE_LOG(LogTemp, Warning, TEXT("F1MAPA layout2 (marcadores) ativo"));
+	W->SpawnActor<ACoopSun>(ACoopSun::StaticClass(), FVector(0, 0, 1000), FRotator::ZeroRotator);
+	// coluna (mesmo tamanho/modelo do original) e ponte (comprimento pelo marcador), material compartilhado
+	{
+		const FVector C = MCol->GetActorLocation() + FVector(0, 0, 308.f);
+		if (ACoopDestructible* Col = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(C)))
+		{ Col->Setup(Sc(FVector(160, 160, 560)), FLinearColor(0.62f, 0.62f, 0.64f)); Col->Model = TEXT("Coluna_Inteira"); Col->FinishSpawning(FTransform(C)); Lbl(Col, TEXT("F1_Coluna")); Column = Col; }
+		const float Len = FMath::Max(MBr->GetActorScale3D().X * 100.f, 300.f);
+		const FVector B = MBr->GetActorLocation() - FVector(0, 0, 16.5f);
+		if (ACoopDestructible* Br = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(B)))
+		{ Br->Setup(FVector(Len, 375.f, 33.f), FLinearColor(0.55f, 0.52f, 0.46f), 360.f * KZ, 350.f * KXY, true); Br->Model = TEXT("Ponte_Inteira"); Br->FinishSpawning(FTransform(B)); Lbl(Br, TEXT("F1_Ponte")); Bridge = Br; }
+		if (Column && Bridge) { Column->Partner = Bridge; Bridge->Partner = Column; }
+	}
+	// teto estrutural que desaba (apoiado na coluna): paineis do Blender, mesma queda/esmagamento do original
+	if (AActor* MT = One(TEXT("F1L_Teto")))
+	{
+		const FVector O = MT->GetActorLocation(), S = MT->GetActorScale3D() * 100.f;
+		const int32 NX = FMath::Max(1, FMath::RoundToInt(S.X / 583.5f)), NY = FMath::Max(1, FMath::RoundToInt(S.Y / 540.f));
+		for (int32 ix = 0; ix < NX; ++ix) for (int32 iy = 0; iy < NY; ++iy)
+			if (ACoopCeiling* c = W->SpawnActor<ACoopCeiling>(ACoopCeiling::StaticClass(), O + FVector(-S.X * 0.5f + (ix + 0.5f) * S.X / NX, -S.Y * 0.5f + (iy + 0.5f) * S.Y / NY, 40.f), FRotator::ZeroRotator))
+			{ c->Setup(FVector(S.X / NX, S.Y / NY, 80.f), FLinearColor(0.1f, 0.11f, 0.12f)); c->SetOpts(TEXT("Teto_Painel"), true); Lbl(c, TEXT("F1_TetoEstrutural_L2")); Roof.Add(c); }
+	}
+	if (AActor* MR = One(TEXT("F1L_Rachaduras"))) { const FVector O = MR->GetActorLocation(), E = MR->GetActorScale3D() * 50.f; CrackBox = FBox(O - E, O + E); CrackWallY = O.Y; }
+	// porta + tunel: mesma construcao do original, deslocada para o marcador (moldura em FX=3576, piso 44 no original)
+	const FVector D = MDoor->GetActorLocation();
+	L2Off = FVector(D.X - 3576.f, D.Y, D.Z - 44.f);
+	BuildExitDoor(D.X, D.Y, D.Z);
+	auto WallPiece = [&](const TCHAR* N, FVector C, FVector Sz) { if (ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), C + L2Off, FRotator::ZeroRotator)) { b->Setup(Sz, FLinearColor(0.20f, 0.21f, 0.24f)); Lbl(b, N); } };
+	WallPiece(TEXT("F1_ParedeFundoSaida_Esq"), FVector(3630, -439.5f, 55), FVector(60, 741, 1430));
+	WallPiece(TEXT("F1_ParedeFundoSaida_Dir"), FVector(3630, 433.5f, 55), FVector(60, 753, 1430));
+	WallPiece(TEXT("F1_ParedeFundoSaida_Topo"), FVector(3630, 0, 503), FVector(60, 1620, 534));
+	{
+		TSet<AActor*> Before; for (TActorIterator<AActor> It(W); It; ++It) Before.Add(*It);
+		const bool bOld = GBaked; GBaked = false;   // o tunel completo (com seus modelos) e criado pelo codigo
+		BuildTransition();
+		GBaked = bOld;
+		for (TActorIterator<AActor> It(W); It; ++It) if (!Before.Contains(*It)) It->AddActorWorldOffset(L2Off);
+	}
+	if (AActor* MB = One(TEXT("F1L_Barreira"))) { BarrierLoc = MB->GetActorLocation(); BarrierSize = MB->GetActorScale3D() * 100.f; }
+	SpawnBarrier();
+	W->SpawnActor<ACoopFog>(ACoopFog::StaticClass(), MBr->GetActorLocation() + FVector(0, 0, 200), FRotator::ZeroRotator);
+	if (const TArray<AActor*>* St = Mk.Find(FName(TEXT("F1L_Inicio"))))
+		for (AActor* A : *St) Starts.Add(W->SpawnActor<APlayerStart>(A->GetActorLocation(), A->GetActorRotation()));
+	return true;
+}
+
 void ACoopFase1GameMode::SpawnBarrier()
 {
 	// Barreira INVISIVEL provisoria no vao (ver relatorio): o vao seria pulavel (pulo corrido ~700-800cm).
 	// Ignora Visibility/Camera (ghost), entao nao atrapalha mira nem linha de visao dos poderes.
 	UWorld* W = GetWorld();
-	ACoopBlock* B = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(FVector(500, 0, 125)), FRotator::ZeroRotator);
-	if (B) { B->Setup(Sc(FVector(20, 1000, 950)), FLinearColor::Black, true); Lbl(B, TEXT("F1_BarreiraVao_Provisoria")); }
+	ACoopBlock* B = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), BarrierLoc, FRotator::ZeroRotator);
+	if (B) { B->Setup(BarrierSize, FLinearColor::Black, true); Lbl(B, TEXT("F1_BarreiraVao_Provisoria")); }
 	Barrier = B;
 }
 
@@ -246,6 +330,7 @@ void ACoopFase1GameMode::BuildLevel()
 		for (AActor* A : Refs) A->Destroy();
 		UE_LOG(LogTemp, Warning, TEXT("F1MAPA editavel=%d referencias_removidas=%d"), (int)GBaked, Refs.Num());
 	}
+	if (BuildLevelLayout2()) return;   // mapa com marcadores F1L_* (nova arquitetura); senao, layout original abaixo
 	W->SpawnActor<ACoopSun>(ACoopSun::StaticClass(), FVector(0, 0, 1000), FRotator::ZeroRotator);
 
 	auto B = [&](const TCHAR* Name, FVector C, FVector S, FLinearColor Col, bool bGhost = false, FLinearColor Em = FLinearColor::Black, float Rough = 0.9f, float Metal = 0.f) -> ACoopBlock*
@@ -320,25 +405,7 @@ void ACoopFase1GameMode::BuildLevel()
 	if (Column && Bridge) { Column->Partner = Bridge; Bridge->Partner = Column; }
 	if (ACoopBlock* Slab = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Sc(FVector(780, 0, -140)), FRotator(-35.f, 0.f, 0.f)))
 	{ Slab->Setup(Sc(FVector(150, 250, 30)), FLinearColor(0.45f, 0.42f, 0.38f)); Lbl(Slab, TEXT("F1_Ponte_LajeCaida")); }
-	// F. saida: moldura (modelo, so visual) + duas folhas que DESLIZAM para os lados quando todos estao perto (ver TickExit)
-	{
-		const float FX = 3576.f, FY = 0.f, FZ = 44.f;
-		ExitCenter = FVector(FX, FY, FZ + 100.f);
-		if (ACoopBlock* Fr = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(FX, FY, FZ + 143.f), FRotator::ZeroRotator))
-		{ Fr->Setup(FVector(56.6f, 280.4f, 286.f), FLinearColor(0.1f, 0.1f, 0.12f)); Fr->SetOpts(TEXT("Porta_Quadro"), true); Lbl(Fr, TEXT("F1_PortaQuadro")); }
-		// os pilares da moldura avancam para dentro da sala: colisao invisivel para nao atravessar
-		for (const FVector2D& P : { FVector2D(-104.5f, 71.f), FVector2D(98.5f, 83.f) })
-			if (ACoopBlock* G = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(FX, FY + P.X, FZ + 143.f), FRotator::ZeroRotator))
-			{ G->Setup(FVector(57.f, P.Y, 286.f), FLinearColor::Black, true); Lbl(G, TEXT("F1_PortaPilar_Colisao")); }
-		auto Leaf = [&](const TCHAR* Slot, FVector Cen, FVector Sz, float Dir) -> ACoopExitDoor*
-		{
-			ACoopExitDoor* L = W->SpawnActor<ACoopExitDoor>(ACoopExitDoor::StaticClass(), Cen, FRotator::ZeroRotator);
-			if (L) { L->Setup(Sz, FLinearColor(0.12f, 0.13f, 0.15f), false, FLinearColor::Black, 0.6f, 0.5f); L->SetOpts(FName(Slot), false); L->SetSlide(FVector(0, Dir, 0), 66.f); Lbl(L, Slot); }
-			return L;
-		};
-		ExitDoor = Leaf(TEXT("Porta_Folha_Esq"), FVector(FX + 0.5f, FY - 36.4f, FZ + 95.f), FVector(54.2f, 60.7f, 190.f), -1.f);
-		ExitDoor2 = Leaf(TEXT("Porta_Folha_Dir"), FVector(FX + 1.4f, FY + 24.3f, FZ + 95.f), FVector(50.3f, 60.6f, 190.f), 1.f);
-	}
+	BuildExitDoor(3576.f, 0.f, 44.f);
 	BuildTransition();
 
 	SpawnBarrier();
@@ -410,6 +477,21 @@ void ACoopFase1GameMode::SpawnCrackCluster(int32 Idx)
 {
 	UWorld* W = GetWorld();
 	FRandomStream R(1000 + Idx * 7919);
+	if (bLayout2)
+	{
+		if (!CrackBox.IsValid) return;
+		float U = R.FRandRange(CrackBox.Min.X, CrackBox.Max.X), Z = R.FRandRange(CrackBox.Min.Z, CrackBox.Max.Z);
+		const float Base = 90.f + R.FRandRange(-40.f, 40.f);
+		for (int32 s = 0; s < 3; ++s)
+		{
+			const float L = R.FRandRange(100.f, 220.f), Th = Base + (s % 2 ? 1.f : -1.f) * R.FRandRange(15.f, 35.f);
+			const float dU = L * FMath::Cos(FMath::DegreesToRadians(Th)), dZ = L * FMath::Sin(FMath::DegreesToRadians(Th));
+			if (ACoopBlock* B = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), FVector(U + dU * 0.5f, CrackWallY, Z + dZ * 0.5f), FRotator(Th, 0.f, 0.f)))
+			{ B->Setup(FVector(L, 4.f, 8.f), FLinearColor(0.02f, 0.02f, 0.025f), false, FLinearColor(1.f, 0.28f, 0.04f) * 1.5f, 0.9f, 0.f); B->SetOpts(NAME_None, true); Lbl(B, TEXT("F1_Rachadura")); Cracks.Add(B); }
+			U += dU; Z += dZ;
+		}
+		return;
+	}
 	const int32 Wall = Idx % 4; // 0: lateral Y- | 1: lateral Y+ | 2: fundo inicio | 3: fundo saida
 	const bool bSide = Wall < 2;
 	float U = bSide ? R.FRandRange(-1250.f, 2250.f) : R.FRandRange(-380.f, 380.f);
@@ -588,7 +670,7 @@ void ACoopFase1GameMode::TickExit()
 		++N;
 		const FVector L = P->GetActorLocation();
 		if (FVector::Dist2D(L, DoorLoc) < 650.f && FMath::Abs(L.Z - DoorLoc.Z) < 400.f) ++Near;
-		if (L.X > TrX0 + TrLen - 380.f && FMath::Abs(L.Y) < TrHalfW) ++InZone;
+		if (L.X > TrX0 + L2Off.X + TrLen - 380.f && FMath::Abs(L.Y - L2Off.Y) < TrHalfW) ++InZone;
 	}
 	if (N == 0) return;
 	if (!bDoorLatched && Near == N)

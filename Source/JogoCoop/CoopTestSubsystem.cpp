@@ -2,6 +2,7 @@
 #include "CoopCharacter.h"
 #include "CoopDestructible.h"
 #include "Camera/CameraActor.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/PlayerController.h"
@@ -29,6 +30,12 @@ static const FTourKey GTour[] = {
 	{ FVector(-50, 0, 330), -5, -22 }, { FVector(650, 0, 300), 0, -18 }, { FVector(1400, 0, 250), 5, -8 },
 	{ FVector(2400, -250, 220), 15, -5 }, { FVector(3150, 0, 190), 0, -2 }, { FVector(3420, 0, 170), 0, 0 } };
 
+// trajeto para o layout 2 (Fase1_Arquitetura, coordenadas da UE)
+static const FTourKey GTour2[] = {
+	{ FVector(0, 350, 420), -15, -10 }, { FVector(850, 450, 520), -55, -14 }, { FVector(1150, 0, 700), 0, -32 },
+	{ FVector(2000, 0, 950), 0, -42 }, { FVector(2900, 650, 520), -12, -10 }, { FVector(3400, 0, 470), 0, -5 },
+	{ FVector(3900, 0, 540), 0, -3 }, { FVector(3650, 900, 700), 195, -12 }, { FVector(2700, -950, 650), 168, -9 } };
+
 void ACoopF1Tour::Tick(float Dt)
 {
 	Super::Tick(Dt);
@@ -38,11 +45,13 @@ void ACoopF1Tour::Tick(float Dt)
 	if (Tag.IsEmpty()) Tag = TEXT("tour");
 	T += Dt;
 	if (T < 4.f) return;   // carrega texturas/luz
-	if (!bStarted) { Cam = GetWorld()->SpawnActor<ACameraActor>(GTour[0].P, FRotator(GTour[0].Pitch, GTour[0].Yaw, 0)); Cam->GetCameraComponent()->SetFieldOfView(85.f); PC->SetViewTargetWithBlend(Cam, 0.f); bStarted = true; return; }
-	const int32 NK = UE_ARRAY_COUNT(GTour); const float Dur = 18.f;
+	if (!bStarted) { Cam = GetWorld()->SpawnActor<ACameraActor>(FVector::ZeroVector, FRotator::ZeroRotator); Cam->GetCameraComponent()->SetFieldOfView(85.f); PC->SetViewTargetWithBlend(Cam, 0.f); bStarted = true; return; }
+	bool bL2 = false; for (TActorIterator<AActor> It(GetWorld()); It; ++It) if (It->Tags.Contains(FName("F1L_Ponte"))) { bL2 = true; break; }
+	const FTourKey* Keys = bL2 ? GTour2 : GTour;
+	const int32 NK = bL2 ? UE_ARRAY_COUNT(GTour2) : UE_ARRAY_COUNT(GTour); const float Dur = bL2 ? 22.f : 18.f;
 	const float U = FMath::Clamp((T - 4.f) / Dur, 0.f, 1.f) * (NK - 1);
 	const int32 I = FMath::Min((int32)U, NK - 2); const float A = U - I;
-	auto K = [&](int32 i) { return GTour[FMath::Clamp(i, 0, NK - 1)]; };
+	auto K = [&](int32 i) { return Keys[FMath::Clamp(i, 0, NK - 1)]; };
 	const FVector P = FMath::CubicCRSplineInterp(K(I - 1).P, K(I).P, K(I + 1).P, K(I + 2).P, 0.f, 1.f, 2.f, 3.f, 1.f + A);
 	const float S = A * A * (3 - 2 * A);
 	Cam->SetActorLocationAndRotation(P, FRotator(FMath::Lerp(K(I).Pitch, K(I + 1).Pitch, S), FMath::Lerp(K(I).Yaw, K(I + 1).Yaw, S), 0));
@@ -82,10 +91,22 @@ void ACoopF1Flow::Tick(float Dt)
 	ACoopDestructible *Col = nullptr, *Br = nullptr;
 	for (TActorIterator<ACoopDestructible> It(W); It; ++It) { if (It->Model == FName("Coluna_Inteira")) Col = *It; else if (It->Model == FName("Ponte_Inteira")) Br = *It; }
 	if (!Col || !Br) return;
+	// pontos do roteiro (padrao = layout original; com marcadores F1L_* = nova arquitetura)
+	float EdgeX = -130.f, AcrossX = 1750.f, BeyondX = 1600.f, DoorApX = 3300.f, DoorPassX = 3760.f, DoorY = 0.f, TunnelX = 5150.f, ExitX = 5000.f, PassX = 3720.f;
+	{
+		AActor *MBr = nullptr, *MDoor = nullptr;
+		for (TActorIterator<AActor> It(W); It; ++It) { if (It->Tags.Contains(FName("F1L_Ponte"))) MBr = *It; if (It->Tags.Contains(FName("F1L_Porta"))) MDoor = *It; }
+		if (MBr && MDoor)
+		{
+			const float BX = MBr->GetActorLocation().X, HL = MBr->GetActorScale3D().X * 50.f, DX = MDoor->GetActorLocation().X;
+			EdgeX = BX - HL - 130.f; AcrossX = BX + HL + 250.f; BeyondX = BX + HL - 150.f;
+			DoorApX = DX - 380.f; DoorPassX = DX + 184.f; PassX = DX + 144.f; DoorY = MDoor->GetActorLocation().Y; TunnelX = DX + 1574.f; ExitX = DX + 1424.f;
+		}
+	}
 	const bool bNeon = Me->CoopRole == ECoopRole::Neon;
 	const float Oy = bNeon ? 100.f : -100.f;
 	int32 NP = 0, NBeyond = 0, NExit = 0;
-	for (TActorIterator<ACoopCharacter> It(W); It; ++It) { ++NP; if (It->GetActorLocation().X > 1600.f) ++NBeyond; if (It->GetActorLocation().X > 5000.f) ++NExit; }
+	for (TActorIterator<ACoopCharacter> It(W); It; ++It) { ++NP; if (It->GetActorLocation().X > BeyondX) ++NBeyond; if (It->GetActorLocation().X > ExitX) ++NExit; }
 	auto Walk = [&](FVector2D Tg)->float
 	{
 		const FVector L = Me->GetActorLocation(); const FVector2D D = Tg - FVector2D(L.X, L.Y);
@@ -100,10 +121,43 @@ void ACoopF1Flow::Tick(float Dt)
 			Col->IsDestroyed() ? TEXT("DESTRUIDA") : TEXT("inteira"), Br->IsDestroyed() ? TEXT("DESTRUIDA") : TEXT("inteira"));
 		Save();
 	}
+	// ---- variantes: -F1Teste=colapso (coluna nao e reconstruida -> teto desaba e a fase reinicia) | atalho (tentativas de pulo pelo vao) ----
+	const FString Var = FParse::Param(FCommandLine::Get(), TEXT("F1Colapso")) ? TEXT("colapso") : FParse::Param(FCommandLine::Get(), TEXT("F1Atalho")) ? TEXT("atalho") : TEXT("");
+	if (Var == TEXT("colapso") && Ph >= 2 && Ph < 9)
+	{
+		static FVector StartPos = FVector::ZeroVector;
+		if (Ph == 2 && PhT < Dt + 0.001f) StartPos = Me->GetActorLocation();
+		if (Ph == 2 && !bNeon && !Col->IsDestroyed() && PhT > 2.f && PhT < 2.f + Dt * 1.5f) Fire(Me, Col);
+		if (Ph == 2 && Col->IsDestroyed()) { SetPh(3, TEXT("coluna DESTRUIDA; ninguem reconstroi")); }
+		if (Ph == 3) Walk(FVector2D(StartPos.X + 400.f, StartPos.Y));   // afasta-se da borda (o teto cai em todos)
+		if (Ph == 3 && PhT > 18.f)
+		{
+			const bool bReset = !Col->IsDestroyed() && Br->IsDestroyed();
+			Log += FString::Printf(TEXT("RESULTADO COLAPSO: coluna=%s ponte=%s pos=(%.0f,%.0f,%.0f) -> %s\n"), Col->IsDestroyed() ? TEXT("destruida") : TEXT("inteira(reiniciada)"),
+				Br->IsDestroyed() ? TEXT("destruida(reiniciada)") : TEXT("inteira"), Me->GetActorLocation().X, Me->GetActorLocation().Y, Me->GetActorLocation().Z, bReset ? TEXT("SUCESSO") : TEXT("FALHA"));
+			Save(); SetPh(11, TEXT("fim colapso"));
+		}
+		return;
+	}
+	if (Var == TEXT("atalho") && Ph >= 2 && Ph < 9)
+	{
+		// so o host tenta: corre e pula da borda em 3 direcoes (centro do vao, pier norte, diagonal); o cliente espera
+		static int32 Try = 0; static float MaxX = -1e9f;
+		if (!bNeon) { if (PhT > 40.f) SetPh(11, TEXT("cliente aguardou")); return; }
+		const FVector L = Me->GetActorLocation();
+		const float TY[3] = { 0.f, -825.f, -500.f };   // pier fica em Y -700..-950 (UE)
+		if (Try >= 3) { Log += FString::Printf(TEXT("RESULTADO ATALHO: maior X alcancado acima do piso = %.0f (lado de saida comeca em %.0f) -> %s\n"), MaxX, AcrossX - 250.f, MaxX < AcrossX - 450.f ? TEXT("SEM ATALHO") : TEXT("ATALHO POSSIVEL")); Save(); SetPh(11, TEXT("fim atalho")); return; }
+		if (L.Z > -80.f && L.X > MaxX && PhT > 0.5f) MaxX = L.X;
+		if (PhT < 3.f) { Me->SetActorLocation(FVector(EdgeX - 700.f, TY[Try], 100.f)); return; }       // recua para pegar embalo
+		Walk(FVector2D(EdgeX + 3000.f, TY[Try]));
+		if (L.X > EdgeX + 90.f && !Me->GetCharacterMovement()->IsFalling()) Me->Jump();
+		if (PhT > 9.f) { Log += FString::Printf(TEXT("tentativa %d (Y=%.0f): maxX=%.0f\n"), Try + 1, TY[Try], MaxX); ++Try; PhT = 0.f; }
+		return;
+	}
 	switch (Ph)
 	{
 	case 0: if (GS->PlayerArray.Num() >= 2 && PhT > 6.f) SetPh(1, TEXT("2 jogadores")); break;
-	case 1: if (Walk(FVector2D(-130.f, Oy)) < 25.f && PhT > 1.f && NP >= 2) SetPh(2, TEXT("na borda da plataforma inicial")); else if (PhT > 30.f) SetPh(9, TEXT("TIMEOUT borda")); break;
+	case 1: if (Walk(FVector2D(EdgeX, DoorY + Oy)) < 25.f && PhT > 1.f && NP >= 2) SetPh(2, TEXT("na borda da plataforma inicial")); else if (PhT > 30.f) SetPh(9, TEXT("TIMEOUT borda")); break;
 	case 2: // Ruina destroi a coluna (aguarda o parceiro chegar)
 		if (!bNeon && !Col->IsDestroyed() && PhT > 2.f && PhT < 2.f + Dt * 1.5f) Fire(Me, Col);
 		if (bNeon && Col->IsDestroyed() && Br->IsDestroyed()) { Fire(Me, Br); SetPh(3, TEXT("Neon: coluna caiu -> constroi a ponte")); }
@@ -112,7 +166,7 @@ void ACoopF1Flow::Tick(float Dt)
 		break;
 	case 3: if (!Br->IsDestroyed()) SetPh(4, TEXT("ponte CONSTRUIDA -> atravessar")); else if (PhT > 10.f) SetPh(9, TEXT("TIMEOUT ponte")); break;
 	case 4: // atravessa a ponte
-		if (Walk(FVector2D(1750.f, Oy)) < 25.f) SetPh(5, TEXT("do outro lado"));
+		if (Walk(FVector2D(AcrossX, DoorY + Oy)) < 25.f) SetPh(5, TEXT("do outro lado"));
 		else if (PhT > 15.f) SetPh(9, FString::Printf(TEXT("TIMEOUT travessia (X=%.0f)"), Me->GetActorLocation().X));
 		break;
 	case 5: // Ruina destroi a ponte; Neon reconstroi a coluna
@@ -121,13 +175,13 @@ void ACoopF1Flow::Tick(float Dt)
 		else if (PhT > 12.f) SetPh(9, TEXT("TIMEOUT etapa ponte->coluna"));
 		break;
 	case 6: if (!Col->IsDestroyed() && Br->IsDestroyed()) SetPh(7, TEXT("coluna RECONSTRUIDA (teto estabilizado)")); else if (PhT > 8.f) SetPh(9, TEXT("TIMEOUT coluna nao reconstruida")); break;
-	case 7: if (Walk(FVector2D(3300.f, Oy)) < 25.f) SetPh(8, TEXT("diante da porta")); else if (PhT > 20.f) SetPh(9, TEXT("TIMEOUT porta")); break;
+	case 7: if (Walk(FVector2D(DoorApX, DoorY + Oy)) < 25.f) SetPh(8, TEXT("diante da porta")); else if (PhT > 20.f) SetPh(9, TEXT("TIMEOUT porta")); break;
 	case 8: // a abertura da porta e estreita (Y -69..57): passa um de cada vez pelo centro, depois se afasta para o lado no tunel
 		if (PhT > (bNeon ? 2.f : 3.5f))
 		{
-			const FVector2D Tg = Me->GetActorLocation().X < 3720.f ? FVector2D(3760.f, -6.f) : FVector2D(5150.f, Oy * 1.5f);
-			if (Me->GetActorLocation().X > 3720.f && Walk(Tg) < 25.f) SetPh(10, TEXT("fim do tunel"));
-			else if (Me->GetActorLocation().X <= 3720.f) Walk(Tg);
+			const FVector2D Tg = Me->GetActorLocation().X < PassX ? FVector2D(DoorPassX, DoorY - 6.f) : FVector2D(TunnelX, DoorY + Oy * 1.5f);
+			if (Me->GetActorLocation().X > PassX && Walk(Tg) < 25.f) SetPh(10, TEXT("fim do tunel"));
+			else if (Me->GetActorLocation().X <= PassX) Walk(Tg);
 			if (PhT > 25.f) SetPh(9, FString::Printf(TEXT("TIMEOUT tunel (X=%.0f Y=%.0f)"), Me->GetActorLocation().X, Me->GetActorLocation().Y));
 		}
 		break;
