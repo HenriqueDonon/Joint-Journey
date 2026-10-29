@@ -1,0 +1,8 @@
+inicio_nivel0: pos=(300,-600,90) noChao=1 capsulaR=34 meiaAltura=88
+nivel0: pos=(300,-600,90) noChao=1 capsulaR=34 meiaAltura=88
+nivel600: pos=(500,0,690) noChao=1 capsulaR=34 meiaAltura=88
+nivel1200: pos=(500,0,1290) noChao=1 capsulaR=34 meiaAltura=88
+nivel1800: pos=(1900,0,1890) noChao=1 capsulaR=34 meiaAltura=88
+queda_no_poco(apoiado em placeholder ou piso): pos=(1380,200,690) noChao=1 capsulaR=34 meiaAltura=88
+queda_2_no_poco(sobre elevador de carga Z=300+88): pos=(1100,-200,579) noChao=0 capsulaR=34 meiaAltura=88
+queda_3_no_poco(vao livre -> piso nivel 0 Z=88): pos=(1000,200,90) noChao=1 capsulaR=34 meiaAltura=88
