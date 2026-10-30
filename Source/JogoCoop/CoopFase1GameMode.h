@@ -41,7 +41,7 @@ private:
 	UPROPERTY() class ACoopExitDoor* ExitDoor2 = nullptr;
 	FVector ExitCenter = FVector::ZeroVector;
 	void TickExit();
-	// ---- layout alternativo por MARCADORES (mapa Fase1_Arquitetura): atores com tags F1L_* definem onde ficam coluna,
+	// ---- layout alternativo por MARCADORES (mapa Fase 1 oficial /Game/Maps/Fase1 (antiga Arquitetura)): atores com tags F1L_* definem onde ficam coluna,
 	// ponte, porta/tunel, inicio, barreira, teto que desaba e rachaduras. Sem marcadores = layout original (inalterado).
 	bool bLayout2 = false;
 	UPROPERTY() class ACoopCollapseRig* Rig = nullptr;   // estrutura sustentada + colapso progressivo (so no layout 2, se existir no mapa)

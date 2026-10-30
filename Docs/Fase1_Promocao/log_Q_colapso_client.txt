@@ -1,0 +1,55 @@
+EVT t=6.03 srvT=34.22 fase 0->1 2 jogadores
+t=6.13 ph=1 Ruina pos=(300,400,90) coluna=inteira ponte=DESTRUIDA
+t=6.67 ph=1 Ruina pos=(370,355,90) coluna=inteira ponte=DESTRUIDA
+t=7.22 ph=1 Ruina pos=(580,218,90) coluna=inteira ponte=DESTRUIDA
+t=7.87 ph=1 Ruina pos=(440,309,90) coluna=inteira ponte=DESTRUIDA
+t=8.46 ph=1 Ruina pos=(679,154,90) coluna=inteira ponte=DESTRUIDA
+t=9.05 ph=1 Ruina pos=(1052,-89,90) coluna=inteira ponte=DESTRUIDA
+EVT t=9.05 srvT=37.55 fase 1->2 na borda da plataforma inicial
+t=9.59 ph=2 Ruina pos=(1106,-123,90) coluna=inteira ponte=DESTRUIDA
+t=10.16 ph=2 Ruina pos=(1106,-123,90) coluna=inteira ponte=DESTRUIDA
+t=10.74 ph=2 Ruina pos=(1106,-123,90) coluna=inteira ponte=DESTRUIDA
+t=11.24 ph=2 Ruina pos=(1106,-123,90) coluna=inteira ponte=DESTRUIDA
+EVT t=11.39 srvT=40.03 fase 2->3 coluna DESTRUIDA; ninguem reconstroi
+t=11.79 ph=3 Ruina pos=(1059,-188,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=12.40 ph=3 Ruina pos=(869,-454,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=12.92 ph=3 Ruina pos=(696,-694,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=13.43 ph=3 Ruina pos=(613,-810,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=13.94 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=14.54 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=15.12 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=15.67 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=16.21 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=16.73 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=17.24 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=17.78 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=18.31 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=18.83 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=19.40 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=19.91 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=20.42 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=20.95 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=21.52 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=22.06 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=22.64 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=23.27 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=23.78 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=24.29 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=24.87 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=25.40 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=26.10 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=26.61 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=27.11 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=27.63 ph=3 Ruina pos=(614,-809,90) coluna=DESTRUIDA ponte=DESTRUIDA
+t=28.23 ph=3 Ruina pos=(614,-809,90) coluna=inteira ponte=DESTRUIDA
+t=28.76 ph=3 Ruina pos=(346,227,90) coluna=inteira ponte=DESTRUIDA
+t=29.28 ph=3 Ruina pos=(413,-28,90) coluna=inteira ponte=DESTRUIDA
+RESULTADO COLAPSO: coluna=inteira(reiniciada) ponte=destruida(reiniciada) pos=(437,-118,90) -> SUCESSO
+EVT t=29.43 srvT=58.40 fase 3->11 fim colapso
+t=29.83 ph=11 Ruina pos=(484,-289,90) coluna=inteira ponte=DESTRUIDA
+t=30.46 ph=11 Ruina pos=(484,-289,90) coluna=inteira ponte=DESTRUIDA
+t=30.97 ph=11 Ruina pos=(484,-289,90) coluna=inteira ponte=DESTRUIDA
+t=31.54 ph=11 Ruina pos=(484,-289,90) coluna=inteira ponte=DESTRUIDA
+t=32.16 ph=11 Ruina pos=(484,-289,90) coluna=inteira ponte=DESTRUIDA
+t=32.74 ph=11 Ruina pos=(484,-289,90) coluna=inteira ponte=DESTRUIDA
+t=33.27 ph=11 Ruina pos=(484,-289,90) coluna=inteira ponte=DESTRUIDA

@@ -3,7 +3,7 @@
 #include "GameFramework/Actor.h"
 #include "CoopTunnelDressing.generated.h"
 
-// Revestimento do tunel pos-fase no Fase1_Arquitetura (mesma linguagem do galpao: aco escuro, nervuras, faixa ciano,
+// Revestimento do tunel pos-fase no Fase 1 oficial /Game/Maps/Fase1 (antiga Arquitetura) (mesma linguagem do galpao: aco escuro, nervuras, faixa ciano,
 // faixas de perigo, vigas e canos no teto, luz fria + acentos ambar). Colocado no mapa na posicao do marcador F1L_Porta
 // (piso no centro da porta); monta so visual (sem colisao) em BeginPlay em cada maquina. Nao altera o tunel de gameplay.
 UCLASS()

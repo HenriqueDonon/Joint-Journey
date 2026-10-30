@@ -1,7 +1,7 @@
 # Refino da Fase1_Arquitetura (sem recriar o mapa): secao do teto maior, camera de derrota e revestimento do tunel.
 import unreal
 ell = unreal.EditorLevelLibrary
-ell.load_level('/Game/Maps/Fase1_Arquitetura')
+ell.load_level('/Game/Maps/Fase1')
 acts = ell.get_all_level_actors()
 rig = [a for a in acts if a.get_class().get_name() == 'CoopCollapseRig'][0]
 def v2(x, y): return unreal.Vector2D(x, y)

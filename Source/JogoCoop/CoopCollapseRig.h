@@ -15,7 +15,7 @@ struct FRigState
 	UPROPERTY() float StressAtT1 = 0.f; // nivel de tensao quando estabilizou (para decair suave)
 };
 
-// ESTRUTURA SUSTENTADA PELA COLUNA + COLAPSO PROGRESSIVO (layout 2 da Fase 1 / Fase1_Arquitetura).
+// ESTRUTURA SUSTENTADA PELA COLUNA + COLAPSO PROGRESSIVO (layout 2 da Fase 1 / Fase 1 oficial /Game/Maps/Fase1 (antiga Arquitetura)).
 // Ator colocado no mapa (existe no servidor e nos clientes). Monta em BeginPlay: deck do mezanino sobre a coluna, capitel,
 // torre de transferencia ate uma secao pesada do teto, vigas, tirantes e ligacao com as trelicas principais.
 // Efeitos (vibracao, cedencia, rachaduras, poeira, faiscas, pecas e detritos caindo, queda final) sao deterministicos

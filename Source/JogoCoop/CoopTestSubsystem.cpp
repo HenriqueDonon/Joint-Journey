@@ -32,7 +32,7 @@ static const FTourKey GTour[] = {
 	{ FVector(-50, 0, 330), -5, -22 }, { FVector(650, 0, 300), 0, -18 }, { FVector(1400, 0, 250), 5, -8 },
 	{ FVector(2400, -250, 220), 15, -5 }, { FVector(3150, 0, 190), 0, -2 }, { FVector(3420, 0, 170), 0, 0 } };
 
-// trajeto para o layout 2 (Fase1_Arquitetura, coordenadas da UE)
+// trajeto para o layout 2 (Fase 1 oficial /Game/Maps/Fase1 (antiga Arquitetura), coordenadas da UE)
 static const FTourKey GTour2[] = {
 	{ FVector(0, 350, 420), -15, -10 }, { FVector(850, 450, 520), -55, -14 }, { FVector(1150, 0, 700), 0, -32 },
 	{ FVector(2000, 0, 950), 0, -42 }, { FVector(2900, 650, 520), -12, -10 }, { FVector(3400, 0, 470), 0, -5 },

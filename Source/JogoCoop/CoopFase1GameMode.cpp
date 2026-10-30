@@ -36,7 +36,7 @@ static constexpr float KXY = 1.5f, KZ = 1.1f, KLUM = 2.25f;
 static constexpr float CollapseSecs = 12.f; // 8s * 1.5
 static FVector Sc(const FVector& V) { return FVector(V.X * KXY, V.Y * KXY, V.Z * KZ); }
 
-// Mapa editavel (Fase1_Editavel): a decoracao com modelo ja esta no nivel como atores (tag F1Decor) -> o codigo nao a cria de novo.
+// Mapa antigo (backup: /Game/Maps/Backup/Fase1_Original_Editavel): a decoracao com modelo ja esta no nivel como atores (tag F1Decor) -> o codigo nao a cria de novo.
 // Atores F1Ref sao so referencia para o Editor (plataformas, paredes, teto...) e sao removidos ao jogar.
 static bool GBaked = false;
 static bool HasModel(const TCHAR* Slot)
@@ -620,7 +620,7 @@ void ACoopFase1GameMode::BuildTransition()
 	// modelos do Blender: paineis nas paredes e placas no piso
 	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot, FVector Scl = FVector(1.f), bool bCollide = false) -> ACoopBlock*
 	{
-		if (GBaked || Rig) return nullptr;   // Fase1_Arquitetura: tunel revestido por ACoopTunnelDressing (linguagem da nova fase)
+		if (GBaked || Rig) return nullptr;   // Fase 1 oficial /Game/Maps/Fase1 (antiga Arquitetura): tunel revestido por ACoopTunnelDressing (linguagem da nova fase)
 		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Base + FVector(0, 0, Size.Z * 0.5f), Rot);
 		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); if (!Scl.Equals(FVector(1.f))) b->SetModelScale(Scl); Lbl(b, Slot); b->Tags.Add(TEXT("F1Decor")); if (bCollide) b->Tags.Add(TEXT("F1Col")); }
 		return b;

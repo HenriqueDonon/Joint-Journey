@@ -3,7 +3,7 @@
 # marcadores F1L_* deste mapa. Nao toca nos mapas Fase1_Editavel / Fase1_Experimental / Fase2.
 import unreal, os, json
 proj = unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir())
-DST = '/Game/Maps/Fase1_Arquitetura'; DIR = '/Game/Fase1Arq/HF'
+DST = '/Game/Maps/Fase1'   # Fase 1 oficial (promovida em 29/10/2026; antes /Game/Maps/Fase1_Arquitetura); DIR = '/Game/Fase1Arq/HF'
 ell = unreal.EditorLevelLibrary; eal = unreal.EditorAssetLibrary
 if eal.does_asset_exist(DST) and not os.path.exists(os.path.join(proj, 'MapaFase1Arq', 'RECRIAR.txt')):
     print('[F1A] JA_EXISTE'); raise SystemExit
