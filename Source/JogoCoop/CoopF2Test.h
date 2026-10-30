@@ -47,3 +47,18 @@ private:
 	void Go(int32 S, const FString& Why);
 	void Save();
 };
+
+// Teste do PUZZLE 2 (-F2P2; -F2Swap inverte papeis; -F2Lag=N latencia no cliente; -InspP2 camera fixa na sala durante a maquina).
+// Resolve o P1, sobe, separa, demonstra um ERRO (transferencia a mais) + REARME e depois a solucao correta e o reencontro.
+UCLASS()
+class JOGOCOOP_API ACoopF2P2Flow : public AActor
+{
+	GENERATED_BODY()
+public:
+	ACoopF2P2Flow() { PrimaryActorTick.bCanEverTick = true; }
+	virtual void Tick(float Dt) override;
+private:
+	int32 St = 0, Shots = 0, Wp = 0, Sub = 0; float StT = 0.f, SubT = 0.f, ShotT = 0.f, LogT = 0.f, Total = 0.f, NoGame = 0.f; FString Tag, Log; bool bDone = false, bRoleSet = false;
+	void Go(int32 S, const FString& Why);
+	void Save();
+};

@@ -180,11 +180,11 @@ void ACoopDestructible::ApplyState(bool bWithFx)
 	if (ModelComp) { ModelComp->SetVisibility(!bDestroyed); Mesh->SetVisibility(false, false); }
 	else Mesh->SetVisibility(!bDestroyed, false);
 	ApplyCollision();
-	for (UStaticMeshComponent* C : Chunks) if (C) C->SetVisibility(bDestroyed);
+	for (UStaticMeshComponent* C : Chunks) if (C) C->SetVisibility(bDestroyed && bShowOwnDebris);
 	if (FragMeshes.Num() > 0 && GetNetMode() != NM_DedicatedServer)
 	{
 		if (!bDestroyed) ClearFrags();
-		else if (Frags.Num() == 0) SpawnFrags();
+		else if (Frags.Num() == 0 && bShowOwnDebris) SpawnFrags();
 	}
 	ClearAssembly();
 	if (bWithFx && bAssemblyFx && !bDestroyed && !bQuietChange && GetNetMode() != NM_DedicatedServer) StartAssembly();
@@ -222,6 +222,7 @@ bool ACoopDestructible::ServerRebuild(FString& OutWhy)
 	if (GetWorld()->OverlapMultiByObjectType(Hits, GetActorLocation(), GetActorQuat(), Obj, FCollisionShape::MakeBox(Size * 0.5f)))
 		for (const FOverlapResult& H : Hits)
 			if (Cast<APawn>(H.GetActor())) { OutWhy = TEXT("Tem alguem no lugar do objeto"); return false; }
+	if (RebuildCheck && !RebuildCheck(this, OutWhy)) return false;   // material/encaixe (ex.: Fase 2 P2)
 	bDestroyed = false; bQuietChange = false; LastRebuildAt = SrvNow();
 	SolidAt = (bAssemblyFx && Size.X >= Size.Z * 2.f) ? SrvNow() + AssemblyDuration() : 0.f;
 	ApplyState(true);
@@ -244,8 +245,9 @@ void ACoopDestructible::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ACoopDestructible, bDestroyed);
 	DOREPLIFETIME(ACoopDestructible, bQuietChange);
 	DOREPLIFETIME(ACoopDestructible, SolidAt);
-	DOREPLIFETIME_CONDITION(ACoopDestructible, bCanBreak, COND_InitialOnly);
-	DOREPLIFETIME_CONDITION(ACoopDestructible, bCanRebuild, COND_InitialOnly);
+	DOREPLIFETIME(ACoopDestructible, bCanBreak);
+	DOREPLIFETIME(ACoopDestructible, bCanRebuild);
+	DOREPLIFETIME_CONDITION(ACoopDestructible, bShowOwnDebris, COND_InitialOnly);
 	DOREPLIFETIME(ACoopDestructible, Partner);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, bAssemblyFx, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, Size, COND_InitialOnly);

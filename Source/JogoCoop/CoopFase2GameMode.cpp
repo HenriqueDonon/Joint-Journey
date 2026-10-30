@@ -174,6 +174,7 @@ void ACoopFase2GameMode::SetupP1()
 	P1Suporte->bCanBreak = false;                 // Ruina nao destroi o suporte pronto
 	P1Suporte->Partner = P1Trava;                 // material: so reconstroi com a trava destruida
 	P1Suporte->bAssemblyFx = true;                // montagem vertical com os destrocos da trava
+	P1Suporte->bShowOwnDebris = false;            // vaga vazia: o unico material visivel e o da trava destruida
 	P1Trava->FinishSpawning(FTransform(MT->GetActorRotation(), MT->GetActorLocation()));
 	P1Suporte->FinishSpawning(FTransform(MS->GetActorRotation(), MS->GetActorLocation()));
 	UE_LOG(LogTemp, Warning, TEXT("F2X P1 montado: trava e suporte criados (elevador travado)"));

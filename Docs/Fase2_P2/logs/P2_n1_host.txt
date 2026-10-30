@@ -1,0 +1,206 @@
+t=0.50 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=1.00 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=1.50 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=2.01 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=2.51 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=3.01 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=3.52 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=4.02 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=4.52 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=5.03 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=5.53 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=6.03 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=6.53 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=7.04 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=7.54 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=8.04 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=8.54 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=9.05 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=9.55 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=10.05 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=10.56 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=11.06 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=11.56 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=12.06 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=12.57 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=13.07 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=13.57 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=14.08 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=14.58 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=15.08 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=15.58 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=16.29 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=16.79 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=17.30 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=17.80 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=18.31 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=18.81 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=19.31 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=19.82 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=20.32 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=20.82 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=21.32 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=21.83 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=22.33 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=22.83 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=23.34 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=23.84 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=24.34 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=24.84 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=25.35 passo=0.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=25.78 tecla E (pular apresentacao)
+RESULTADO INICIO papel=Neon | maquina: P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+EVT t=25.78 srvT=25.79 passo 0->1 controle
+t=26.18 passo=1.0 Neon pos=(-300,-150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=26.69 passo=1.0 Neon pos=(-70,-170,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=27.20 passo=1.0 Neon pos=(236,-197,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=27.73 passo=1.0 Neon pos=(550,-224,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=28.23 passo=1.0 Neon pos=(850,-251,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+EVT t=28.27 srvT=28.27 passo 1->2 P1 posicionado
+t=28.79 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=29.29 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=29.79 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=30.29 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=30.79 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=31.30 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=31.80 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=32.35 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=32.86 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=33.37 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=33.88 passo=2.0 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=33.97 Neon atira em SUPORTE (P1)
+t=34.38 passo=2.1 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=34.91 passo=2.1 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=35.41 passo=2.1 Neon pos=(934,-259,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO A. P1 resolvido (elevador liberado)
+EVT t=35.42 srvT=35.42 passo 2->3 P1 ok
+t=35.91 passo=3.0 Neon pos=(949,-169,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=36.44 passo=3.0 Neon pos=(1153,-52,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=36.95 passo=3.0 Neon pos=(1221,-40,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=37.46 passo=3.0 Neon pos=(1221,-40,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=38.04 passo=3.0 Neon pos=(1221,-40,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=38.55 passo=3.0 Neon pos=(1221,-40,109) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=39.09 passo=3.0 Neon pos=(1221,-40,160) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=39.60 passo=3.0 Neon pos=(1221,-40,231) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=40.16 passo=3.0 Neon pos=(1221,-40,324) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=40.67 passo=3.0 Neon pos=(1221,-40,416) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=41.24 passo=3.0 Neon pos=(1221,-40,515) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=41.75 passo=3.0 Neon pos=(1221,-40,593) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=42.25 passo=3.0 Neon pos=(1221,-40,652) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=42.78 passo=3.0 Neon pos=(1221,-40,686) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=43.33 passo=3.0 Neon pos=(1221,-40,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO B. ELEVADOR levou os dois ate B (eu a bordo=1, Z=690)
+EVT t=43.66 srvT=43.66 passo 3->4 em B
+t=43.83 passo=4.0 Neon pos=(1221,-41,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=44.40 passo=4.0 Neon pos=(1207,-314,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO C. SEPARACAO: atravessei a barreira ciano, estou na sala SUL (Y=-478)
+EVT t=44.82 srvT=44.83 passo 4->5 na sala
+t=44.91 passo=5.0 Neon pos=(1315,-474,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=45.09 Neon atira em CALHA sem material
+t=45.41 passo=5.1 Neon pos=(1441,-469,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=45.91 passo=5.1 Neon pos=(1441,-469,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=46.48 passo=5.1 Neon pos=(1441,-469,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO D1. NEON reconstruir a calha SEM material: calha continua ausente (OK)
+t=46.99 passo=5.2 Neon pos=(1300,-483,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=47.54 passo=5.2 Neon pos=(1051,-643,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=47.54 Neon atira em PINO com a maquina emperrada
+t=48.04 passo=5.3 Neon pos=(1044,-656,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=48.61 passo=5.3 Neon pos=(1044,-656,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO D2. NEON pino com a maquina desalinhada: pino nao encaixou (OK)
+EVT t=49.09 srvT=49.09 passo 5->6 Neon testou
+t=49.12 passo=6.0 Neon pos=(1044,-656,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=49.65 passo=6.0 Neon pos=(1044,-656,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=50.16 passo=6.0 Neon pos=(1044,-656,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=50.72 passo=6.0 Neon pos=(1044,-656,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=51.23 passo=6.0 Neon pos=(1044,-656,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=51.78 passo=6.0 Neon pos=(1044,-656,690) P=-100 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO F. FREIO solto (visto por Neon): alvo P=-200 (norte mais pesada: 3 x 1)
+t=52.29 passo=6.2 Neon pos=(1044,-656,690) P=-130 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=52.83 passo=6.2 Neon pos=(1044,-656,690) P=-163 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=53.35 passo=6.2 Neon pos=(1044,-656,690) P=-194 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO E. PLATAFORMAS pararam em P=-200 (norte embaixo, sul em cima)
+EVT t=53.45 srvT=53.45 passo 6->7 maquina livre
+RESULTADO E2. lingote 1 no BERCO (calha ausente): massas 2 x 1, alvo P=-100
+t=53.86 passo=7.2 Neon pos=(1050,-653,690) P=-196 alvo=-100 massaN=2 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[1,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=54.38 passo=7.2 Neon pos=(1173,-550,690) P=-165 alvo=-100 massaN=2 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[1,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=54.95 passo=7.2 Neon pos=(1202,-482,690) P=-131 alvo=-100 massaN=2 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[1,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=55.37 Neon atira em CALHA com o material do freio
+RESULTADO G. CALHA construida -> lingote passou ao SUL: massas 2 x 2, alvo P=0
+t=55.46 passo=7.4 Neon pos=(1447,-469,690) P=-100 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=55.97 passo=7.4 Neon pos=(1447,-469,690) P=-70 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=56.47 passo=7.4 Neon pos=(1447,-469,690) P=-40 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=56.97 passo=7.4 Neon pos=(1447,-469,690) P=-9 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO H1. PLATAFORMAS NIVELADAS (P=-2.8) - mas aqui a Ruina vai cometer um erro
+EVT t=57.08 srvT=57.08 passo 7->8 nivelado
+t=57.49 passo=8.0 Neon pos=(1447,-469,690) P=0 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=58.08 passo=8.0 Neon pos=(1447,-469,690) P=0 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO ERRO: lingote 2 tambem passou: massas 1 x 3, alvo P=200 (sul agora mais pesada)
+t=58.58 passo=8.2 Neon pos=(1447,-469,690) P=27 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=59.13 passo=8.2 Neon pos=(1447,-469,690) P=60 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=59.63 passo=8.2 Neon pos=(1447,-469,690) P=90 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=60.14 passo=8.2 Neon pos=(1447,-469,690) P=120 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=60.65 passo=8.2 Neon pos=(1446,-469,690) P=151 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=61.16 passo=8.2 Neon pos=(1229,-483,690) P=182 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=61.55 Neon atira em PINO desalinhado
+t=61.66 passo=8.3 Neon pos=(1050,-643,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=62.17 passo=8.3 Neon pos=(1050,-643,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=62.68 passo=8.3 Neon pos=(1050,-643,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO H2. PINO com a maquina desequilibrada: nao encaixou (OK)
+t=63.18 passo=8.4 Neon pos=(1050,-643,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=63.71 passo=8.4 Neon pos=(1050,-643,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=2 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO K. REARME: P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+EVT t=63.74 srvT=63.74 passo 8->9 rearmado
+t=64.21 passo=9.0 Neon pos=(1050,-643,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=64.72 passo=9.0 Neon pos=(1050,-643,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=65.29 passo=9.0 Neon pos=(1050,-643,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=65.80 passo=9.0 Neon pos=(1052,-642,690) P=-102 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=66.33 passo=9.0 Neon pos=(1173,-548,690) P=-134 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=66.84 passo=9.0 Neon pos=(1188,-491,690) P=-165 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+ACAO t=67.30 Neon atira em CALHA
+t=67.42 passo=9.1 Neon pos=(1433,-483,690) P=-199 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=67.92 passo=9.1 Neon pos=(1196,-483,690) P=-184 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=68.47 passo=9.2 Neon pos=(1050,-642,690) P=-151 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=68.98 passo=9.2 Neon pos=(1050,-642,690) P=-121 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=69.53 passo=9.2 Neon pos=(1050,-642,690) P=-88 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=70.04 passo=9.2 Neon pos=(1050,-642,690) P=-57 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=70.55 passo=9.2 Neon pos=(1050,-642,690) P=-27 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=1 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+ACAO t=70.97 Neon atira em PINO no nivel
+RESULTADO I. CONCLUIDO: equilibrio travado e portoes abertos | P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+EVT t=70.98 srvT=70.98 passo 9->10 concluido
+t=71.05 passo=10.0 Neon pos=(1055,-641,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=71.58 passo=10.0 Neon pos=(1173,-591,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=72.08 passo=10.0 Neon pos=(1173,-563,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=72.63 passo=10.0 Neon pos=(1173,-542,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=73.13 passo=10.0 Neon pos=(1173,-528,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=73.69 passo=10.0 Neon pos=(1173,-513,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=74.20 passo=10.0 Neon pos=(1304,-474,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=74.71 passo=10.0 Neon pos=(1613,-471,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=75.23 passo=10.0 Neon pos=(1905,-489,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=75.77 passo=10.0 Neon pos=(1871,-758,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=76.28 passo=10.0 Neon pos=(2145,-745,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=76.80 passo=10.0 Neon pos=(2166,-445,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+RESULTADO J. REENCONTRO: distancia 616 cm | caminho ate a escada B->C livre
+EVT t=77.03 srvT=77.03 passo 10->11 reencontro
+t=77.31 passo=11.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=77.85 passo=11.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=78.35 passo=11.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=78.88 passo=11.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=79.38 passo=11.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=79.92 passo=11.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+RESULTADO FIM P2 | P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+EVT t=80.04 srvT=80.04 passo 11->99 fim
+t=80.42 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=80.94 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=81.45 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=82.03 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=82.55 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=83.08 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=83.58 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=84.08 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=84.59 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=85.09 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=85.59 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=86.10 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=86.60 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=87.10 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=87.60 passo=99.0 Neon pos=(2149,-290,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1

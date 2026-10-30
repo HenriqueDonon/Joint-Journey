@@ -32,6 +32,11 @@ public:
 	// Regras por objeto (padrao: ciclo livre como na Fase 1). Fase 2/P1: trava nao se reconstroi; suporte nao se destroi.
 	UPROPERTY(Replicated) bool bCanBreak = true;
 	UPROPERTY(Replicated) bool bCanRebuild = true;
+	// false: quando quebrado nao mostra escombros proprios (peca "ausente"; o material vem de outro objeto)
+	UPROPERTY(Replicated) bool bShowOwnDebris = true;
+	// Servidor (opcional): regra extra de material/encaixe chamada no fim da validacao do ServerRebuild. Pode definir Partner
+	// (origem real dos destrocos usada na animacao). Nao replicado; padrao vazio = comportamento antigo.
+	TFunction<bool(ACoopDestructible*, FString&)> RebuildCheck;
 	float RebuildDoneAt() const { return LastRebuildAt + AssemblyDuration(); }   // servidor: quando a montagem visual termina
 	bool HasBeenRebuilt() const { return LastRebuildAt > 0.f; }
 	void TakeDebris(TArray<FVector>& Out);   // local: entrega as posicoes dos destrocos visiveis e os esconde

@@ -27,6 +27,7 @@ void UCoopTestSubsystem::OnWorldBeginPlay(UWorld& W)
 	if (FParse::Param(FCommandLine::Get(), TEXT("F2Fluxo"))) W.SpawnActor<ACoopF2Flow>();
 	if (FParse::Param(FCommandLine::Get(), TEXT("F2Vistas"))) W.SpawnActor<ACoopF2Views>();
 	if (FParse::Param(FCommandLine::Get(), TEXT("F2P1"))) W.SpawnActor<ACoopF2P1Flow>();
+	if (FParse::Param(FCommandLine::Get(), TEXT("F2P2"))) W.SpawnActor<ACoopF2P2Flow>();
 }
 
 // ---------------- passeio de camera (mesmo trajeto em qualquer mapa da Fase 1) ----------------

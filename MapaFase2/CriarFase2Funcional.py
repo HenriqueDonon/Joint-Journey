@@ -128,7 +128,6 @@ for s in (1, -1):
 # hub de contrapesos (entre as salas, visto pelas janelas): fechado
 box('Hub_ParedeLeste', 1930, 1950, -300, 300, 0, 1200, 'parede', 'B_Hub')
 box('Hub_Piso', 1470, 1930, -300, 300, 560, 600, 'B', 'B_Hub')
-box('P2_Contrapeso_Central', 1620, 1780, -100, 100, 600, 1100, 'contra', 'Placeholders_P2')
 # tetos de B = piso de C
 box('C_Faixa_Norte', 450, 2800, 250, 1250, 1160, 1200, 'Cc', 'C')
 box('C_Cobertura_Sul', 450, 1950, -1250, -300, 1160, 1200, 'Cc', 'C')
@@ -193,19 +192,18 @@ box('P1_Suporte_Topo', 1095, 1305, -240, -165, 200, 240, 'trilho', 'P1_Mecanismo
 box('P1_Suporte_Faixa', 1095, 1305, -242, -238, 205, 235, 'console', 'P1_Mecanismo', col=False)
 box('P1_Mecanismo_Tambor', 1000, 1040, -120, 120, 300, 480, 'mec', 'Placeholders_P1')
 box('P1_Area_Aproximacao', 470, 1040, -290, 290, 0, 4, 'saida', 'Placeholders_P1', col=False)
-for s, nome, cor in ((1, 'Norte_Ruina', 'trava'), (-1, 'Sul_Neon', 'suporte')):
-    y = s*750
-    box('P2_PlataformaSuspensa_' + nome, 1250, 1650, y-200, y+200, 640, 680, 'contra', 'Placeholders_P2')
-    for dx, dy in ((-190, -190), (190, -190), (-190, 190), (190, 190)):
-        box('P2_Cabo_' + nome, 1450+dx-3, 1450+dx+3, y+dy-3, y+dy+3, 680, 1160, 'trilho', 'Placeholders_P2', col=False)
-    box('P2_Carga_' + nome, 1400, 1500, y-50, y+50, 680, 800, 'mec', 'Placeholders_P2')
-if True:
-    box('P2_Freio_1_Ruina', 700, 820, 900, 1020, 600, 760, 'trava', 'Placeholders_P2')
-    box('P2_Freio_2_Ruina', 700, 820, 500, 620, 600, 760, 'trava', 'Placeholders_P2')
-    box('P2_TravaLiberacao_Ruina', 1800, 1900, 1100, 1200, 600, 900, 'trava', 'Placeholders_P2')
-    box('P2_Guia_Reconstruivel_Neon', 700, 760, -1100, -500, 600, 1160, 'suporte', 'Placeholders_P2', col=False)
-    box('P2_Suporte_Transferencia_Neon', 1800, 1900, -1200, -1100, 600, 900, 'suporte', 'Placeholders_P2', col=False)
-    box('P2_Rota_Reencontro', 1970, 2800, -100, 100, 600, 604, 'saida', 'Placeholders_P2', col=False)
+# P2 (Tarefa 07): maquina de contrapesos = ator CoopBalanceMachine (plataformas, cabos, lingotes, freio, bracadeiras, calha,
+# pino, berco e mostradores sao montados por ele; as pecas destrutiveis/reconstruiveis nascem no servidor). Aqui: cercas das
+# areas das plataformas (ninguem sobe nelas) e o console de rearme em cada sala.
+for sg in (1, -1):
+    y0, y1 = sorted((sg*520, sg*1000))
+    rail(1210, y0, 1690, y0, 600); rail(1210, y1, 1690, y1, 600); rail(1210, y0, 1210, y1, 600); rail(1690, y0, 1690, y1, 600)
+BM = ell.spawn_actor_from_class(unreal.load_class(None, '/Script/JogoCoop.CoopBalanceMachine'), unreal.Vector(1450, 0, 600))
+BM.set_actor_label('P2_Maquina_Contrapesos'); BM.set_folder_path('P2')
+for sg, nome in ((1, 'Norte'), (-1, 'Sul')):
+    c = ell.spawn_actor_from_class(CC, unreal.Vector(1800, sg*380, 660), unreal.Rotator(roll=0, pitch=0, yaw=0))
+    c.set_editor_property('action', unreal.CoopConsoleAction.MACHINE_RESET); c.set_editor_property('machine', BM)
+    c.set_actor_label('Console_Rearme_P2_' + nome); c.set_folder_path('P2')
 # P3: trajetoria da esfera na cobertura sul de C (X 460..1950, Y ~-800), 3 trechos + lancador + sensor + coletor.
 # (a faixa norte fica livre para circulacao e para o portao P3 da escada C->D)
 box('P3_Lancador', 1800, 1940, -920, -680, 1200, 1450, 'mec', 'Placeholders_P3')
@@ -229,7 +227,7 @@ for (x, y, z) in ((700, 290, 420), (700, -290, 420), (2400, 1235, 900), (2400, -
 # ===== ROTULOS =====
 text('A | INICIO - PUZZLE 1: ELEVADOR DE EMERGENCIA', (-590, 0, 420), 0, 60, (.6, 1, .6))
 text('TRAVA DANIFICADA', (1200, 246, 300), 270, 32, (1, .4, .4)); text('SUPORTE AUSENTE', (1200, -246, 280), 90, 32, (.5, .7, 1))
-text('B NORTE - RUINA (freios/travas)', (1300, 1240, 1050), 270, 45, (1, .85, .4)); text('B SUL - NEON (guias/suportes)', (1300, -1240, 1050), 90, 45, (.4, 1, 1))
+
 text('REENCONTRO (apos P2)', (2790, 0, 900), 180, 50, (1, 1, 1))
 text('C - PUZZLE 3: NUCLEO EM MOVIMENTO', (1200, -1240, 1550), 90, 50, (.5, .7, 1))
 text('SAIDA', (2770, -600, 2350), 180, 90, (1, .8, .2))

@@ -1,5 +1,6 @@
 #include "CoopConsole.h"
 #include "CoopElevator.h"
+#include "CoopBalanceMachine.h"
 #include "CoopCharacter.h"
 #include "JJVisual.h"
 #include "Components/StaticMeshComponent.h"
@@ -37,6 +38,7 @@ void ACoopConsole::BeginPlay()
 bool ACoopConsole::ServerUse(ACoopCharacter* By, FString& OutWhy)
 {
 	if (!HasAuthority()) { OutWhy = TEXT("sem autoridade"); return false; }
+	if (Action == ECoopConsoleAction::MachineReset) return Machine ? Machine->ServerReset(OutWhy) : false;
 	if (!Elevator) { OutWhy = TEXT("Console sem elevador"); return false; }
 	switch (Action)
 	{
@@ -47,12 +49,12 @@ bool ACoopConsole::ServerUse(ACoopCharacter* By, FString& OutWhy)
 	return false;
 }
 
-// indicador: vermelho = travado | ambar = em movimento | verde = disponivel (le o estado replicado do elevador)
+// indicador: vermelho = travado/bloqueado | ambar = sem efeito agora | verde = disponivel (estado replicado do elevador/maquina)
 void ACoopConsole::Tick(float Dt)
 {
 	Super::Tick(Dt);
-	if (!Elevator || !ScreenMat) return;
-	const int32 S = Elevator->bLockedP1 ? 0 : Elevator->IsMoving() ? 1 : 2;
+	if (!ScreenMat || (!Elevator && !Machine)) return;
+	int32 S = 0; Prompt(S);
 	if (S == LastState) return;
 	LastState = S;
 	const FLinearColor C = S == 0 ? FLinearColor(1.f, 0.08f, 0.04f) : S == 1 ? FLinearColor(1.f, 0.55f, 0.05f) : FLinearColor(0.15f, 1.f, 0.35f);
@@ -61,18 +63,25 @@ void ACoopConsole::Tick(float Dt)
 	if (Lamp) Lamp->SetLightColor(C);
 }
 
-FString ACoopConsole::Prompt(bool& bAvailable) const
+FString ACoopConsole::Prompt(int32& S) const
 {
-	bAvailable = false;
+	S = 1;
+	if (Action == ECoopConsoleAction::MachineReset)
+	{
+		if (!Machine) return FString();
+		if (Machine->IsDone()) { S = 1; return TEXT("Mecanismo travado"); }
+		S = 2; return TEXT("[E] Rearmar mecanismo");
+	}
 	if (!Elevator) return FString();
-	if (Elevator->bLockedP1) return TEXT("[E] Elevador TRAVADO - o mecanismo precisa de conserto");
-	if (Elevator->IsMoving()) return TEXT("Elevador em movimento...");
-	bAvailable = true;
+	if (Elevator->bLockedP1) { S = 0; return TEXT("Elevador travado"); }
+	if (Elevator->IsMoving()) { S = 1; return TEXT("Elevador em movimento"); }
+	const bool bTop = Elevator->IsTargetTop();
 	switch (Action)
 	{
-	case ECoopConsoleAction::ElevatorToggle: return Elevator->IsTargetTop() ? TEXT("[E] Descer") : TEXT("[E] Subir");
-	case ECoopConsoleAction::ElevatorCallBottom: return Elevator->IsTargetTop() ? TEXT("[E] Chamar o elevador") : TEXT("[E] Elevador aqui - entre na cabine");
-	case ECoopConsoleAction::ElevatorCallTop: return Elevator->IsTargetTop() ? TEXT("[E] Elevador aqui - entre na cabine") : TEXT("[E] Chamar o elevador");
+	case ECoopConsoleAction::ElevatorToggle: S = 2; return bTop ? TEXT("[E] Descer") : TEXT("[E] Subir");
+	case ECoopConsoleAction::ElevatorCallBottom: if (bTop) { S = 2; return TEXT("[E] Chamar o elevador"); } S = 1; return TEXT("Elevador neste andar");
+	case ECoopConsoleAction::ElevatorCallTop: if (!bTop) { S = 2; return TEXT("[E] Chamar o elevador"); } S = 1; return TEXT("Elevador neste andar");
+	default: break;
 	}
 	return FString();
 }

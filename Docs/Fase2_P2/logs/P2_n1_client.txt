@@ -1,0 +1,149 @@
+t=0.50 passo=0.0 Ruina pos=(-300,150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=1.01 passo=0.0 Ruina pos=(-300,150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=1.51 passo=0.0 Ruina pos=(-300,150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=2.01 passo=0.0 Ruina pos=(-300,150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=2.51 passo=0.0 Ruina pos=(-300,150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=3.00 tecla E (pular apresentacao)
+t=3.01 passo=0.1 Ruina pos=(-300,150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=3.52 passo=0.1 Ruina pos=(-300,150,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO INICIO papel=Ruina | maquina: P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+EVT t=4.00 srvT=30.62 passo 0->1 controle
+t=4.41 passo=1.0 Ruina pos=(-279,152,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=4.91 passo=1.0 Ruina pos=(16,178,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=5.42 passo=1.0 Ruina pos=(315,204,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=5.92 passo=1.0 Ruina pos=(617,230,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+EVT t=6.35 srvT=32.97 passo 1->2 P1 posicionado
+t=6.42 passo=2.0 Ruina pos=(891,254,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=6.92 passo=2.0 Ruina pos=(891,254,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=7.35 Ruina atira em TRAVA (P1)
+t=7.43 passo=2.1 Ruina pos=(891,254,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=7.94 passo=2.1 Ruina pos=(891,254,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=8.44 passo=2.1 Ruina pos=(891,254,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO A. P1 resolvido (elevador liberado)
+EVT t=8.81 srvT=35.42 passo 2->3 P1 ok
+t=8.95 passo=3.0 Ruina pos=(908,242,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=9.45 passo=3.0 Ruina pos=(1011,111,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=9.95 passo=3.0 Ruina pos=(1196,45,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=10.45 passo=3.0 Ruina pos=(1196,45,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=10.81 tecla E (subir)
+t=10.96 passo=3.0 Ruina pos=(1196,45,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=11.46 passo=3.0 Ruina pos=(1196,45,90) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=11.96 passo=3.0 Ruina pos=(1196,45,110) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=12.47 passo=3.0 Ruina pos=(1196,45,158) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=12.97 passo=3.0 Ruina pos=(1196,45,228) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=13.47 passo=3.0 Ruina pos=(1196,45,311) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=13.98 passo=3.0 Ruina pos=(1196,45,401) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=14.48 passo=3.0 Ruina pos=(1196,45,490) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=14.99 passo=3.0 Ruina pos=(1196,45,572) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=15.50 passo=3.0 Ruina pos=(1196,45,637) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=16.01 passo=3.0 Ruina pos=(1196,45,679) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=16.51 passo=3.0 Ruina pos=(1196,45,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=17.03 passo=3.0 Ruina pos=(1196,45,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO B. ELEVADOR levou os dois ate B (eu a bordo=1, Z=690)
+EVT t=17.05 srvT=43.66 passo 3->4 em B
+t=17.53 passo=4.0 Ruina pos=(1198,241,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=18.03 passo=4.0 Ruina pos=(1251,481,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO C. SEPARACAO: atravessei a barreira roxa, estou na sala NORTE (Y=475)
+EVT t=18.10 srvT=44.70 passo 4->5 na sala
+ACAO t=18.32 Ruina atira em CALHA da sala do Neon (atraves da parede/janela)
+t=18.54 passo=5.1 Ruina pos=(1439,468,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=19.04 passo=5.1 Ruina pos=(1439,468,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=19.54 passo=5.1 Ruina pos=(1439,468,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO D3. RUINA na peca do outro lado: calha sem efeito (OK)
+t=20.05 passo=5.2 Ruina pos=(1383,469,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=20.55 passo=5.2 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=21.05 passo=5.2 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=21.56 passo=5.2 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=22.06 passo=5.2 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=22.56 passo=5.2 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=23.07 passo=5.2 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=23.57 passo=5.2 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=24.07 passo=5.2 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+EVT t=24.10 srvT=50.70 passo 5->6 Ruina pronta
+t=24.59 passo=6.0 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=25.09 passo=6.0 Ruina pos=(1307,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=25.10 Ruina atira em FREIO emperrado
+RESULTADO E. FREIO solto (visto por Ruina): alvo P=-200 (norte mais pesada: 3 x 1)
+t=25.61 passo=6.2 Ruina pos=(1307,470,690) P=-126 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=26.11 passo=6.2 Ruina pos=(1307,470,690) P=-156 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=26.62 passo=6.2 Ruina pos=(1307,470,690) P=-187 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO E. PLATAFORMAS pararam em P=-197 (norte embaixo, sul em cima)
+EVT t=26.80 srvT=53.40 passo 6->7 maquina livre
+t=27.12 passo=7.0 Ruina pos=(1401,470,690) P=-200 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=27.16 Ruina atira em BRACADEIRA 1
+RESULTADO E2. lingote 1 no BERCO (calha ausente): massas 2 x 1, alvo P=-100
+t=27.64 passo=7.2 Ruina pos=(1439,470,690) P=-173 alvo=-100 massaN=2 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[1,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=28.15 passo=7.2 Ruina pos=(1439,470,690) P=-143 alvo=-100 massaN=2 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[1,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+t=28.66 passo=7.2 Ruina pos=(1439,470,690) P=-112 alvo=-100 massaN=2 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[1,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO G. CALHA construida -> lingote passou ao SUL: massas 2 x 2, alvo P=0
+t=29.16 passo=7.4 Ruina pos=(1439,470,690) P=-82 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=29.67 passo=7.4 Ruina pos=(1439,470,690) P=-51 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=30.17 passo=7.4 Ruina pos=(1439,470,690) P=-21 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+RESULTADO H1. PLATAFORMAS NIVELADAS (P=-2.6) - mas aqui a Ruina vai cometer um erro
+EVT t=30.49 srvT=57.09 passo 7->8 nivelado
+t=30.68 passo=8.0 Ruina pos=(1439,470,690) P=0 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=31.18 passo=8.0 Ruina pos=(1439,470,690) P=0 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=31.50 Ruina atira em BRACADEIRA 2 (erro: transferencia a mais)
+RESULTADO ERRO: lingote 2 tambem passou: massas 1 x 3, alvo P=200 (sul agora mais pesada)
+t=31.70 passo=8.2 Ruina pos=(1439,470,690) P=10 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=32.20 passo=8.2 Ruina pos=(1439,470,690) P=40 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=32.71 passo=8.2 Ruina pos=(1439,470,690) P=71 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=33.22 passo=8.2 Ruina pos=(1439,470,690) P=101 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=33.73 passo=8.2 Ruina pos=(1439,470,690) P=132 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=34.23 passo=8.2 Ruina pos=(1439,470,690) P=162 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=34.74 passo=8.2 Ruina pos=(1439,470,690) P=193 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=35.25 passo=8.2 Ruina pos=(1439,470,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=35.76 passo=8.2 Ruina pos=(1439,470,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=36.26 passo=8.2 Ruina pos=(1439,470,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+t=36.77 passo=8.2 Ruina pos=(1529,464,690) P=200 alvo=200 massaN=1 massaS=3 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,2,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=0
+ACAO t=37.09 tecla E (rearmar mecanismo)
+RESULTADO K. REARME: P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+EVT t=37.13 srvT=63.73 passo 8->9 rearmado
+t=37.28 passo=9.0 Ruina pos=(1725,451,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=37.79 passo=9.0 Ruina pos=(1450,463,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=38.30 passo=9.0 Ruina pos=(1305,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=38.81 passo=9.0 Ruina pos=(1305,470,690) P=-100 alvo=-100 massaN=3 massaS=1 freioLivre=0 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+ACAO t=39.13 Ruina atira em FREIO
+t=39.31 passo=9.1 Ruina pos=(1305,470,690) P=-109 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=39.82 passo=9.1 Ruina pos=(1305,470,690) P=-140 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=40.32 passo=9.1 Ruina pos=(1305,470,690) P=-170 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=ausente pino=ausente portoesP2abertos=0 rearmes=1
+t=40.84 passo=9.1 Ruina pos=(1329,470,690) P=-200 alvo=-200 massaN=3 massaS=1 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[0,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+ACAO t=41.04 Ruina atira em BRACADEIRA 1 (unica)
+t=41.34 passo=9.2 Ruina pos=(1444,470,690) P=-183 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=41.85 passo=9.2 Ruina pos=(1444,470,690) P=-153 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=42.35 passo=9.2 Ruina pos=(1444,470,690) P=-123 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=42.87 passo=9.2 Ruina pos=(1444,470,690) P=-92 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=43.37 passo=9.2 Ruina pos=(1444,470,690) P=-62 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+t=43.88 passo=9.2 Ruina pos=(1444,470,690) P=-31 alvo=0 massaN=2 massaS=2 freioLivre=1 travado=0 concluido=0 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ausente portoesP2abertos=0 rearmes=1
+RESULTADO I. CONCLUIDO: equilibrio travado e portoes abertos | P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+EVT t=44.37 srvT=70.97 passo 9->10 concluido
+t=44.39 passo=10.0 Ruina pos=(1444,470,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=44.90 passo=10.0 Ruina pos=(1673,470,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=45.40 passo=10.0 Ruina pos=(1875,585,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=45.90 passo=10.0 Ruina pos=(1971,775,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=46.41 passo=10.0 Ruina pos=(2176,633,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=46.91 passo=10.0 Ruina pos=(2153,332,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=47.41 passo=10.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=47.93 passo=10.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=48.43 passo=10.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=48.94 passo=10.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=49.44 passo=10.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=49.95 passo=10.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+RESULTADO J. REENCONTRO: distancia 699 cm | caminho ate a escada B->C livre
+EVT t=50.28 srvT=76.87 passo 10->11 reencontro
+t=50.46 passo=11.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=50.97 passo=11.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=51.47 passo=11.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=51.99 passo=11.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=52.49 passo=11.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=53.01 passo=11.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+RESULTADO FIM P2 | P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+EVT t=53.28 srvT=79.87 passo 11->99 fim
+t=53.52 passo=99.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=54.02 passo=99.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=54.52 passo=99.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=55.03 passo=99.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=55.53 passo=99.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=56.04 passo=99.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=56.55 passo=99.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1
+t=57.05 passo=99.0 Ruina pos=(2151,311,690) P=-1 alvo=-1 massaN=2 massaS=2 freioLivre=1 travado=1 concluido=1 pilhas=0 lingotes=[2,0,0] calha=CONSTRUIDA pino=ENCAIXADO portoesP2abertos=2 rearmes=1

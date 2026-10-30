@@ -56,13 +56,13 @@ void ACoopHUD::DrawHUD()
 				const float D = FVector::Dist(It->GetActorLocation(), C->GetActorLocation());
 				if (D < It->UseRadius && D < BestD) { BestD = D; Best = *It; }
 			}
-			bool bAv = false;
-			const FString P = Best ? Best->Prompt(bAv) : FString();
+			int32 St = 1;
+			const FString P = Best ? Best->Prompt(St) : FString();
 			if (!P.IsEmpty())
 			{
 				float W = 0.f, H = 0.f; GetTextSize(P, W, H, GEngine->GetMediumFont(), 1.2f);
 				DrawRect(FLinearColor(0.f, 0.f, 0.f, 0.45f), cx - W * 0.5f - 10.f, cy + 70.f, W + 20.f, H + 8.f);
-				DrawText(P, bAv ? FLinearColor(0.6f, 1.f, 0.7f) : FLinearColor(1.f, 0.45f, 0.35f), cx - W * 0.5f, cy + 74.f, GEngine->GetMediumFont(), 1.2f);
+				DrawText(P, St == 2 ? FLinearColor(0.6f, 1.f, 0.7f) : St == 0 ? FLinearColor(1.f, 0.45f, 0.35f) : FLinearColor(0.7f, 0.7f, 0.7f), cx - W * 0.5f, cy + 74.f, GEngine->GetMediumFont(), 1.2f);
 			}
 		}
 	}

@@ -5,6 +5,7 @@
 #include "CoopFase2GameMode.h"
 #include "CoopDestructible.h"
 #include "CoopConsole.h"
+#include "CoopBalanceMachine.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/GameStateBase.h"
@@ -178,7 +179,17 @@ void ACoopF2Views::Tick(float Dt)
 		{ TEXT("13_D_saida"), FVector(1500, 600, 2150), FVector(2800, -600, 2000), 75, 1e9f, false },
 		{ TEXT("14_reencontro_escadas"), FVector(2000, 1100, 1450), FVector(2450, -600, 700), 85, 1750, false },
 	};
-	const int32 NV = UE_ARRAY_COUNT(V);
+	static const FV V2[] = {
+		{ TEXT("P2_01_sala_norte_ruina"), FVector(1000, 1190, 1120), FVector(1560, 560, 860), 88, 1e9f, false },
+		{ TEXT("P2_02_sala_sul_neon"), FVector(1000, -1190, 1120), FVector(1560, -560, 860), 88, 1e9f, false },
+		{ TEXT("P2_03_hub_pela_janela_norte"), FVector(1700, 700, 960), FVector(1700, 0, 940), 70, 1e9f, false },
+		{ TEXT("P2_04_freio_e_bracadeiras"), FVector(1450, 360, 900), FVector(1450, 800, 800), 85, 1e9f, false },
+		{ TEXT("P2_05_calha_e_pino"), FVector(1000, -420, 1000), FVector(1450, -700, 900), 85, 1e9f, false },
+		{ TEXT("P2_06_planta_B"), FVector(1300, 0, 9000), FVector(1300, 1, 600), 20, 1150, false },
+	};
+	static const bool bP2Views = FParse::Param(FCommandLine::Get(), TEXT("F2VistasP2"));
+	const FV* VV = bP2Views ? V2 : V;
+	const int32 NV = bP2Views ? UE_ARRAY_COUNT(V2) : UE_ARRAY_COUNT(V);
 	static const bool bIntroRec = FParse::Param(FCommandLine::Get(), TEXT("F2Intro"));
 	if (bIntroRec)   // grava a apresentacao quadro a quadro (com -usefixedtimestep -fps=30) e o retorno ao personagem
 	{
@@ -197,13 +208,13 @@ void ACoopF2Views::Tick(float Dt)
 		for (TActorIterator<AStaticMeshActor> It(W); It; ++It)
 		{
 			FVector O, Ext; It->GetActorBounds(false, O, Ext);
-			It->SetActorHiddenInGame((O.Z - Ext.Z) > V[I].HideAbove || (V[I].bCut && It->ActorHasTag(TEXT("CorteSul"))));
+			It->SetActorHiddenInGame((O.Z - Ext.Z) > VV[I].HideAbove || (VV[I].bCut && It->ActorHasTag(TEXT("CorteSul"))));
 		}
-		Cam->SetActorLocationAndRotation(V[I].P, (V[I].Tg - V[I].P).Rotation());
-		Cam->GetCameraComponent()->SetFieldOfView(V[I].Fov);
+		Cam->SetActorLocationAndRotation(VV[I].P, (VV[I].Tg - VV[I].P).Rotation());
+		Cam->GetCameraComponent()->SetFieldOfView(VV[I].Fov);
 		PC->SetViewTargetWithBlend(Cam, 0.f);
 	}
-	if (Ph > 0.9f && Ph < 0.9f + Dt * 1.5f) FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f2vistas/%s.png"), V[I].Name), false, false);
+	if (Ph > 0.9f && Ph < 0.9f + Dt * 1.5f) FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f2vistas/%s.png"), VV[I].Name), false, false);
 }
 
 // =================== PUZZLE 1 ===================
@@ -225,7 +236,8 @@ void ACoopF2P1Flow::Tick(float Dt)
 	AGameStateBase* GS = W->GetGameState();
 	ACoopElevator* E = nullptr; for (TActorIterator<ACoopElevator> It(W); It; ++It) { E = *It; break; }
 	ACoopDestructible *Tr = nullptr, *Su = nullptr;
-	for (TActorIterator<ACoopDestructible> It(W); It; ++It) { if (It->GetActorLocation().Y > 0.f) Tr = *It; else Su = *It; }
+	for (TActorIterator<ACoopDestructible> It(W); It; ++It)
+		if (FMath::Abs(It->GetActorLocation().X - 1200.f) < 10.f && It->GetActorLocation().Z < 400.f) { if (It->GetActorLocation().Y > 0.f) Tr = *It; else Su = *It; }
 	if (!Me || !GS || !E || !Tr || !Su) { NoGame += Dt; if (NoGame > 25.f && !bDone) { bDone = true; GEngine->Exec(W, TEXT("quit")); } return; }
 	if (bDone) return;
 	static const bool bSwap = FParse::Param(FCommandLine::Get(), TEXT("F2Swap"));
@@ -267,7 +279,7 @@ void ACoopF2P1Flow::Tick(float Dt)
 		const ACoopConsole* B = nullptr; float BD = 1e9f;
 		for (TActorIterator<ACoopConsole> It(W); It; ++It) { const float D = FVector::Dist(It->GetActorLocation(), L); if (D < It->UseRadius && D < BD) { BD = D; B = *It; } }
 		if (!B) return FString(TEXT("(nenhum console ao alcance)"));
-		bool bAv = false; const FString P = B->Prompt(bAv); return P + (bAv ? TEXT(" [disponivel]") : TEXT(" [indisponivel]"));
+		int32 S = 1; const FString P = B->Prompt(S); return P + (S == 2 ? TEXT(" [verde: disponivel]") : S == 0 ? TEXT(" [vermelho: bloqueado]") : TEXT(" [cinza: sem efeito]"));
 	};
 	// camera de inspecao no host (-InspP1): mostra a trava, o suporte e a cabine nos momentos certos (so para o video)
 	static const bool bInsp = FParse::Param(FCommandLine::Get(), TEXT("InspP1"));
@@ -347,6 +359,161 @@ void ACoopF2P1Flow::Tick(float Dt)
 		else if (Sub == 3) { Walk(FVector2D(1200, -Sg * 520.f)); if (!Me->GetCharacterMovement()->IsFalling() && SubT > 1.f) Me->Jump(); T0 = FMath::Max(T0, -Sg * L.Y); if (SubT > 6.f) { Res(FString::Printf(TEXT("K. BARREIRA DO OUTRO: |Y| max %.0f -> %s"), T0, T0 < 215.f ? TEXT("BLOQUEADO (OK)") : TEXT("PASSOU (FALHA)"))); Go(8, TEXT("barreiras")); } }
 		break; }
 	case 8: if (At(FVector2D(1200, (bNeon ? -1.f : 1.f) * 470.f)) && StT > 2.f) { Res(TEXT("FIM P1: puzzle concluido em cooperacao e setor B funcionando")); Go(99, TEXT("fim")); } break;
+	case 98: case 99: if (StT > (Tag == TEXT("host") ? 8.f : 4.f)) { Save(); bDone = true; GEngine->Exec(W, TEXT("quit")); } break;
+	}
+}
+
+// =================== PUZZLE 2 ===================
+void ACoopF2P2Flow::Go(int32 S, const FString& Why)
+{
+	const AGameStateBase* GS = GetWorld()->GetGameState();
+	Log += FString::Printf(TEXT("EVT t=%.2f srvT=%.2f passo %d->%d %s\n"), Total, GS ? GS->GetServerWorldTimeSeconds() : 0.f, St, S, *Why);
+	St = S; StT = 0.f; Wp = 0; Sub = 0; SubT = 0.f; Save();
+}
+void ACoopF2P2Flow::Save() { FFileHelper::SaveStringToFile(Log, *(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f2p2/log_%s.txt"), *Tag))); }
+
+void ACoopF2P2Flow::Tick(float Dt)
+{
+	Super::Tick(Dt);
+	UWorld* W = GetWorld();
+	if (Tag.IsEmpty()) { FParse::Value(FCommandLine::Get(), TEXT("FluxoTag="), Tag); if (Tag.IsEmpty()) Tag = TEXT("solo"); }
+	APlayerController* PC = W->GetFirstPlayerController();
+	ACoopCharacter* Me = PC ? Cast<ACoopCharacter>(PC->GetPawn()) : nullptr;
+	AGameStateBase* GS = W->GetGameState();
+	ACoopElevator* E = nullptr; for (TActorIterator<ACoopElevator> It(W); It; ++It) { E = *It; break; }
+	ACoopBalanceMachine* M = nullptr; for (TActorIterator<ACoopBalanceMachine> It(W); It; ++It) { M = *It; break; }
+	ACoopDestructible *Tr = nullptr, *Su = nullptr;
+	for (TActorIterator<ACoopDestructible> It(W); It; ++It)
+		if (FMath::Abs(It->GetActorLocation().X - 1200.f) < 10.f && It->GetActorLocation().Z < 400.f) { if (It->GetActorLocation().Y > 0.f) Tr = *It; else Su = *It; }
+	if (!Me || !GS || !E || !M || !Tr || !Su || !M->Brake || !M->Chute || !M->Pin || !M->Clamp0) { NoGame += Dt; if (NoGame > 25.f && !bDone) { bDone = true; GEngine->Exec(W, TEXT("quit")); } return; }
+	if (bDone) return;
+	static const bool bSwap = FParse::Param(FCommandLine::Get(), TEXT("F2Swap"));
+	if (!bRoleSet && Total > 1.f)
+	{
+		bRoleSet = true;
+		if (bSwap) if (UFunction* F = Me->FindFunction(TEXT("ServerSetRole"))) { uint8 R = (uint8)(Tag == TEXT("host") ? ECoopRole::Ruina : ECoopRole::Neon); Me->ProcessEvent(F, &R); }
+		int32 Lag = 0;
+		if (Tag == TEXT("client") && FParse::Value(FCommandLine::Get(), TEXT("F2Lag="), Lag) && Lag > 0) { GEngine->Exec(W, *FString::Printf(TEXT("Net PktLag=%d"), Lag)); Log += FString::Printf(TEXT("LATENCIA simulada no cliente: %d ms\n"), Lag); }
+	}
+	ACoopCharacter* O = nullptr; int32 NP = 0;
+	for (TActorIterator<ACoopCharacter> It(W); It; ++It) { ++NP; if (*It != Me) O = *It; }
+	StT += Dt; SubT += Dt; ShotT += Dt; LogT += Dt; Total += Dt;
+	const bool bNeon = Me->CoopRole == ECoopRole::Neon;
+	const float Sg = bNeon ? -1.f : 1.f;
+	const FVector L = Me->GetActorLocation();
+	const FBalState& B = M->State();
+	const float P = M->PlatformOffset();
+	auto Walk = [&](FVector2D Tg) -> float
+	{
+		const FVector2D D = Tg - FVector2D(L.X, L.Y);
+		if (D.Size() > 22.f) { Me->AddMovementInput(FVector(D.X, D.Y, 0).GetSafeNormal(), 1.f); PC->SetControlRotation(FRotator(-12.f, FMath::RadiansToDegrees(FMath::Atan2(D.Y, D.X)), 0)); }
+		return D.Size();
+	};
+	auto At = [&](FVector2D Tg) { return Walk(Tg) < 30.f; };
+	auto Path = [&](std::initializer_list<FVector2D> Pt) -> bool { const int32 N = (int32)Pt.size(); if (Wp >= N) return true; if (Walk(*(Pt.begin() + Wp)) < 30.f) ++Wp; return Wp >= N; };
+	auto Use = [&](const TCHAR* Why) { if (UFunction* F = Me->FindFunction(TEXT("ServerInteract"))) Me->ProcessEvent(F, nullptr); Log += FString::Printf(TEXT("ACAO t=%.2f tecla E (%s)\n"), Total, Why); };
+	auto Fire = [&](ACoopDestructible* T, const TCHAR* Why)
+	{
+		const FVector D = T->GetActorLocation() - L; PC->SetControlRotation(FRotator(FMath::Clamp(D.Rotation().Pitch, -60.f, 60.f), D.Rotation().Yaw, 0));
+		if (UFunction* F = Me->FindFunction(TEXT("ServerPowerShot"))) { struct { ACoopDestructible* Target; FVector_NetQuantize10 End; } Parm{ T, FVector_NetQuantize10(T->GetActorLocation()) }; Me->ProcessEvent(F, &Parm); }
+		Log += FString::Printf(TEXT("ACAO t=%.2f %s atira em %s\n"), Total, bNeon ? TEXT("Neon") : TEXT("Ruina"), Why);
+	};
+	auto Res = [&](const FString& S) { Log += TEXT("RESULTADO ") + S + TEXT("\n"); Save(); };
+	auto InCab = [&](const FVector& Pp) { return FMath::Abs(Pp.X - E->GetActorLocation().X) < 95.f && FMath::Abs(Pp.Y - E->GetActorLocation().Y) < 95.f && Pp.Z - E->GetActorLocation().Z > 0.f && Pp.Z - E->GetActorLocation().Z < 250.f; };
+	auto GatesOpen = [&]() { int32 N = 0; for (TActorIterator<ACoopGate> It(W); It; ++It) if (It->GateId.ToString().StartsWith(TEXT("P2_")) && It->bOpen) ++N; return N; };
+	auto Mach = [&]() { return FString::Printf(TEXT("P=%.0f alvo=%.0f massaN=%d massaS=%d freioLivre=%d travado=%d concluido=%d pilhas=%d lingotes=[%d,%d,%d] calha=%s pino=%s portoesP2abertos=%d rearmes=%d"),
+		P, B.Target, M->MassNorth(), M->MassSouth(), (int32)B.bBrakeFree, (int32)B.bLocked, (int32)B.bDone, HasAuthority() ? M->MaterialPiles() : -1, B.L0, B.L1, B.L2,
+		M->Chute->IsDestroyed() ? TEXT("ausente") : TEXT("CONSTRUIDA"), M->Pin->IsDestroyed() ? TEXT("ausente") : TEXT("ENCAIXADO"), GatesOpen(), B.Resets); };
+	// camera fixa em cada sala durante a maquina (so para o video)
+	static const bool bInsp = FParse::Param(FCommandLine::Get(), TEXT("InspP2"));
+	if (bInsp && St >= 5 && St <= 9)
+	{
+		static ACameraActor* IC = nullptr;
+		if (!IC) { IC = W->SpawnActor<ACameraActor>(); IC->GetCameraComponent()->SetFieldOfView(88.f); }
+		const FVector CP(1000.f, Sg * 1190.f, 1120.f), CT(1560.f, Sg * 560.f, 860.f);
+		IC->SetActorLocationAndRotation(CP, (CT - CP).Rotation());
+		if (PC->GetViewTarget() != IC) PC->SetViewTargetWithBlend(IC, 0.f);
+	}
+	else if (bInsp && St > 9 && PC->GetViewTarget() != Me) PC->SetViewTargetWithBlend(Me, 0.f);
+	if (St >= 1 && ShotT >= 0.2f) { ShotT = 0.f; FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f2p2/%s/f_%05d.jpg"), *Tag, Shots++), false, false); }
+	if (LogT >= 0.5f) { LogT = 0.f; Log += FString::Printf(TEXT("t=%.2f passo=%d.%d %s pos=(%.0f,%.0f,%.0f) %s\n"), Total, St, Sub, bNeon ? TEXT("Neon") : TEXT("Ruina"), L.X, L.Y, L.Z, *Mach()); }
+	if (Total > 235.f && St < 98) { Res(TEXT("TEMPO TOTAL ESGOTADO")); Go(98, TEXT("tempo total")); }
+	if (St > 0 && St < 90 && StT > 45.f) { Res(FString::Printf(TEXT("TIMEOUT no passo %d.%d pos=(%.0f,%.0f,%.0f) %s"), St, Sub, L.X, L.Y, L.Z, *Mach())); Go(98, TEXT("timeout")); }
+	const FVector2D NeonSpotA(900, -255), RuinaSpotA(900, 255);
+	const FVector2D RoomSpot(1300.f, Sg * 470.f), MachSpot(1450.f, Sg * 470.f), PinSpot(1050.f, -650.f), ResetSpot(1750.f, 450.f * Sg);
+	switch (St)
+	{
+	case 0:
+		if (NP < 2 || Total < 3.f) break;
+		if (PC->GetViewTarget() != Me && Sub == 0 && SubT > 1.f) { Use(TEXT("pular apresentacao")); Sub = 1; }
+		if (PC->GetViewTarget() == Me && StT > 4.f) { Res(FString::Printf(TEXT("INICIO papel=%s | maquina: %s"), bNeon ? TEXT("Neon") : TEXT("Ruina"), *Mach())); Go(1, TEXT("controle")); }
+		break;
+	// ---------------- P1 (rapido, caminho real) ----------------
+	case 1: if (At(bNeon ? NeonSpotA : RuinaSpotA)) Go(2, TEXT("P1 posicionado")); break;
+	case 2:
+		if (!bNeon && Sub == 0 && StT > 1.f) { Fire(Tr, TEXT("TRAVA (P1)")); Sub = 1; }
+		if (bNeon && Sub == 0 && Tr->IsDestroyed() && StT > 2.f) { Fire(Su, TEXT("SUPORTE (P1)")); Sub = 1; }
+		if (!E->bLockedP1) { Res(TEXT("A. P1 resolvido (elevador liberado)")); Go(3, TEXT("P1 ok")); }
+		break;
+	case 3:
+		if (At(FVector2D(1200, Sg * 45.f)) && O && InCab(L) && InCab(O->GetActorLocation()) && !bNeon && !E->IsMoving() && !E->IsTargetTop() && SubT > 2.f) { Use(TEXT("subir")); SubT = 0.f; }
+		if (E->IsParkedAt(true) && E->SideDoorAlpha() > 0.95f) { Res(FString::Printf(TEXT("B. ELEVADOR levou os dois ate B (eu a bordo=%d, Z=%.0f)"), (int32)InCab(L), L.Z)); Go(4, TEXT("em B")); }
+		break;
+	case 4: if (Path({ FVector2D(1200, Sg * 40.f), FVector2D(1200, Sg * 470.f), RoomSpot })) { Res(FString::Printf(TEXT("C. SEPARACAO: atravessei a barreira %s, estou na sala %s (Y=%.0f)"), bNeon ? TEXT("ciano") : TEXT("roxa"), bNeon ? TEXT("SUL") : TEXT("NORTE"), L.Y)); Go(5, TEXT("na sala")); } break;
+	// ---------------- P2 ----------------
+	case 5:   // D: interacoes nao autorizadas / sem efeito
+		if (bNeon)
+		{
+			if (Sub == 0 && At(MachSpot)) { Fire(M->Chute, TEXT("CALHA sem material")); Sub = 1; SubT = 0.f; }
+			else if (Sub == 1 && SubT > 1.5f) { Res(FString::Printf(TEXT("D1. NEON reconstruir a calha SEM material: calha %s"), M->Chute->IsDestroyed() ? TEXT("continua ausente (OK)") : TEXT("CONSTRUIDA (FALHA)"))); Sub = 2; }
+			else if (Sub == 2 && At(PinSpot)) { Fire(M->Pin, TEXT("PINO com a maquina emperrada")); Sub = 3; SubT = 0.f; }
+			else if (Sub == 3 && SubT > 1.5f) { Res(FString::Printf(TEXT("D2. NEON pino com a maquina desalinhada: pino %s"), M->Pin->IsDestroyed() ? TEXT("nao encaixou (OK)") : TEXT("ENCAIXOU (FALHA)"))); Go(6, TEXT("Neon testou")); }
+		}
+		else
+		{
+			if (Sub == 0 && At(MachSpot)) { Fire(M->Chute, TEXT("CALHA da sala do Neon (atraves da parede/janela)")); Sub = 1; SubT = 0.f; }
+			else if (Sub == 1 && SubT > 1.5f) { Res(FString::Printf(TEXT("D3. RUINA na peca do outro lado: calha %s"), M->Chute->IsDestroyed() ? TEXT("sem efeito (OK)") : TEXT("ALTERADA (FALHA)"))); Sub = 2; }
+			else if (Sub == 2 && At(RoomSpot) && O && FVector::Dist2D(O->GetActorLocation(), FVector(PinSpot.X, PinSpot.Y, 0)) < 80.f && StT > 6.f) Go(6, TEXT("Ruina pronta"));
+		}
+		break;
+	case 6:   // E/F: Ruina solta o freio -> plataformas se movem (Neon observa do outro lado)
+		if (!bNeon && Sub == 0 && StT > 1.f) { Fire(M->Brake, TEXT("FREIO emperrado")); Sub = 1; }
+		if (B.bBrakeFree && Sub < 2) { Res(FString::Printf(TEXT("%s. FREIO solto (visto por %s): alvo P=%.0f (norte mais pesada: 3 x 1)"), bNeon ? TEXT("F") : TEXT("E"), bNeon ? TEXT("Neon") : TEXT("Ruina"), B.Target)); Sub = 2; }
+		if (Sub == 2 && FMath::Abs(P - B.Target) < 3.f) { Res(FString::Printf(TEXT("E. PLATAFORMAS pararam em P=%.0f (norte embaixo, sul em cima)"), P)); Go(7, TEXT("maquina livre")); }
+		break;
+	case 7:   // ERRO demonstrado (parte 1): bracadeira antes da calha -> lingote fica no berco; Neon monta a calha -> passa para o sul
+		if (!bNeon && Sub == 0 && At(MachSpot)) { Fire(M->Clamp0, TEXT("BRACADEIRA 1")); Sub = 1; }
+		if (B.L0 == 1 && Sub < 2) { Res(FString::Printf(TEXT("E2. lingote 1 no BERCO (calha ausente): massas %d x %d, alvo P=%.0f"), M->MassNorth(), M->MassSouth(), B.Target)); Sub = 2; }
+		if (bNeon && Sub == 2 && At(MachSpot)) { Fire(M->Chute, TEXT("CALHA com o material do freio")); Sub = 3; }
+		if (B.L0 == 2 && Sub >= 2 && Sub < 4) { Res(FString::Printf(TEXT("G. CALHA construida -> lingote passou ao SUL: massas %d x %d, alvo P=%.0f"), M->MassNorth(), M->MassSouth(), B.Target)); Sub = 4; }
+		if (Sub == 4 && FMath::Abs(P) < 3.f) { Res(FString::Printf(TEXT("H1. PLATAFORMAS NIVELADAS (P=%.1f) - mas aqui a Ruina vai cometer um erro"), P)); Go(8, TEXT("nivelado")); }
+		break;
+	case 8:   // ERRO (parte 2): Ruina solta mais uma -> excesso no sul; Neon tenta o pino (nao encaixa); Ruina rearma
+		if (!bNeon && Sub == 0 && StT > 1.f) { Fire(M->Clamp1, TEXT("BRACADEIRA 2 (erro: transferencia a mais)")); Sub = 1; }
+		if (Sub < 2 && B.L1 == 2) { Res(FString::Printf(TEXT("ERRO: lingote 2 tambem passou: massas %d x %d, alvo P=%.0f (sul agora mais pesada)"), M->MassNorth(), M->MassSouth(), B.Target)); Sub = 2; }
+		if (bNeon && Sub == 2 && P > 150.f && At(PinSpot)) { Fire(M->Pin, TEXT("PINO desalinhado")); Sub = 3; SubT = 0.f; }
+		if (bNeon && Sub == 3 && SubT > 1.5f) { Res(FString::Printf(TEXT("H2. PINO com a maquina desequilibrada: %s"), M->Pin->IsDestroyed() ? TEXT("nao encaixou (OK)") : TEXT("ENCAIXOU (FALHA)"))); Sub = 4; }
+		if (!bNeon && Sub == 2 && P > 150.f && StT > 6.f && At(ResetSpot)) { Use(TEXT("rearmar mecanismo")); Sub = 3; }
+		if (B.Resets >= 1 && Sub >= 2) { Res(FString::Printf(TEXT("K. REARME: %s"), *Mach())); Go(9, TEXT("rearmado")); }
+		break;
+	case 9:   // SOLUCAO: freio -> calha -> UMA bracadeira -> nivel -> pino
+		if (!bNeon)
+		{
+			if (Sub == 0 && At(RoomSpot) && StT > 2.f) { Fire(M->Brake, TEXT("FREIO")); Sub = 1; }
+			else if (Sub == 1 && !M->Chute->IsDestroyed() && At(MachSpot)) { Fire(M->Clamp0, TEXT("BRACADEIRA 1 (unica)")); Sub = 2; }
+		}
+		else
+		{
+			if (Sub == 0 && B.bBrakeFree && At(MachSpot)) { Fire(M->Chute, TEXT("CALHA")); Sub = 1; }
+			else if (Sub == 1 && !M->Chute->IsDestroyed() && At(PinSpot)) { Sub = 2; }
+			else if (Sub == 2 && B.L0 == 2 && FMath::Abs(P) < 2.f) { Fire(M->Pin, TEXT("PINO no nivel")); Sub = 3; }
+		}
+		if (B.bDone && GatesOpen() == 2) { Res(FString::Printf(TEXT("I. CONCLUIDO: equilibrio travado e portoes abertos | %s"), *Mach())); Go(10, TEXT("concluido")); }
+		else if (StT > 2.f && FMath::Fmod(StT, 5.f) < Dt && GatesOpen() > 0) Res(TEXT("FALHA: portao aberto antes da conclusao"));
+		break;
+	case 10: if (Path({ FVector2D(1850, Sg * 470.f), FVector2D(1850, Sg * 750.f), FVector2D(2150, Sg * 750.f), FVector2D(2150, Sg * 300.f) }) && O && FVector::Dist2D(L, O->GetActorLocation()) < 700.f)
+		{ Res(FString::Printf(TEXT("J. REENCONTRO: distancia %.0f cm | caminho ate a escada B->C livre"), FVector::Dist2D(L, O->GetActorLocation()))); Go(11, TEXT("reencontro")); } break;
+	case 11: if (StT > 3.f) { Res(FString::Printf(TEXT("FIM P2 | %s"), *Mach())); Go(99, TEXT("fim")); } break;
 	case 98: case 99: if (StT > (Tag == TEXT("host") ? 8.f : 4.f)) { Save(); bDone = true; GEngine->Exec(W, TEXT("quit")); } break;
 	}
 }
