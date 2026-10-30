@@ -203,6 +203,7 @@ bool ACoopDestructible::ServerBreak(FString& OutWhy)
 {
 	if (!HasAuthority()) { OutWhy = TEXT("sem autoridade"); return false; }
 	if (bDestroyed) { OutWhy = TEXT("Ja esta destruido"); return false; }
+	if (!bCanBreak) { OutWhy = TEXT("Esta estrutura nao pode ser destruida"); return false; }
 	bDestroyed = true; bQuietChange = false;
 	ApplyState(true); // servidor/host nao recebe OnRep
 	ForceNetUpdate();
@@ -213,6 +214,7 @@ bool ACoopDestructible::ServerRebuild(FString& OutWhy)
 {
 	if (!HasAuthority()) { OutWhy = TEXT("sem autoridade"); return false; }
 	if (!bDestroyed) { OutWhy = TEXT("Objeto ja esta intacto"); return false; }
+	if (!bCanRebuild) { OutWhy = TEXT("Esta peca nao pode ser reconstruida"); return false; }
 	if (Partner && !Partner->IsDestroyed()) { OutWhy = TEXT("Sem material: destrua a outra estrutura primeiro"); return false; }
 	// nao reconstruir em cima de alguem (evita prender jogador dentro da colisao)
 	TArray<FOverlapResult> Hits;
@@ -220,7 +222,7 @@ bool ACoopDestructible::ServerRebuild(FString& OutWhy)
 	if (GetWorld()->OverlapMultiByObjectType(Hits, GetActorLocation(), GetActorQuat(), Obj, FCollisionShape::MakeBox(Size * 0.5f)))
 		for (const FOverlapResult& H : Hits)
 			if (Cast<APawn>(H.GetActor())) { OutWhy = TEXT("Tem alguem no lugar do objeto"); return false; }
-	bDestroyed = false; bQuietChange = false;
+	bDestroyed = false; bQuietChange = false; LastRebuildAt = SrvNow();
 	SolidAt = (bAssemblyFx && Size.X >= Size.Z * 2.f) ? SrvNow() + AssemblyDuration() : 0.f;
 	ApplyState(true);
 	ForceNetUpdate();
@@ -242,6 +244,8 @@ void ACoopDestructible::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(ACoopDestructible, bDestroyed);
 	DOREPLIFETIME(ACoopDestructible, bQuietChange);
 	DOREPLIFETIME(ACoopDestructible, SolidAt);
+	DOREPLIFETIME_CONDITION(ACoopDestructible, bCanBreak, COND_InitialOnly);
+	DOREPLIFETIME_CONDITION(ACoopDestructible, bCanRebuild, COND_InitialOnly);
 	DOREPLIFETIME(ACoopDestructible, Partner);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, bAssemblyFx, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, Size, COND_InitialOnly);
@@ -341,9 +345,10 @@ float ACoopDestructible::SrvNow() const
 
 float ACoopDestructible::AssemblyDuration() const
 {
-	// mesma conta da montagem horizontal (StartAssembly/TickAssembly): ultimo segmento encaixa + assentamento
-	const int32 N = FMath::Clamp(FMath::RoundToInt(Size.X / 140.f), 6, 12);
-	return 0.18f + 0.07f * (N - 1) + 0.42f + 0.22f;
+	// mesma conta da montagem (StartAssembly/TickAssembly): ultima peca encaixa + assentamento
+	if (!bAssemblyFx) return 0.f;
+	if (Size.X >= Size.Z * 2.f) { const int32 N = FMath::Clamp(FMath::RoundToInt(Size.X / 140.f), 6, 12); return 0.18f + 0.07f * (N - 1) + 0.42f + 0.22f; }
+	return 0.12f + 0.1f * 6 + 0.5f + 0.22f;   // vertical: 7 aneis
 }
 
 void ACoopDestructible::ApplyCollision()

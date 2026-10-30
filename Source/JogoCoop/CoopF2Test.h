@@ -32,3 +32,18 @@ private:
 	float T = 0.f; int32 S = 0;
 	UPROPERTY() class ACameraActor* Cam = nullptr;
 };
+
+// Teste do PUZZLE 1 (-F2P1; -F2Swap inverte papeis: host = Ruina). Tudo pelo caminho real do jogo (tiro de poder via
+// ServerPowerShot, tecla E via ServerInteract); nenhuma funcao de depuracao e usada.
+UCLASS()
+class JOGOCOOP_API ACoopF2P1Flow : public AActor
+{
+	GENERATED_BODY()
+public:
+	ACoopF2P1Flow() { PrimaryActorTick.bCanEverTick = true; }
+	virtual void Tick(float Dt) override;
+private:
+	int32 St = 0, Shots = 0, Wp = 0, Sub = 0; float StT = 0.f, SubT = 0.f, ShotT = 0.f, LogT = 0.f, Total = 0.f, NoGame = 0.f, T0 = 0.f; FString Tag, Log; bool bDone = false, bRoleSet = false;
+	void Go(int32 S, const FString& Why);
+	void Save();
+};

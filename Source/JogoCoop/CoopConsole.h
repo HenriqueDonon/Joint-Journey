@@ -16,6 +16,9 @@ class JOGOCOOP_API ACoopConsole : public AActor
 public:
 	ACoopConsole();
 	virtual void BeginPlay() override;
+	virtual void Tick(float Dt) override;
+	// texto da dica contextual (HUD, quando o jogador local esta ao alcance) e se a acao esta disponivel agora
+	FString Prompt(bool& bAvailable) const;
 	UPROPERTY(VisibleAnywhere) class UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere) class UStaticMeshComponent* Screen;
 	UPROPERTY(EditAnywhere, Category="Console") ECoopConsoleAction Action = ECoopConsoleAction::ElevatorToggle;
@@ -24,4 +27,8 @@ public:
 	UPROPERTY(EditAnywhere, Category="Console") bool bAttachToElevator = false;   // painel da cabine: anda junto
 	// Servidor: executa a acao. Retorna false com motivo (mostrado ao jogador).
 	bool ServerUse(class ACoopCharacter* By, FString& OutWhy);
+private:
+	UPROPERTY() class UMaterialInstanceDynamic* ScreenMat = nullptr;
+	UPROPERTY() class UPointLightComponent* Lamp = nullptr;
+	int32 LastState = -1;
 };

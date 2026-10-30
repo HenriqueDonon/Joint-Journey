@@ -22,6 +22,8 @@
 #include "CoopGate.h"
 #include "CoopElevator.h"
 #include "CoopIntroCam.h"
+#include "CoopDestructible.h"
+#include "GameFramework/GameStateBase.h"
 
 // pontos de pouso (cm) dos 4 niveis: Z = superficie + folga; X/Y em area livre de cada setor
 static const FVector GLevelSpots[4] = { FVector(300, -600, 110), FVector(500, 0, 710), FVector(500, 0, 1310), FVector(1900, 0, 1910) };
@@ -55,18 +57,18 @@ void ACoopFase2GameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	APlayerController* PC0 = GetWorld()->GetFirstPlayerController();
-	// atalhos TEMPORARIOS de inspecao (nao fazem parte do percurso futuro)
-	if (PC0)
+	if (!bF2XChecked) SetupF2X();
+	// atalhos TEMPORARIOS de inspecao (nao fazem parte do percurso futuro); no layout funcional so com -F2Debug
+	if (PC0 && (!bF2X || DebugAllowed()))
 	{
 		if (PC0->WasInputKeyJustPressed(EKeys::F6)) TeleportTo(PC0, 0);
 		if (PC0->WasInputKeyJustPressed(EKeys::F7)) TeleportTo(PC0, 1);
 		if (PC0->WasInputKeyJustPressed(EKeys::F8)) TeleportTo(PC0, 2);
 		if (PC0->WasInputKeyJustPressed(EKeys::F9)) TeleportTo(PC0, 3);
 	}
-	if (!bF2XChecked) SetupF2X();
 	if (bF2X)
 	{
-		if (PC0 && PC0->WasInputKeyJustPressed(EKeys::F10)) DebugUnlockAll();
+		if (PC0 && DebugAllowed() && PC0->WasInputKeyJustPressed(EKeys::F10)) DebugUnlockAll();
 		TickF2X(DeltaSeconds);
 	}
 	// queda para fora do poco (Z < -300): volta ao nivel 0
@@ -143,6 +145,60 @@ void ACoopFase2GameMode::SetupF2X()
 	}
 	for (TActorIterator<ACoopIntroCam> It(GetWorld()); It; ++It) { Intro = *It; break; }
 	if (bF2X) UE_LOG(LogTemp, Warning, TEXT("F2X layout funcional ativo: %d pontos de retorno, intro=%d"), Spots.Num(), Intro ? 1 : 0);
+	if (bF2X) SetupP1();
+}
+
+bool ACoopFase2GameMode::DebugAllowed() { static const bool b = FParse::Param(FCommandLine::Get(), TEXT("F2Debug")); return b; }
+
+// P1: os objetos nascem no servidor a partir de marcadores do mapa (TargetPoint com tag; escala * 100 = tamanho em cm)
+// e replicam para os clientes. Trava: so a Ruina destroi (nunca se reconstroi). Suporte: nasce quebrado; so o Neon reconstroi,
+// e so com o material da trava (Partner destruido); depois de pronto nao pode ser destruido -> sem consumo duplicado.
+void ACoopFase2GameMode::SetupP1()
+{
+	AActor *MT = nullptr, *MS = nullptr;
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It) { if (It->ActorHasTag(TEXT("F2P1_Trava"))) MT = *It; if (It->ActorHasTag(TEXT("F2P1_Suporte"))) MS = *It; }
+	if (!MT || !MS) return;
+	auto Spawn = [&](AActor* M, FLinearColor Col, bool bStartBroken, const TCHAR* Name) -> ACoopDestructible*
+	{
+		const FTransform T(M->GetActorRotation(), M->GetActorLocation());
+		ACoopDestructible* D = GetWorld()->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), T);
+		if (!D) return nullptr;
+		D->Setup(M->GetActorScale3D() * 100.f, Col, 0.f, 0.f, bStartBroken);
+		D->Tags.Add(FName(Name));
+		return D;
+	};
+	P1Trava = Spawn(MT, FLinearColor(0.45f, 0.07f, 0.04f), false, TEXT("P1_Trava"));
+	P1Suporte = Spawn(MS, FLinearColor(0.2f, 0.32f, 0.55f), true, TEXT("P1_Suporte"));
+	if (!P1Trava || !P1Suporte) return;
+	P1Trava->bCanRebuild = false;                 // Neon nao "desfaz" a trava
+	P1Suporte->bCanBreak = false;                 // Ruina nao destroi o suporte pronto
+	P1Suporte->Partner = P1Trava;                 // material: so reconstroi com a trava destruida
+	P1Suporte->bAssemblyFx = true;                // montagem vertical com os destrocos da trava
+	P1Trava->FinishSpawning(FTransform(MT->GetActorRotation(), MT->GetActorLocation()));
+	P1Suporte->FinishSpawning(FTransform(MS->GetActorRotation(), MS->GetActorLocation()));
+	UE_LOG(LogTemp, Warning, TEXT("F2X P1 montado: trava e suporte criados (elevador travado)"));
+}
+
+void ACoopFase2GameMode::TickP1()
+{
+	if (bP1Done || !P1Suporte) return;
+	if (!bP1MatMsg && P1Trava && P1Trava->IsDestroyed())
+	{
+		bP1MatMsg = true;
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+			if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) C->ClientToast(TEXT("Trava destruida: material liberado - o elevador ainda precisa do suporte"));
+		UE_LOG(LogTemp, Warning, TEXT("F2X P1 trava destruida: material disponivel"));
+	}
+	// elevador liberado SO quando a reconstrucao do suporte terminou (montagem visual inclusa); validado no servidor
+	if (P1Suporte->IsDestroyed() || !P1Suporte->HasBeenRebuilt()) return;
+	const AGameStateBase* GS = GetWorld()->GetGameState();
+	const float Now = GS ? GS->GetServerWorldTimeSeconds() : GetWorld()->GetTimeSeconds();
+	if (Now < P1Suporte->RebuildDoneAt()) return;
+	bP1Done = true;
+	for (TActorIterator<ACoopElevator> It(GetWorld()); It; ++It) It->ServerSetLocked(false);
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+		if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) C->ClientToast(TEXT("MECANISMO CONSERTADO: elevador LIBERADO"));
+	UE_LOG(LogTemp, Warning, TEXT("F2X P1 CONCLUIDO: suporte reconstruido, elevador liberado"));
 }
 
 FVector ACoopFase2GameMode::CheckSpot(int32 Level, const ACoopCharacter* C) const
@@ -198,6 +254,7 @@ void ACoopFase2GameMode::HandleInteract(ACoopCharacter* C)
 void ACoopFase2GameMode::TickF2X(float Dt)
 {
 	F2XTime += Dt;
+	TickP1();
 	// apresentacao: uma vez por sessao, quando os dois jogadores estao presentes (ou 30 s jogando sozinho)
 	const int32 NP = GetWorld()->GetNumPlayerControllers();
 	static const bool bNoIntro = FParse::Param(FCommandLine::Get(), TEXT("F2SemIntro"));

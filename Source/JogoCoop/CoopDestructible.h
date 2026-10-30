@@ -29,6 +29,11 @@ public:
 	// Animacao de montagem na reconstrucao (layout 2): pecas saem dos destrocos do Partner e se encaixam
 	// (horizontal = ponte: segmentos em sequencia | vertical = coluna: aneis empilhando de baixo para cima)
 	UPROPERTY(Replicated) bool bAssemblyFx = false;
+	// Regras por objeto (padrao: ciclo livre como na Fase 1). Fase 2/P1: trava nao se reconstroi; suporte nao se destroi.
+	UPROPERTY(Replicated) bool bCanBreak = true;
+	UPROPERTY(Replicated) bool bCanRebuild = true;
+	float RebuildDoneAt() const { return LastRebuildAt + AssemblyDuration(); }   // servidor: quando a montagem visual termina
+	bool HasBeenRebuilt() const { return LastRebuildAt > 0.f; }
 	void TakeDebris(TArray<FVector>& Out);   // local: entrega as posicoes dos destrocos visiveis e os esconde
 	virtual void Tick(float Dt) override;
 
@@ -63,7 +68,10 @@ private:
 	UPROPERTY(Replicated) float SolidAt = 0.f;
 	bool bPendingSolid = false;
 	float SrvNow() const;
+	float LastRebuildAt = -1.f;
+public:
 	float AssemblyDuration() const;
+private:
 	void ApplyCollision();
 	void UpdateTick();
 	struct FAsm { class UStaticMeshComponent* C = nullptr; FVector From, To, Scale; float Delay = 0.f; };

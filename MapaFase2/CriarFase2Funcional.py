@@ -179,8 +179,18 @@ def gate(gid, x, y, z, size):
 gate('P2_Norte', 1960, 750, 600, (20, 300, 400)); gate('P2_Sul', 1960, -750, 600, (20, 300, 400))
 gate('P3_Saida', 2675, 1185, 1200, (250, 20, 400))
 # ===== PLACEHOLDERS dos puzzles (sem logica) =====
-box('P1_Trava_Destrutivel', 1100, 1300, 170, 230, 80, 260, 'trava', 'Placeholders_P1')
-box('P1_Suporte_Reconstruivel', 1100, 1300, -230, -170, 0, 200, 'suporte', 'Placeholders_P1', col=False)
+# P1 (Tarefa 06): a TRAVA e o SUPORTE sao ACoopDestructible criados pelo GameMode a partir destes marcadores
+# (escala * 100 = tamanho em cm). Aqui so a parte fixa do mecanismo: trilho-guia + mandibulas da trava; base e mao-francesa do suporte.
+mark('F2P1_Trava', 1200, 205, 170).set_actor_scale3d(unreal.Vector(1.4, 0.5, 1.2))
+mark('F2P1_Suporte', 1200, -200, 115).set_actor_scale3d(unreal.Vector(1.9, 0.5, 1.7))
+box('P1_TrilhoGuia_Norte', 1185, 1215, 170, 180, 0, 600, 'trilho', 'P1_Mecanismo')
+box('P1_Mandibula_Sup', 1120, 1280, 170, 245, 230, 250, 'trilho', 'P1_Mecanismo')
+box('P1_Mandibula_Inf', 1120, 1280, 170, 245, 90, 110, 'trilho', 'P1_Mecanismo')
+box('P1_Corrente_Trava', 1110, 1130, 170, 190, 110, 230, 'contra', 'P1_Mecanismo', col=False)
+box('P1_TrilhoGuia_Sul', 1185, 1215, -180, -170, 0, 600, 'trilho', 'P1_Mecanismo')
+box('P1_Suporte_Base', 1095, 1305, -240, -165, 0, 30, 'trilho', 'P1_Mecanismo')
+box('P1_Suporte_Topo', 1095, 1305, -240, -165, 200, 240, 'trilho', 'P1_Mecanismo')
+box('P1_Suporte_Faixa', 1095, 1305, -242, -238, 205, 235, 'console', 'P1_Mecanismo', col=False)
 box('P1_Mecanismo_Tambor', 1000, 1040, -120, 120, 300, 480, 'mec', 'Placeholders_P1')
 box('P1_Area_Aproximacao', 470, 1040, -290, 290, 0, 4, 'saida', 'Placeholders_P1', col=False)
 for s, nome, cor in ((1, 'Norte_Ruina', 'trava'), (-1, 'Sul_Neon', 'suporte')):
@@ -218,7 +228,7 @@ for y in (-500, -1000): mod('F2M_Grade_200', 2500, y, 1800.5, 0, folder='Modulos
 for (x, y, z) in ((700, 290, 420), (700, -290, 420), (2400, 1235, 900), (2400, -1235, 900)): mod('F2M_Tubo_400', x, y, z, 0, 1.0, 'Modulos_Tubo', col=False)
 # ===== ROTULOS =====
 text('A | INICIO - PUZZLE 1: ELEVADOR DE EMERGENCIA', (-590, 0, 420), 0, 60, (.6, 1, .6))
-text('TRAVA (Ruina)', (1200, 240, 300), 270, 35, (1, .4, .4)); text('SUPORTE (Neon)', (1200, -240, 230), 90, 35, (.4, .6, 1))
+text('TRAVA DANIFICADA', (1200, 246, 300), 270, 32, (1, .4, .4)); text('SUPORTE AUSENTE', (1200, -246, 280), 90, 32, (.5, .7, 1))
 text('B NORTE - RUINA (freios/travas)', (1300, 1240, 1050), 270, 45, (1, .85, .4)); text('B SUL - NEON (guias/suportes)', (1300, -1240, 1050), 90, 45, (.4, 1, 1))
 text('REENCONTRO (apos P2)', (2790, 0, 900), 180, 50, (1, 1, 1))
 text('C - PUZZLE 3: NUCLEO EM MOVIMENTO', (1200, -1240, 1550), 90, 50, (.5, .7, 1))

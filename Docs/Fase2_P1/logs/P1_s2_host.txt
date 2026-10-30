@@ -1,0 +1,181 @@
+t=0.50 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=1.01 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=1.51 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=2.01 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=2.51 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=3.01 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=3.52 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=4.02 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=4.52 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=5.03 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=5.53 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=6.03 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=6.54 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=7.04 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=7.54 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=8.04 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=8.55 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=9.05 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=9.55 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=10.05 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=10.55 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=11.06 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=11.56 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=12.06 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=12.56 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=13.07 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=13.74 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=14.24 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=14.74 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=15.25 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=15.75 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=16.25 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=16.76 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=17.26 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=17.76 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=18.27 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=18.77 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=19.27 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=19.78 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=20.28 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=20.78 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=21.28 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=21.78 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=22.28 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=22.79 passo=0 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+ACAO t=23.22 tecla E (pular apresentacao)
+RESULTADO A. INICIO: papel=Neon, elevador TRAVADO=1, trava=inteira, suporte=ausente
+EVT t=23.22 srvT=23.22 passo 0->1 controle
+t=23.60 passo=1 Neon pos=(-300,-150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=24.10 passo=1 Neon pos=(-71,-170,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=24.63 passo=1 Neon pos=(242,-197,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=25.14 passo=1 Neon pos=(546,-224,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=25.65 passo=1 Neon pos=(855,-251,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+EVT t=25.68 srvT=25.68 passo 1->2 posicionado
+RESULTADO INDICADOR console A: [E] Elevador TRAVADO - o mecanismo precisa de conserto [indisponivel]
+ACAO t=25.71 tecla E (console de chamada com o elevador travado)
+t=26.16 passo=2 Neon pos=(895,-255,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=26.71 passo=2 Neon pos=(895,-255,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=27.22 passo=2 Neon pos=(895,-255,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=27.76 passo=2 Neon pos=(895,-255,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO B. CONSOLE ANTES DO PUZZLE: elevador nao partiu (OK, travado)
+ACAO t=28.21 Neon atira o poder em SUPORTE (reconstruir sem material)
+t=28.26 passo=2 Neon pos=(895,-255,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=28.84 passo=2 Neon pos=(895,-255,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=29.36 passo=2 Neon pos=(895,-255,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO D. NEON RECONSTRUIR SEM MATERIAL: suporte continua ausente (BLOQUEADO, OK)
+t=29.88 passo=2 Neon pos=(895,-232,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=30.38 passo=2 Neon pos=(898,47,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+ACAO t=30.70 Neon atira o poder em TRAVA (Neon tenta destruir a trava)
+t=30.91 passo=2 Neon pos=(900,257,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=31.42 passo=2 Neon pos=(900,257,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=31.97 passo=2 Neon pos=(900,257,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO C. NEON DESTRUIR A TRAVA: trava intacta (BLOQUEADO, OK)
+t=32.49 passo=2 Neon pos=(870,205,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=33.01 passo=2 Neon pos=(712,-66,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+EVT t=33.08 srvT=33.08 passo 2->3 Neon aguarda
+t=33.52 passo=3 Neon pos=(684,-114,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=34.05 passo=3 Neon pos=(684,-114,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=34.56 passo=3 Neon pos=(684,-114,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=35.07 passo=3 Neon pos=(684,-114,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=35.58 passo=3 Neon pos=(684,-114,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=36.15 passo=3 Neon pos=(684,-114,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+EVT t=36.34 srvT=36.34 passo 3->4 trava destruida (visto pelo Neon)
+t=36.66 passo=4 Neon pos=(684,-114,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=37.16 passo=4 Neon pos=(684,-114,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=37.67 passo=4 Neon pos=(684,-114,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=38.21 passo=4 Neon pos=(684,-114,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=38.73 passo=4 Neon pos=(811,-197,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO F. APOS DESTRUIR A TRAVA: elevador travado=1 (esperado 1)
+RESULTADO INDICADOR console A: [E] Elevador TRAVADO - o mecanismo precisa de conserto [indisponivel]
+ACAO t=38.86 tecla E (console com trava destruida e sem suporte)
+t=39.29 passo=4 Neon pos=(895,-252,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=39.80 passo=4 Neon pos=(895,-252,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=40.31 passo=4 Neon pos=(895,-252,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=40.81 passo=4 Neon pos=(895,-252,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO F2. CONSOLE COM SO A TRAVA DESTRUIDA: elevador nao partiu (OK)
+ACAO t=40.91 Neon atira o poder em SUPORTE (Neon reconstroi o suporte com o material)
+t=41.39 passo=4 Neon pos=(895,-252,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO H. DURANTE A MONTAGEM (+0,7 s): suporte=construido, elevador travado=1 (esperado 1)
+t=41.90 passo=4 Neon pos=(895,-252,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO G/I. SUPORTE RECONSTRUIDO e elevador LIBERADO 1.46 s depois do tiro (montagem ~1,44 s)
+RESULTADO INDICADOR console A: [E] Elevador aqui - entre na cabine [indisponivel]
+t=42.40 passo=4 Neon pos=(895,-252,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=42.91 passo=4 Neon pos=(701,-133,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+EVT t=42.91 srvT=42.91 passo 4->5 Neon aguarda
+t=43.41 passo=5 Neon pos=(685,-123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=43.94 passo=5 Neon pos=(685,-123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=44.47 passo=5 Neon pos=(801,82,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+ACAO t=44.76 Neon atira o poder em TRAVA (Neon tenta reconstruir a trava)
+t=44.97 passo=5 Neon pos=(897,249,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=45.51 passo=5 Neon pos=(897,249,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=46.02 passo=5 Neon pos=(897,249,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+RESULTADO L. SEM DUPLICIDADE: trava=destruida suporte=construido elevTravado=0 (esperado: destruida/construido/0)
+t=46.52 passo=5 Neon pos=(877,186,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=47.05 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=47.55 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=48.11 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=48.62 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=49.16 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=49.68 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=50.21 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=50.73 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=51.24 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=51.77 passo=5 Neon pos=(802,-54,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+EVT t=52.00 srvT=52.00 passo 5->6 rumo a cabine
+t=52.27 passo=6 Neon pos=(826,-53,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=52.79 passo=6 Neon pos=(1119,-47,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=53.31 passo=6 Neon pos=(1198,-45,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+RESULTADO INDICADOR cabine: Elevador em movimento... [indisponivel]
+t=53.82 passo=6 Neon pos=(1198,-45,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=54.36 passo=6 Neon pos=(1198,-45,97) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=7 portasLat=0.00
+t=54.86 passo=6 Neon pos=(1198,-45,134) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=44 portasLat=0.00
+t=55.42 passo=6 Neon pos=(1198,-45,204) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=113 portasLat=0.00
+t=55.94 passo=6 Neon pos=(1198,-45,285) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=195 portasLat=0.00
+t=56.49 passo=6 Neon pos=(1198,-45,382) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=292 portasLat=0.00
+t=57.00 passo=6 Neon pos=(1198,-45,473) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=383 portasLat=0.00
+t=57.53 passo=6 Neon pos=(1198,-45,561) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=471 portasLat=0.00
+t=58.05 passo=6 Neon pos=(1198,-45,630) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=539 portasLat=0.00
+t=58.60 passo=6 Neon pos=(1198,-45,678) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=588 portasLat=0.00
+t=59.10 passo=6 Neon pos=(1198,-45,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=0.00
+t=59.65 passo=6 Neon pos=(1198,-45,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=0.92
+RESULTADO J. SUBIDA JUNTOS: chegou em B, eu a bordo=1, Z=690
+EVT t=59.66 srvT=59.66 passo 6->7 em B
+t=60.27 passo=7 Neon pos=(1199,-314,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+RESULTADO K. BARREIRA PROPRIA: atravessou (Y=-443)
+t=60.78 passo=7 Neon pos=(1200,-416,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=61.31 passo=7 Neon pos=(1200,-98,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=61.82 passo=7 Neon pos=(1200,-44,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=62.37 passo=7 Neon pos=(1200,-44,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=62.87 passo=7 Neon pos=(1189,-42,879) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=63.44 passo=7 Neon pos=(1135,90,834) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=63.94 passo=7 Neon pos=(1131,185,796) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=64.51 passo=7 Neon pos=(1197,186,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=65.02 passo=7 Neon pos=(1261,186,775) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=65.55 passo=7 Neon pos=(1262,186,810) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=66.07 passo=7 Neon pos=(1197,186,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=66.60 passo=7 Neon pos=(1145,186,775) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=67.12 passo=7 Neon pos=(1148,186,810) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+RESULTADO K. BARREIRA DO OUTRO: |Y| max 186 -> BLOQUEADO (OK)
+EVT t=67.43 srvT=67.43 passo 7->8 barreiras
+t=67.63 passo=8 Neon pos=(1200,159,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=68.13 passo=8 Neon pos=(1219,30,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=68.68 passo=8 Neon pos=(1228,-189,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=69.19 passo=8 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+RESULTADO FIM P1: puzzle concluido em cooperacao e setor B funcionando
+EVT t=69.44 srvT=69.44 passo 8->99 fim
+t=69.72 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=70.23 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=70.78 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=71.28 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=71.82 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=72.42 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=72.94 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=73.46 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=73.96 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=74.46 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=74.97 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=75.47 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=75.97 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=76.47 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=76.97 passo=99 Neon pos=(1201,-464,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00

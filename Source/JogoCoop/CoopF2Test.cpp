@@ -3,6 +3,8 @@
 #include "CoopElevator.h"
 #include "CoopGate.h"
 #include "CoopFase2GameMode.h"
+#include "CoopDestructible.h"
+#include "CoopConsole.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/GameStateBase.h"
@@ -202,4 +204,149 @@ void ACoopF2Views::Tick(float Dt)
 		PC->SetViewTargetWithBlend(Cam, 0.f);
 	}
 	if (Ph > 0.9f && Ph < 0.9f + Dt * 1.5f) FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f2vistas/%s.png"), V[I].Name), false, false);
+}
+
+// =================== PUZZLE 1 ===================
+void ACoopF2P1Flow::Go(int32 S, const FString& Why)
+{
+	const AGameStateBase* GS = GetWorld()->GetGameState();
+	Log += FString::Printf(TEXT("EVT t=%.2f srvT=%.2f passo %d->%d %s\n"), Total, GS ? GS->GetServerWorldTimeSeconds() : 0.f, St, S, *Why);
+	St = S; StT = 0.f; Wp = 0; Sub = 0; SubT = 0.f; Save();
+}
+void ACoopF2P1Flow::Save() { FFileHelper::SaveStringToFile(Log, *(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f2p1/log_%s.txt"), *Tag))); }
+
+void ACoopF2P1Flow::Tick(float Dt)
+{
+	Super::Tick(Dt);
+	UWorld* W = GetWorld();
+	if (Tag.IsEmpty()) { FParse::Value(FCommandLine::Get(), TEXT("FluxoTag="), Tag); if (Tag.IsEmpty()) Tag = TEXT("solo"); }
+	APlayerController* PC = W->GetFirstPlayerController();
+	ACoopCharacter* Me = PC ? Cast<ACoopCharacter>(PC->GetPawn()) : nullptr;
+	AGameStateBase* GS = W->GetGameState();
+	ACoopElevator* E = nullptr; for (TActorIterator<ACoopElevator> It(W); It; ++It) { E = *It; break; }
+	ACoopDestructible *Tr = nullptr, *Su = nullptr;
+	for (TActorIterator<ACoopDestructible> It(W); It; ++It) { if (It->GetActorLocation().Y > 0.f) Tr = *It; else Su = *It; }
+	if (!Me || !GS || !E || !Tr || !Su) { NoGame += Dt; if (NoGame > 25.f && !bDone) { bDone = true; GEngine->Exec(W, TEXT("quit")); } return; }
+	if (bDone) return;
+	static const bool bSwap = FParse::Param(FCommandLine::Get(), TEXT("F2Swap"));
+	if (!bRoleSet && Total > 1.f)
+	{
+		bRoleSet = true;
+		if (bSwap)   // RPC de teste ja existente (ServerSetRole): host vira Ruina, cliente vira Neon
+			if (UFunction* F = Me->FindFunction(TEXT("ServerSetRole"))) { uint8 R = (uint8)(Tag == TEXT("host") ? ECoopRole::Ruina : ECoopRole::Neon); Me->ProcessEvent(F, &R); }
+	}
+	ACoopCharacter* O = nullptr; int32 NP = 0;
+	for (TActorIterator<ACoopCharacter> It(W); It; ++It) { ++NP; if (*It != Me) O = *It; }
+	StT += Dt; SubT += Dt; ShotT += Dt; LogT += Dt; Total += Dt;
+	const bool bNeon = Me->CoopRole == ECoopRole::Neon;
+	const FVector L = Me->GetActorLocation();
+	const float Srv = GS->GetServerWorldTimeSeconds();
+	auto Walk = [&](FVector2D Tg) -> float
+	{
+		const FVector2D D = Tg - FVector2D(L.X, L.Y);
+		if (D.Size() > 22.f) { Me->AddMovementInput(FVector(D.X, D.Y, 0).GetSafeNormal(), 1.f); PC->SetControlRotation(FRotator(-12.f, FMath::RadiansToDegrees(FMath::Atan2(D.Y, D.X)), 0)); }
+		return D.Size();
+	};
+	auto At = [&](FVector2D Tg) { return Walk(Tg) < 30.f; };
+	auto Face = [&](const FVector& P) { const FVector D = P - L; PC->SetControlRotation(FRotator(-10.f, D.Rotation().Yaw, 0)); };
+	auto Use = [&](const TCHAR* Why) { if (UFunction* F = Me->FindFunction(TEXT("ServerInteract"))) Me->ProcessEvent(F, nullptr); Log += FString::Printf(TEXT("ACAO t=%.2f tecla E (%s)\n"), Total, Why); };
+	auto Fire = [&](ACoopDestructible* T, const TCHAR* Why)
+	{
+		Face(T->GetActorLocation());
+		if (UFunction* F = Me->FindFunction(TEXT("ServerPowerShot")))
+		{
+			struct { ACoopDestructible* Target; FVector_NetQuantize10 End; } Parm{ T, FVector_NetQuantize10(T->GetActorLocation()) };
+			Me->ProcessEvent(F, &Parm);
+		}
+		Log += FString::Printf(TEXT("ACAO t=%.2f %s atira o poder em %s (%s)\n"), Total, bNeon ? TEXT("Neon") : TEXT("Ruina"), T == Tr ? TEXT("TRAVA") : TEXT("SUPORTE"), Why);
+	};
+	auto InCab = [&](const FVector& P) { return FMath::Abs(P.X - E->GetActorLocation().X) < 95.f && FMath::Abs(P.Y - E->GetActorLocation().Y) < 95.f && P.Z - E->GetActorLocation().Z > 0.f && P.Z - E->GetActorLocation().Z < 250.f; };
+	auto Res = [&](const FString& S) { Log += TEXT("RESULTADO ") + S + TEXT("\n"); Save(); };
+	auto PromptHere = [&]() -> FString
+	{
+		const ACoopConsole* B = nullptr; float BD = 1e9f;
+		for (TActorIterator<ACoopConsole> It(W); It; ++It) { const float D = FVector::Dist(It->GetActorLocation(), L); if (D < It->UseRadius && D < BD) { BD = D; B = *It; } }
+		if (!B) return FString(TEXT("(nenhum console ao alcance)"));
+		bool bAv = false; const FString P = B->Prompt(bAv); return P + (bAv ? TEXT(" [disponivel]") : TEXT(" [indisponivel]"));
+	};
+	// camera de inspecao no host (-InspP1): mostra a trava, o suporte e a cabine nos momentos certos (so para o video)
+	static const bool bInsp = FParse::Param(FCommandLine::Get(), TEXT("InspP1"));
+	if (bInsp && Tag == TEXT("host") && St >= 1)
+	{
+		static ACameraActor* IC = nullptr;
+		if (!IC) { IC = W->SpawnActor<ACameraActor>(); IC->GetCameraComponent()->SetFieldOfView(80.f); }
+		FVector CP(420, -60, 420), CT(1150, 0, 180);
+		if (St == 3) { CP = FVector(640, 285, 330); CT = FVector(1200, 205, 160); }
+		else if (St == 4) { CP = FVector(640, -285, 330); CT = FVector(1200, -200, 120); }
+		else if (St == 6) { CP = FVector(560, -40, 650); CT = FVector(1200, 0, 450); }
+		IC->SetActorLocationAndRotation(CP, (CT - CP).Rotation());
+		if (St >= 7) { if (PC->GetViewTarget() != Me) PC->SetViewTargetWithBlend(Me, 0.f); }
+		else if (PC->GetViewTarget() != IC && PC->GetViewTarget() == Me) PC->SetViewTargetWithBlend(IC, 0.f);
+	}
+	if (St >= 1 && ShotT >= 0.2f) { ShotT = 0.f; FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f2p1/%s/f_%05d.jpg"), *Tag, Shots++), false, false); }
+	if (LogT >= 0.5f)
+	{
+		LogT = 0.f;
+		Log += FString::Printf(TEXT("t=%.2f passo=%d %s pos=(%.0f,%.0f,%.0f) trava=%s suporte=%s elevTravado=%d elevZ=%.0f portasLat=%.2f\n"), Total, St, bNeon ? TEXT("Neon") : TEXT("Ruina"), L.X, L.Y, L.Z,
+			Tr->IsDestroyed() ? TEXT("DESTRUIDA") : TEXT("inteira"), Su->IsDestroyed() ? TEXT("ausente") : TEXT("CONSTRUIDO"), (int32)E->bLockedP1, E->CurrentOffsetZ(), E->SideDoorAlpha());
+	}
+	if (Total > 205.f && St < 98) { Res(TEXT("TEMPO TOTAL ESGOTADO")); Go(98, TEXT("tempo total")); }
+	if (St > 0 && St < 90 && StT > 40.f) { Res(FString::Printf(TEXT("TIMEOUT no passo %d sub %d pos=(%.0f,%.0f,%.0f)"), St, Sub, L.X, L.Y, L.Z)); Go(98, TEXT("timeout")); }
+	const FVector2D NeonSpot(900, -255), RuinaSpot(900, 255), Wait(680, 120), NeonWait(680, -120);
+	switch (St)
+	{
+	case 0:   // papel e apresentacao (os dois pulam com E)
+		if (NP < 2 || Total < 3.f) break;
+		if (PC->GetViewTarget() != Me && Sub == 0 && SubT > 1.f) { Use(TEXT("pular apresentacao")); Sub = 1; }
+		if (PC->GetViewTarget() == Me && StT > 4.f && E->bLockedP1)
+		{ Res(FString::Printf(TEXT("A. INICIO: papel=%s, elevador TRAVADO=%d, trava=%s, suporte=%s"), bNeon ? TEXT("Neon") : TEXT("Ruina"), (int32)E->bLockedP1, Tr->IsDestroyed() ? TEXT("destruida") : TEXT("inteira"), Su->IsDestroyed() ? TEXT("ausente") : TEXT("construido"))); Go(1, TEXT("controle")); }
+		break;
+	case 1: if (At(bNeon ? NeonSpot : Wait)) Go(2, TEXT("posicionado")); break;
+	case 2:   // Neon: console travado (B), tentar reconstruir sem material (D), tentar destruir a trava (C)
+		if (!bNeon) { if (O && O->GetActorLocation().Y < -150.f && Tr->IsDestroyed() == false && StT > 1.f && Sub == 0) Sub = 0; Walk(Wait); if (O && FVector::Dist2D(O->GetActorLocation(), FVector(NeonWait.X, NeonWait.Y, 0)) < 60.f && StT > 3.f) Go(3, TEXT("Neon terminou as tentativas")); break; }
+		if (Sub == 0) { Res(TEXT("INDICADOR console A: ") + PromptHere()); Use(TEXT("console de chamada com o elevador travado")); Sub = 1; SubT = 0.f; }
+		else if (Sub == 1 && SubT > 2.5f) { Res(FString::Printf(TEXT("B. CONSOLE ANTES DO PUZZLE: elevador %s"), E->IsMoving() || E->CurrentOffsetZ() > 1.f ? TEXT("PARTIU (FALHA)") : TEXT("nao partiu (OK, travado)"))); Fire(Su, TEXT("reconstruir sem material")); Sub = 2; SubT = 0.f; }
+		else if (Sub == 2 && SubT > 1.5f) { Res(FString::Printf(TEXT("D. NEON RECONSTRUIR SEM MATERIAL: suporte %s"), Su->IsDestroyed() ? TEXT("continua ausente (BLOQUEADO, OK)") : TEXT("CONSTRUIDO (FALHA)"))); Sub = 3; SubT = 0.f; }
+		else if (Sub == 3) { if (At(RuinaSpot)) { Fire(Tr, TEXT("Neon tenta destruir a trava")); Sub = 4; SubT = 0.f; } }
+		else if (Sub == 4 && SubT > 1.5f) { Res(FString::Printf(TEXT("C. NEON DESTRUIR A TRAVA: trava %s"), Tr->IsDestroyed() ? TEXT("DESTRUIDA (FALHA)") : TEXT("intacta (BLOQUEADO, OK)"))); Sub = 5; }
+		else if (Sub == 5 && At(NeonWait)) Go(3, TEXT("Neon aguarda"));
+		break;
+	case 3:   // Ruina: tenta reconstruir o suporte (nao pode) e destroi a trava
+		if (bNeon) { Walk(NeonWait); if (Tr->IsDestroyed() && StT > 1.f) { T0 = Total; Go(4, TEXT("trava destruida (visto pelo Neon)")); } break; }
+		if (Sub == 0) { if (At(NeonSpot)) { Fire(Su, TEXT("Ruina tenta reconstruir o suporte")); Sub = 1; SubT = 0.f; } }
+		else if (Sub == 1 && SubT > 1.5f) { Res(FString::Printf(TEXT("RUINA NO SUPORTE: %s"), Su->IsDestroyed() ? TEXT("continua ausente (Ruina nao reconstroi, OK)") : TEXT("CONSTRUIDO (FALHA)"))); Sub = 2; }
+		else if (Sub == 2) { if (At(RuinaSpot)) { Fire(Tr, TEXT("Ruina destroi a trava")); Sub = 3; SubT = 0.f; } }
+		else if (Sub == 3 && SubT > 1.f) { Res(FString::Printf(TEXT("E. RUINA DESTROI A TRAVA: %s"), Tr->IsDestroyed() ? TEXT("DESTRUIDA (OK)") : TEXT("intacta (FALHA)"))); Sub = 4; }
+		else if (Sub == 4 && At(Wait)) { T0 = Total; Go(4, TEXT("Ruina aguarda")); }
+		break;
+	case 4:   // F: elevador continua travado; Neon tenta o console de novo e depois reconstroi o suporte
+		if (!bNeon) { Walk(Wait); if (!E->bLockedP1) { Res(FString::Printf(TEXT("I. (Ruina ve) elevador LIBERADO %.2f s depois do suporte comecar"), Total - T0)); Go(5, TEXT("liberado")); } else if (!Su->IsDestroyed() && T0 > 0.f && Sub == 0) { T0 = Total; Sub = 1; } break; }
+		if (Sub == 0) { if (StT > 2.f && At(NeonSpot)) { Res(FString::Printf(TEXT("F. APOS DESTRUIR A TRAVA: elevador travado=%d (esperado 1)"), (int32)E->bLockedP1)); Res(TEXT("INDICADOR console A: ") + PromptHere()); Use(TEXT("console com trava destruida e sem suporte")); Sub = 1; SubT = 0.f; } }
+		else if (Sub == 1 && SubT > 2.f) { Res(FString::Printf(TEXT("F2. CONSOLE COM SO A TRAVA DESTRUIDA: elevador %s"), E->IsMoving() || E->CurrentOffsetZ() > 1.f ? TEXT("PARTIU (FALHA)") : TEXT("nao partiu (OK)"))); Fire(Su, TEXT("Neon reconstroi o suporte com o material")); Sub = 2; SubT = 0.f; T0 = Total; }
+		else if (Sub == 2 && SubT > 0.7f && SubT < 0.7f + Dt * 1.5f) Res(FString::Printf(TEXT("H. DURANTE A MONTAGEM (+0,7 s): suporte=%s, elevador travado=%d (esperado 1)"), Su->IsDestroyed() ? TEXT("ausente") : TEXT("construido"), (int32)E->bLockedP1));
+		else if (Sub == 2 && !E->bLockedP1) { Res(FString::Printf(TEXT("G/I. SUPORTE RECONSTRUIDO e elevador LIBERADO %.2f s depois do tiro (montagem ~1,44 s)"), Total - T0)); Res(TEXT("INDICADOR console A: ") + PromptHere()); Sub = 3; SubT = 0.f; }
+		else if (Sub == 3 && At(NeonWait)) Go(5, TEXT("Neon aguarda"));
+		break;
+	case 5:   // L: nada de consumo duplicado: Ruina tenta destruir o suporte pronto; Neon tenta reconstruir a trava
+		if (Sub == 0 && StT > (bNeon ? 1.f : 4.5f)) { if (At(bNeon ? RuinaSpot : NeonSpot)) { Fire(bNeon ? Tr : Su, bNeon ? TEXT("Neon tenta reconstruir a trava") : TEXT("Ruina tenta destruir o suporte pronto")); Sub = 1; SubT = 0.f; } }
+		else if (Sub == 1 && SubT > 1.5f) { Res(FString::Printf(TEXT("L. SEM DUPLICIDADE: trava=%s suporte=%s elevTravado=%d (esperado: destruida/construido/0)"), Tr->IsDestroyed() ? TEXT("destruida") : TEXT("INTEIRA"), Su->IsDestroyed() ? TEXT("AUSENTE") : TEXT("construido"), (int32)E->bLockedP1)); Sub = 2; }
+		else if (Sub == 2 && At(FVector2D(800, bNeon ? -60.f : 60.f)) && StT > 9.f) Go(6, TEXT("rumo a cabine"));
+		break;
+	case 6:   // J: embarque e subida juntos (Ruina aciona; repete se recusado)
+		if (At(FVector2D(1200, bNeon ? -45.f : 45.f)) && O && InCab(L) && InCab(O->GetActorLocation()))
+		{
+			if (!bNeon && !E->IsMoving() && !E->IsTargetTop() && SubT > 2.f) { Use(TEXT("subir")); SubT = 0.f; }
+		}
+		if (E->IsMoving() && Sub == 0) { Sub = 1; Res(TEXT("INDICADOR cabine: ") + PromptHere()); }
+		if (E->IsParkedAt(true) && E->SideDoorAlpha() > 0.95f) { Res(FString::Printf(TEXT("J. SUBIDA JUNTOS: chegou em B, eu a bordo=%d, Z=%.0f"), (int32)InCab(L), L.Z)); Go(7, TEXT("em B")); }
+		break;
+	case 7: { const float Sg = bNeon ? -1.f : 1.f;   // K: barreiras do setor B
+		if (Sub == 0) { if (At(FVector2D(1200, Sg * 40.f)) && At(FVector2D(1200, Sg * 40.f))) Sub = 1; }
+		else if (Sub == 1) { if (At(FVector2D(1200, Sg * 470.f))) { Res(FString::Printf(TEXT("K. BARREIRA PROPRIA: atravessou (Y=%.0f)"), L.Y)); Sub = 2; } }
+		else if (Sub == 2) { if (At(FVector2D(1200, Sg * 40.f))) { Sub = 3; SubT = 0.f; T0 = 0.f; } }
+		else if (Sub == 3) { Walk(FVector2D(1200, -Sg * 520.f)); if (!Me->GetCharacterMovement()->IsFalling() && SubT > 1.f) Me->Jump(); T0 = FMath::Max(T0, -Sg * L.Y); if (SubT > 6.f) { Res(FString::Printf(TEXT("K. BARREIRA DO OUTRO: |Y| max %.0f -> %s"), T0, T0 < 215.f ? TEXT("BLOQUEADO (OK)") : TEXT("PASSOU (FALHA)"))); Go(8, TEXT("barreiras")); } }
+		break; }
+	case 8: if (At(FVector2D(1200, (bNeon ? -1.f : 1.f) * 470.f)) && StT > 2.f) { Res(TEXT("FIM P1: puzzle concluido em cooperacao e setor B funcionando")); Go(99, TEXT("fim")); } break;
+	case 98: case 99: if (StT > (Tag == TEXT("host") ? 8.f : 4.f)) { Save(); bDone = true; GEngine->Exec(W, TEXT("quit")); } break;
+	}
 }

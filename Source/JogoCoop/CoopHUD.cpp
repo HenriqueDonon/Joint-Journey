@@ -1,5 +1,7 @@
 #include "CoopHUD.h"
 #include "CoopCharacter.h"
+#include "CoopConsole.h"
+#include "EngineUtils.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
 #include "GameFramework/PlayerController.h"
@@ -45,5 +47,23 @@ void ACoopHUD::DrawHUD()
 		const FString T = bPortal ? TEXT("[R] ARMA DE PORTAIS  -  botao esq: portal azul | botao dir: portal laranja")
 		                          : TEXT("[R] ARMA DE PODERES  -  botao esquerdo: atirar poder (Ruina destroi / Neon constroi)");
 		DrawText(T, bPortal ? FLinearColor(0.4f, 0.8f, 1.f) : FLinearColor(0.8f, 1.f, 0.6f), cx - 280.f, Canvas->SizeY - 50.f, GEngine->GetMediumFont(), 1.f);
+		// dica contextual discreta do console ao alcance (Fase 2): mesma regra de alcance do servidor
+		if (C)
+		{
+			const ACoopConsole* Best = nullptr; float BestD = 1e9f;
+			for (TActorIterator<ACoopConsole> It(GetWorld()); It; ++It)
+			{
+				const float D = FVector::Dist(It->GetActorLocation(), C->GetActorLocation());
+				if (D < It->UseRadius && D < BestD) { BestD = D; Best = *It; }
+			}
+			bool bAv = false;
+			const FString P = Best ? Best->Prompt(bAv) : FString();
+			if (!P.IsEmpty())
+			{
+				float W = 0.f, H = 0.f; GetTextSize(P, W, H, GEngine->GetMediumFont(), 1.2f);
+				DrawRect(FLinearColor(0.f, 0.f, 0.f, 0.45f), cx - W * 0.5f - 10.f, cy + 70.f, W + 20.f, H + 8.f);
+				DrawText(P, bAv ? FLinearColor(0.6f, 1.f, 0.7f) : FLinearColor(1.f, 0.45f, 0.35f), cx - W * 0.5f, cy + 74.f, GEngine->GetMediumFont(), 1.2f);
+			}
+		}
 	}
 }

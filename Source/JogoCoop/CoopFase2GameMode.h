@@ -19,6 +19,11 @@ public:
 	void DebugUnlockAll();                             // F10 (DEPURACAO): abre portoes e destrava o elevador; NAO e solucao de puzzle
 	bool IsFunctionalLayout() const { return bF2X; }
 	bool bDebugUnlocked = false;
+	// ---- PUZZLE 1: Elevador de Emergencia (trava -> material -> suporte -> elevador liberado) ----
+	UPROPERTY() class ACoopDestructible* P1Trava = nullptr;
+	UPROPERTY() class ACoopDestructible* P1Suporte = nullptr;
+	bool bP1Done = false, bP1MatMsg = false;
+	static bool DebugAllowed();   // F6..F10 so com -F2Debug (nunca no fluxo normal)
 private:
 	void TeleportTo(APlayerController* PC, int32 Level);
 	int32 NextStart = 0;
@@ -26,6 +31,8 @@ private:
 	bool bF2XChecked = false, bF2X = false;
 	void SetupF2X();
 	void TickF2X(float Dt);
+	void SetupP1();
+	void TickP1();
 	FVector CheckSpot(int32 Level, const class ACoopCharacter* C) const;
 	void EndIntroFor(APlayerController* PC);
 	UPROPERTY() class ACoopIntroCam* Intro = nullptr;

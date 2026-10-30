@@ -1,0 +1,120 @@
+t=0.50 passo=0 Ruina pos=(-300,150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=1.00 passo=0 Ruina pos=(-300,150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=1.50 passo=0 Ruina pos=(-300,150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=2.01 passo=0 Ruina pos=(-300,150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=2.51 passo=0 Ruina pos=(-300,150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+ACAO t=3.00 tecla E (pular apresentacao)
+t=3.01 passo=0 Ruina pos=(-300,150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=3.51 passo=0 Ruina pos=(-300,150,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO A. INICIO: papel=Ruina, elevador TRAVADO=1, trava=inteira, suporte=ausente
+EVT t=4.00 srvT=28.00 passo 0->1 controle
+t=4.41 passo=1 Ruina pos=(-279,149,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=4.91 passo=1 Ruina pos=(14,140,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=5.41 passo=1 Ruina pos=(316,131,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=5.92 passo=1 Ruina pos=(620,122,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+EVT t=5.97 srvT=30.00 passo 1->2 posicionado
+t=6.42 passo=2 Ruina pos=(673,120,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=6.92 passo=2 Ruina pos=(673,120,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=7.43 passo=2 Ruina pos=(673,120,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=7.93 passo=2 Ruina pos=(673,120,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=8.43 passo=2 Ruina pos=(673,120,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=8.93 passo=2 Ruina pos=(673,120,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+EVT t=8.98 srvT=32.99 passo 2->3 Neon terminou as tentativas
+t=9.44 passo=3 Ruina pos=(769,-39,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+ACAO t=9.81 Ruina atira o poder em SUPORTE (Ruina tenta reconstruir o suporte)
+t=9.94 passo=3 Ruina pos=(895,-247,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=10.44 passo=3 Ruina pos=(895,-247,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=10.94 passo=3 Ruina pos=(895,-247,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO RUINA NO SUPORTE: continua ausente (Ruina nao reconstroi, OK)
+t=11.45 passo=3 Ruina pos=(895,-233,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=11.96 passo=3 Ruina pos=(898,41,90) trava=inteira suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+ACAO t=12.27 Ruina atira o poder em TRAVA (Ruina destroi a trava)
+t=12.47 passo=3 Ruina pos=(900,243,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=12.99 passo=3 Ruina pos=(900,243,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO E. RUINA DESTROI A TRAVA: DESTRUIDA (OK)
+t=13.49 passo=3 Ruina pos=(855,218,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+EVT t=13.80 srvT=37.80 passo 3->4 Ruina aguarda
+t=14.00 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=14.50 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=15.01 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=15.52 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=16.03 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=16.53 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=ausente elevTravado=1 elevZ=0 portasLat=0.00
+t=17.05 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=1 elevZ=0 portasLat=0.00
+t=17.56 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=1 elevZ=0 portasLat=0.00
+t=18.06 passo=4 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=1 elevZ=0 portasLat=0.00
+RESULTADO I. (Ruina ve) elevador LIBERADO 1.45 s depois do suporte comecar
+EVT t=18.37 srvT=42.37 passo 4->5 liberado
+t=18.56 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=19.07 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=19.57 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=20.08 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=20.58 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=21.10 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=21.61 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=22.11 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=22.62 passo=5 Ruina pos=(686,123,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=23.13 passo=5 Ruina pos=(721,60,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=23.63 passo=5 Ruina pos=(734,-58,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+ACAO t=24.07 Ruina atira o poder em SUPORTE (Ruina tenta destruir o suporte pronto)
+t=24.14 passo=5 Ruina pos=(891,-248,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=24.65 passo=5 Ruina pos=(891,-248,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=25.15 passo=5 Ruina pos=(891,-248,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+RESULTADO L. SEM DUPLICIDADE: trava=destruida suporte=construido elevTravado=0 (esperado: destruida/construido/0)
+t=25.66 passo=5 Ruina pos=(889,-241,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=26.17 passo=5 Ruina pos=(871,-47,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=26.67 passo=5 Ruina pos=(808,59,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=27.18 passo=5 Ruina pos=(808,59,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+EVT t=27.39 srvT=51.38 passo 5->6 rumo a cabine
+t=27.68 passo=6 Ruina pos=(901,56,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=28.20 passo=6 Ruina pos=(1193,45,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=28.70 passo=6 Ruina pos=(1195,45,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=29.22 passo=6 Ruina pos=(1195,45,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+ACAO t=29.39 tecla E (subir)
+RESULTADO INDICADOR cabine: Elevador em movimento... [indisponivel]
+t=29.72 passo=6 Ruina pos=(1195,45,90) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=0 portasLat=0.00
+t=30.22 passo=6 Ruina pos=(1195,45,93) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=2 portasLat=0.00
+t=30.72 passo=6 Ruina pos=(1195,45,121) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=31 portasLat=0.00
+t=31.23 passo=6 Ruina pos=(1195,45,177) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=86 portasLat=0.00
+t=31.74 passo=6 Ruina pos=(1195,45,250) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=160 portasLat=0.00
+t=32.26 passo=6 Ruina pos=(1195,45,340) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=249 portasLat=0.00
+t=32.76 passo=6 Ruina pos=(1195,45,429) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=339 portasLat=0.00
+t=33.27 passo=6 Ruina pos=(1195,45,518) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=428 portasLat=0.00
+t=33.77 passo=6 Ruina pos=(1195,45,594) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=504 portasLat=0.00
+t=34.28 passo=6 Ruina pos=(1195,45,653) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=563 portasLat=0.00
+t=34.78 passo=6 Ruina pos=(1195,45,686) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=595 portasLat=0.00
+t=35.29 passo=6 Ruina pos=(1195,45,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=0.00
+RESULTADO J. SUBIDA JUNTOS: chegou em B, eu a bordo=1, Z=690
+EVT t=35.67 srvT=59.66 passo 6->7 em B
+t=35.79 passo=7 Ruina pos=(1195,55,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=36.31 passo=7 Ruina pos=(1198,325,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+RESULTADO K. BARREIRA PROPRIA: atravessou (Y=448)
+t=36.81 passo=7 Ruina pos=(1200,420,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=37.32 passo=7 Ruina pos=(1200,120,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=37.83 passo=7 Ruina pos=(1200,24,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=38.33 passo=7 Ruina pos=(1200,24,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=38.84 passo=7 Ruina pos=(1209,22,874) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=39.35 passo=7 Ruina pos=(1258,-85,865) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=39.85 passo=7 Ruina pos=(1273,-151,749) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=40.35 passo=7 Ruina pos=(1227,-186,776) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=40.85 passo=7 Ruina pos=(1160,-186,811) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=41.37 passo=7 Ruina pos=(1130,-186,714) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=41.87 passo=7 Ruina pos=(1169,-186,764) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=42.38 passo=7 Ruina pos=(1233,-186,808) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=42.88 passo=7 Ruina pos=(1266,-186,736) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=43.40 passo=7 Ruina pos=(1231,-186,750) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+RESULTADO K. BARREIRA DO OUTRO: |Y| max 186 -> BLOQUEADO (OK)
+EVT t=43.41 srvT=67.41 passo 7->8 barreiras
+t=43.90 passo=8 Ruina pos=(1199,-34,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=44.41 passo=8 Ruina pos=(1167,44,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=44.92 passo=8 Ruina pos=(1189,343,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=45.43 passo=8 Ruina pos=(1200,467,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+RESULTADO FIM P1: puzzle concluido em cooperacao e setor B funcionando
+EVT t=45.43 srvT=69.42 passo 8->99 fim
+t=45.93 passo=99 Ruina pos=(1200,467,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=46.45 passo=99 Ruina pos=(1200,467,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=46.95 passo=99 Ruina pos=(1200,467,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=47.46 passo=99 Ruina pos=(1200,467,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=47.96 passo=99 Ruina pos=(1200,467,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=48.48 passo=99 Ruina pos=(1200,467,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
+t=48.98 passo=99 Ruina pos=(1200,467,690) trava=DESTRUIDA suporte=CONSTRUIDO elevTravado=0 elevZ=600 portasLat=1.00
