@@ -22,10 +22,15 @@ public:
 	// Servidor: retornam false (com motivo) se a acao nao for valida no estado atual.
 	bool ServerBreak(FString& OutWhy);
 	bool ServerRebuild(FString& OutWhy);
-	void ServerForce(bool bBreak); // teste (F4): ignora regras
+	void ServerForce(bool bBreak, bool bFx = true); // teste (F4)/reinicio: ignora regras; bFx=false: sem efeito/animacao
 
 	// Material compartilhado: so reconstroi se o Partner estiver destruido (coluna <-> ponte).
-	UPROPERTY() ACoopDestructible* Partner = nullptr;
+	UPROPERTY(Replicated) ACoopDestructible* Partner = nullptr;
+	// Animacao de montagem na reconstrucao (layout 2): pecas saem dos destrocos do Partner e se encaixam
+	// (horizontal = ponte: segmentos em sequencia | vertical = coluna: aneis empilhando de baixo para cima)
+	UPROPERTY(Replicated) bool bAssemblyFx = false;
+	void TakeDebris(TArray<FVector>& Out);   // local: entrega as posicoes dos destrocos visiveis e os esconde
+	virtual void Tick(float Dt) override;
 
 	UPROPERTY(VisibleAnywhere) class UStaticMeshComponent* Mesh;
 	UPROPERTY(Replicated) FVector Size = FVector(220.f, 60.f, 200.f);
@@ -53,4 +58,13 @@ private:
 	virtual void EndPlay(const EEndPlayReason::Type Reason) override;
 	UPROPERTY() class UMaterialInstanceDynamic* BodyMat = nullptr;
 	bool bApplied = false;
+	UPROPERTY(Replicated) bool bQuietChange = false;
+	struct FAsm { class UStaticMeshComponent* C = nullptr; FVector From, To, Scale; float Delay = 0.f; };
+	TArray<FAsm> Asm;
+	UPROPERTY() class UStaticMeshComponent* AsmBeam = nullptr;
+	UPROPERTY() class UPointLightComponent* AsmLight = nullptr;
+	float AsmT0 = -1.f, AsmEnd = 0.f, AsmFlight = 0.45f; bool bAsmHoriz = true;
+	void StartAssembly();
+	void ClearAssembly();
+	void TickAssembly();
 };

@@ -267,11 +267,11 @@ bool ACoopFase1GameMode::BuildLevelLayout2()
 	{
 		const FVector C = MCol->GetActorLocation() + FVector(0, 0, 308.f);
 		if (ACoopDestructible* Col = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(C)))
-		{ Col->Setup(Sc(FVector(160, 160, 560)), FLinearColor(0.62f, 0.62f, 0.64f)); Col->Model = TEXT("Coluna_Inteira"); Col->FinishSpawning(FTransform(C)); Lbl(Col, TEXT("F1_Coluna")); Column = Col; }
+		{ Col->Setup(Sc(FVector(160, 160, 560)), FLinearColor(0.62f, 0.62f, 0.64f)); Col->Model = TEXT("Coluna_Inteira"); Col->bAssemblyFx = true; Col->FinishSpawning(FTransform(C)); Lbl(Col, TEXT("F1_Coluna")); Column = Col; }
 		const float Len = FMath::Max(MBr->GetActorScale3D().X * 100.f, 300.f);
 		const FVector B = MBr->GetActorLocation() - FVector(0, 0, 16.5f);
 		if (ACoopDestructible* Br = W->SpawnActorDeferred<ACoopDestructible>(ACoopDestructible::StaticClass(), FTransform(B)))
-		{ Br->Setup(FVector(Len, 375.f, 33.f), FLinearColor(0.55f, 0.52f, 0.46f), 360.f * KZ, 350.f * KXY, true); Br->Model = TEXT("Ponte_Inteira"); Br->FinishSpawning(FTransform(B)); Lbl(Br, TEXT("F1_Ponte")); Bridge = Br; }
+		{ Br->Setup(FVector(Len, 375.f, 33.f), FLinearColor(0.55f, 0.52f, 0.46f), 360.f * KZ, 350.f * KXY, true); Br->Model = TEXT("Ponte_Inteira"); Br->bAssemblyFx = true; Br->FinishSpawning(FTransform(B)); Lbl(Br, TEXT("F1_Ponte")); Bridge = Br; }
 		if (Column && Bridge) { Column->Partner = Bridge; Bridge->Partner = Column; }
 	}
 	for (TActorIterator<ACoopCollapseRig> It(W); It; ++It) { Rig = *It; break; }
@@ -542,8 +542,19 @@ void ACoopFase1GameMode::TickCollapse()
 		{
 			Phase = 2; PhaseT0 = Now;
 			for (ACoopCeiling* C : Roof) if (C) C->StartFall(RoofFallSecs, RoofDrop);
-			if (Rig) { Rig->ServerBeginFall(); bRigCrushed = false; }
-			Announce(TEXT("O TETO DESABOU!"));
+			if (Rig)
+			{
+				Rig->ServerBeginFall(); bRigCrushed = false;
+				// derrota controlada: todos param e se protegem, camera de derrota (do rig) mostra o desabamento
+				for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+					if (APlayerController* PC = It->Get())
+					{
+						if (ACoopCharacter* Ch = Cast<ACoopCharacter>(PC->GetPawn())) Ch->SetBrace(true);
+						PC->ClientIgnoreMoveInput(true);
+						PC->SetViewTargetWithBlend(Rig, 0.45f, VTBlend_EaseInOut, 2.f);
+					}
+			}
+			Announce(Rig ? TEXT("A ESTRUTURA ESTA DESABANDO!") : TEXT("O TETO DESABOU!"));
 		}
 	}
 	else if (Phase == 2 && Rig && !bRigCrushed && Now - PhaseT0 >= Rig->ImpactDelay())
@@ -551,18 +562,22 @@ void ACoopFase1GameMode::TickCollapse()
 		// layout 2: o esmagamento acontece no impacto visivel da secao do teto (servidor), nao antes
 		bRigCrushed = true;
 		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-			if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) C->SetCrushed(true);
+			if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) C->SetCrushed(true, true);
+		Announce(TEXT("FALHA: a estrutura desabou sobre voces"));
 	}
-	else if (Phase == 2 && Now - PhaseT0 >= (Rig ? Rig->ImpactDelay() + 2.5f : 1.4f))   // layout 2: reinicia so depois do impacto ser visto
+	else if (Phase == 2 && Now - PhaseT0 >= (Rig ? Rig->ImpactDelay() + 2.8f : 1.4f))   // layout 2: reinicia so depois da cena de derrota
 	{
 		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-			if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) C->SetCrushed(false);
+			if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr) { C->SetCrushed(false); C->SetBrace(false); }
 		SendAllToStart();                    // todos voltam ao inicio
+		if (Rig)
+			for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+				if (APlayerController* PC = It->Get()) { PC->ClientIgnoreMoveInput(false); if (PC->GetPawn()) PC->SetViewTargetWithBlend(PC->GetPawn(), 0.35f); }
 		ClearCracks();
 		for (ACoopCeiling* C : Roof) if (C) C->ResetPos();
 		if (Rig) Rig->ServerReset();
-		Column->ServerForce(false);          // estruturas voltam ao estado inicial
-		if (Bridge) Bridge->ServerForce(true);
+		Column->ServerForce(false, !Rig);    // estruturas voltam ao estado inicial (layout 2: sem animacao de montagem)
+		if (Bridge) Bridge->ServerForce(true, !Rig);
 		Phase = 0;
 		if (ExitDoor) ExitDoor->SetOpen(false);
 		if (ExitDoor2) ExitDoor2->SetOpen(false);
@@ -594,7 +609,7 @@ void ACoopFase1GameMode::BuildTransition()
 	Blk(TEXT("F1_Trans_Portal"), FVector(X1 - 14.f, 0, TrFloorTop + 160.f), FVector(6.f, 320.f, 300.f), FLinearColor(0.02f, 0.1f, 0.2f), FLinearColor(0.2f, 1.2f, 3.f) * 3.f);
 	if (ACoopLamp* PL = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(X1 - 120.f, 0, TrFloorTop + 160.f), FRotator::ZeroRotator)) PL->Setup(FLinearColor(0.2f, 0.7f, 1.f), 22000.f, 900.f);
 	// tiras de luz no teto + lampadas
-	for (float X = TrX0 + 200.f; X < X1; X += 400.f)
+	for (float X = TrX0 + 200.f; X < X1 && !Rig; X += 400.f)
 	{
 		Blk(TEXT("F1_Trans_Luz"), FVector(X, 0, TrFloorTop + TrH - 84.f), FVector(180.f, 40.f, 6.f), FLinearColor(0.8f, 0.85f, 0.9f), FLinearColor(0.85f, 0.95f, 1.f) * 3.f);
 		if (ACoopLamp* L = W->SpawnActor<ACoopLamp>(ACoopLamp::StaticClass(), FVector(X, 0, TrFloorTop + TrH - 120.f), FRotator::ZeroRotator)) L->Setup(FLinearColor(0.75f, 0.9f, 1.f), 9000.f, 800.f);
@@ -605,7 +620,7 @@ void ACoopFase1GameMode::BuildTransition()
 	// modelos do Blender: paineis nas paredes e placas no piso
 	auto Prop = [&](const TCHAR* Slot, FVector Base, FVector Size, FRotator Rot, FVector Scl = FVector(1.f), bool bCollide = false) -> ACoopBlock*
 	{
-		if (GBaked) return nullptr;
+		if (GBaked || Rig) return nullptr;   // Fase1_Arquitetura: tunel revestido por ACoopTunnelDressing (linguagem da nova fase)
 		ACoopBlock* b = W->SpawnActor<ACoopBlock>(ACoopBlock::StaticClass(), Base + FVector(0, 0, Size.Z * 0.5f), Rot);
 		if (b) { b->Setup(Size, FLinearColor(0.22f, 0.18f, 0.16f), false, FLinearColor::Black, 0.85f, 0.25f); b->SetOpts(FName(Slot), !bCollide); if (!Scl.Equals(FVector(1.f))) b->SetModelScale(Scl); Lbl(b, Slot); b->Tags.Add(TEXT("F1Decor")); if (bCollide) b->Tags.Add(TEXT("F1Col")); }
 		return b;

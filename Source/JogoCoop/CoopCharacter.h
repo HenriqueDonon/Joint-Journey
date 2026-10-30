@@ -32,7 +32,10 @@ public:
 	// Esmagado pelo teto (Fase 1): boneco achatado e parado ate a fase reiniciar
 	UPROPERTY(ReplicatedUsing=OnRep_Crushed) bool bCrushed = false;
 	UFUNCTION() void OnRep_Crushed();
-	void SetCrushed(bool b);
+	void SetCrushed(bool b, bool bBury = false);
+	// Fase 1 (layout 2): agachado/protegendo-se durante o desabamento (parado, sem poderes)
+	UPROPERTY(ReplicatedUsing=OnRep_Crushed) bool bBrace = false;
+	void SetBrace(bool b);
 	// Camera livre (tecla C): a camera gira em volta sem virar o boneco (para se ver de frente)
 	UPROPERTY(ReplicatedUsing=OnRep_FreeCam) bool bFreeCam = false;
 	UFUNCTION() void OnRep_FreeCam();

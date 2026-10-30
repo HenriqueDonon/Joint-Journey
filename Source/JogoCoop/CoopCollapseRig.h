@@ -41,6 +41,11 @@ public:
 	UPROPERTY(EditAnywhere, Category="Rig") float TrussZ = 1540.f;
 	UPROPERTY(EditAnywhere, Category="Rig") float FloorZ = 0.f;
 	UPROPERTY(EditAnywhere, Category="Rig") float WallY = -1400.f;
+	// camera da cena de derrota (vista ampla da area principal) e altura final da secao desabada
+	UPROPERTY(EditAnywhere, Category="Rig") FVector LoseCamPos = FVector(1750, 1100, 900);
+	UPROPERTY(EditAnywhere, Category="Rig") FVector LoseCamTarget = FVector(450, -100, 200);
+	UPROPERTY(EditAnywhere, Category="Rig") float RestH = 140.f;
+	UPROPERTY(VisibleAnywhere) class UCameraComponent* LoseCam;
 
 	// API do servidor (GameMode)
 	void ServerBeginInstability(float Duration);
@@ -56,7 +61,7 @@ private:
 	float Now() const;
 	static constexpr float Lead = 0.15f;
 	struct FPiece { class UStaticMeshComponent* C = nullptr; FVector Rest; FRotator RestRot; FVector RestScale; int32 Group = 0; float Detach = 2.f; FVector Land; float Phase = 0.f; };
-	TArray<FPiece> P;           // grupos: 0 ancora (fica) | 1 deck/capitel | 2 torre (comprime) | 3 secao do teto+vigas | 4 secundaria (solta antes) | 5 rachadura
+	TArray<FPiece> P;           // grupos: 0 ancora (fica) | 1 deck/capitel | 2 torre (comprime) | 3 secao do teto+vigas | 4 secundaria (solta antes) | 5 rachadura | 6 trelicas do vao (2a onda)
 	// particulas leves como componentes simples (os materiais do glTF nao suportam instancias)
 	UPROPERTY() TArray<class UStaticMeshComponent*> DustC;
 	UPROPERTY() TArray<class UStaticMeshComponent*> SparkC;
@@ -65,6 +70,8 @@ private:
 	UPROPERTY() class UPointLightComponent* SparkLight = nullptr;
 	UPROPERTY() class UPointLightComponent* ImpactLight = nullptr;
 	UPROPERTY() TArray<class UPointLightComponent*> ServiceLights;
+	UPROPERTY() TArray<class USpotLightComponent*> BayLamps; TArray<int32> BayLampPiece;
+	FVector CamRest = FVector::ZeroVector; FRotator CamRot = FRotator::ZeroRotator;
 	TArray<FVector> Joints;      // pontos de tensao (poeira/faiscas)
 	TArray<FVector> DebrisFrom; TArray<float> DebrisAt; TArray<float> DebrisLandZ;
 	FVector Pivot = FVector::ZeroVector;

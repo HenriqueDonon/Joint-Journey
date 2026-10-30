@@ -39,9 +39,14 @@ static const FTourKey GTour2[] = {
 // trajeto "estrutura" (coluna + o que ela sustenta): posicao -> alvo
 struct FLookKey { FVector P, Tg; };
 static const FLookKey GTourEst[] = {
-	{ FVector(2700, 800, 700), FVector(900, -700, 800) }, { FVector(1900, -100, 520), FVector(1000, -600, 520) },
-	{ FVector(1380, -330, 260), FVector(1000, -600, 640) }, { FVector(1950, -1150, 1050), FVector(1000, -650, 1150) },
-	{ FVector(2300, 300, 1150), FVector(900, -800, 1200) }, { FVector(-100, 450, 650), FVector(900, -800, 900) } };
+	{ FVector(2900, 1100, 800), FVector(600, -300, 900) }, { FVector(1900, -100, 520), FVector(1000, -600, 520) },
+	{ FVector(1350, -300, 250), FVector(1000, -600, 900) }, { FVector(1500, 1150, 1100), FVector(500, -500, 1250) },
+	{ FVector(2600, -1100, 1200), FVector(500, 600, 1300) }, { FVector(-150, 1200, 700), FVector(1000, -600, 900) } };
+// trajeto "tunel": do galpao, pela porta, ate o portal; olha para tras (continuidade com a fase)
+static const FLookKey GTourTun[] = {
+	{ FVector(3300, 0, 600), FVector(4600, 0, 450) }, { FVector(3900, 0, 470), FVector(5000, 0, 440) },
+	{ FVector(4500, 0, 460), FVector(5970, 0, 420) }, { FVector(5300, -250, 470), FVector(5970, 0, 420) },
+	{ FVector(5700, -150, 480), FVector(4300, 0, 480) }, { FVector(5850, 0, 500), FVector(3300, 0, 450) } };
 
 void ACoopF1Tour::Tick(float Dt)
 {
@@ -59,11 +64,12 @@ void ACoopF1Tour::Tick(float Dt)
 	const float U = FMath::Clamp((T - 4.f) / Dur, 0.f, 1.f) * (NK - 1);
 	const int32 I = FMath::Min((int32)U, NK - 2); const float A = U - I;
 	auto K = [&](int32 i) { return Keys[FMath::Clamp(i, 0, NK - 1)]; };
-	if (Tag == TEXT("estrutura"))
+	if (Tag == TEXT("estrutura") || Tag == TEXT("tunel"))
 	{
-		const int32 NE = UE_ARRAY_COUNT(GTourEst); const float DE = 20.f;
+		const FLookKey* GTE = Tag == TEXT("tunel") ? GTourTun : GTourEst;
+		const int32 NE = Tag == TEXT("tunel") ? UE_ARRAY_COUNT(GTourTun) : UE_ARRAY_COUNT(GTourEst); const float DE = Tag == TEXT("tunel") ? 16.f : 20.f;
 		const float UE_ = FMath::Clamp((T - 4.f) / DE, 0.f, 1.f) * (NE - 1); const int32 J = FMath::Min((int32)UE_, NE - 2); const float B = UE_ - J;
-		auto E = [&](int32 i) { return GTourEst[FMath::Clamp(i, 0, NE - 1)]; };
+		auto E = [&](int32 i) { return GTE[FMath::Clamp(i, 0, NE - 1)]; };
 		const FVector Pe = FMath::CubicCRSplineInterp(E(J - 1).P, E(J).P, E(J + 1).P, E(J + 2).P, 0.f, 1.f, 2.f, 3.f, 1.f + B);
 		const FVector Te = FMath::CubicCRSplineInterp(E(J - 1).Tg, E(J).Tg, E(J + 1).Tg, E(J + 2).Tg, 0.f, 1.f, 2.f, 3.f, 1.f + B);
 		Cam->SetActorLocationAndRotation(Pe, FRotationMatrix::MakeFromX(Te - Pe).Rotator());
@@ -136,8 +142,14 @@ void ACoopF1Flow::Tick(float Dt)
 	if (bInsp && Tag == TEXT("host") && Ph >= 1)
 	{
 		static ACameraActor* IC = nullptr;
-		if (!IC) { const FVector CP(2150, 450, 640), CT(850, -750, 520); IC = W->SpawnActor<ACameraActor>(CP, FRotationMatrix::MakeFromX(CT - CP).Rotator()); IC->GetCameraComponent()->SetFieldOfView(72.f); }
-		if (PC->GetViewTarget() != IC) PC->SetViewTargetWithBlend(IC, 0.f);
+		static const bool bPonte = FParse::Param(FCommandLine::Get(), TEXT("InspPonte"));
+		if (!IC)
+		{
+			const FVector CP = bPonte ? FVector(1950, 1150, 800) : FVector(2250, 700, 650), CT = bPonte ? FVector(1650, -300, 0) : FVector(900, -550, 470);
+			IC = W->SpawnActor<ACameraActor>(CP, FRotationMatrix::MakeFromX(CT - CP).Rotator()); IC->GetCameraComponent()->SetFieldOfView(bPonte ? 85.f : 78.f);
+		}
+		// cede a vista para a camera de derrota do jogo (cena de derrota real) e retoma depois do reinicio
+		if (PC->GetViewTarget() != IC && PC->GetViewTarget() == PC->GetPawn()) PC->SetViewTargetWithBlend(IC, 0.f);
 	}
 	if (Ph >= 1 && ShotT >= ((bInsp && Tag == TEXT("host")) ? 0.1f : 0.25f)) { ShotT = 0.f; FScreenshotRequest::RequestScreenshot(FPaths::ProjectDir() / FString::Printf(TEXT("AutoShots/f1fluxo/%s/f_%05d.jpg"), *Tag, Shots++), false, false); }
 	if (Ph >= 1 && SaveT > 0.5f)
@@ -213,7 +225,8 @@ void ACoopF1Flow::Tick(float Dt)
 		else if (PhT > 15.f) SetPh(9, TEXT("TIMEOUT coluna"));
 		break;
 	case 3: if (!Br->IsDestroyed()) SetPh(4, TEXT("ponte CONSTRUIDA -> atravessar")); else if (PhT > 10.f) SetPh(9, TEXT("TIMEOUT ponte")); break;
-	case 4: // atravessa a ponte
+	case 4: // atravessa a ponte (espera a montagem visual terminar)
+		if (PhT < 1.6f) break;
 		if (Walk(FVector2D(AcrossX, DoorY + Oy)) < 25.f) SetPh(5, TEXT("do outro lado"));
 		else if (PhT > 15.f) SetPh(9, FString::Printf(TEXT("TIMEOUT travessia (X=%.0f)"), Me->GetActorLocation().X));
 		break;

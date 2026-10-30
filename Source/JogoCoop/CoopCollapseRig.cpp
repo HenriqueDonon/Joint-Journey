@@ -2,6 +2,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
+#include "Components/SpotLightComponent.h"
+#include "Camera/CameraComponent.h"
+#include "JJVisual.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/PlayerController.h"
@@ -20,6 +23,9 @@ ACoopCollapseRig::ACoopCollapseRig()
 	bAlwaysRelevant = true;
 	SetReplicateMovement(false);
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Raiz"));
+	LoseCam = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraDerrota"));
+	LoseCam->SetupAttachment(RootComponent);
+	LoseCam->SetFieldOfView(82.f);
 }
 
 void ACoopCollapseRig::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -38,7 +44,7 @@ void ACoopCollapseRig::ServerBeginInstability(float Duration) { if (!HasAuthorit
 void ACoopCollapseRig::ServerStabilize() { if (!HasAuthority()) return; St.StressAtT1 = Stress(Now()); St.Stage = 3; St.T1 = Now(); ForceNetUpdate(); }
 void ACoopCollapseRig::ServerBeginFall() { if (!HasAuthority()) return; St.StressAtT1 = 1.f; St.Stage = 2; St.T1 = Now() + Lead; ForceNetUpdate(); }
 void ACoopCollapseRig::ServerReset() { if (!HasAuthority()) return; St.Stage = 0; ForceNetUpdate(); }
-float ACoopCollapseRig::BayFallTime() const { return FMath::Sqrt(2.f * FMath::Max(BayZ - (FloorZ + 230.f), 50.f) / 980.f); }
+float ACoopCollapseRig::BayFallTime() const { return FMath::Sqrt(2.f * FMath::Max(BayZ - (FloorZ + RestH), 50.f) / 980.f); }
 
 UStaticMeshComponent* ACoopCollapseRig::Add(int32 Group, UStaticMesh* M, UMaterialInterface* Mat, FVector Loc, FVector Size, FRotator Rot, bool bModelBase)
 {
@@ -105,11 +111,15 @@ void ACoopCollapseRig::Build()
 	const FVector BC((BayMin.X + BayMax.X) * 0.5f, (BayMin.Y + BayMax.Y) * 0.5f, BayZ);
 	const float BW = BayMax.X - BayMin.X, BH = BayMax.Y - BayMin.Y;
 	Add(3, Cube, Conc, BC + FVector(0, 0, BayThick * 0.5f), FVector(BW, BH, BayThick));
-	for (float X : { C.X, BayMin.X + 90.f, BayMax.X - 90.f }) Add(3, Cube, Steel, FVector(X, BC.Y, BayZ - 35), FVector(55, BH, 70));      // vigas principais
-	for (int32 i = 0; i < 5; ++i) Add(3, Cube, Paint, FVector(BC.X, BayMin.Y + (i + 0.5f) * BH / 5.f, BayZ - 22), FVector(BW, 30, 44));   // travessas
-	for (int32 k = 0; k < 6; ++k)                                                                                                     // montantes ate a trelica
+	// viga de transferencia: atravessa o galpao de parede a parede e apoia na torre/coluna (faixa de perigo = peca critica)
+	Add(3, Cube, Paint, FVector(C.X, BC.Y, BayZ - 65), FVector(95, BH, 130));
+	for (float sx : { -1.f, 1.f }) Add(3, Cube, Haz, FVector(C.X + sx * 49.f, BC.Y, BayZ - 65), FVector(4, BH, 22));
+	for (float X : { BayMin.X + 90.f, (BayMin.X + C.X) * 0.5f, BayMax.X - 90.f }) Add(3, Cube, Steel, FVector(X, BC.Y, BayZ - 35), FVector(55, BH, 70));      // vigas principais
+	const int32 NT = FMath::Max(5, FMath::RoundToInt(BH / 350.f));
+	for (int32 i = 0; i < NT; ++i) Add(3, Cube, Paint, FVector(BC.X, BayMin.Y + (i + 0.5f) * BH / NT, BayZ - 22), FVector(BW, 30, 44));   // travessas
+	for (int32 k = 0; k < 8; ++k)                                                                                                     // montantes ate a trelica
 	{
-		const float X = BayMin.X + 60 + (k % 3) * (BW - 120) * 0.5f, Y = (k < 3) ? BayMin.Y + 60 : BayMax.Y - 60;
+		const float X = (k < 4) ? BayMin.X + 60 : BayMax.X - 60, Y = BayMin.Y + 120 + (k % 4) * (BH - 240) / 3.f;
 		Add(3, Cube, Steel, FVector(X, Y, (BayZ + BayThick + TrussZ) * 0.5f), FVector(30, 30, TrussZ - BayZ - BayThick));
 		Joints.Add(FVector(X, Y, TrussZ - 5.f));
 	}
@@ -122,10 +132,34 @@ void ACoopCollapseRig::Build()
 	// mao-francesa: do topo da torre ate as vigas principais
 	for (float sx : { -1.f, 1.f }) Add(3, Cube, Paint, FVector(C.X + sx * 260.f, C.Y, BayZ - 150.f), FVector(400, 22, 22), FRotator(sx * 35.f, 0, 0));
 	// 4) consoles de ancoragem na parede (ficam; soltam faiscas)
-	for (float X : { BayMin.X + 150.f, BC.X, BayMax.X - 150.f })
+	for (float Wy : { WallY, -WallY })
+		for (float X : { BayMin.X + 150.f, BC.X, BayMax.X - 150.f })
+		{
+			const float s = Wy > 0.f ? -1.f : 1.f;
+			Add(0, Cube, Steel, FVector(X, Wy + s * 30.f, BayZ - 60.f), FVector(80, 60, 120));
+			Joints.Add(FVector(X, Wy + s * 40.f, BayZ - 10.f));
+		}
+	// luminarias penduradas na secao (iluminam a area de inicio por baixo dela; caem junto)
 	{
-		Add(0, Cube, Steel, FVector(X, WallY + 30.f, BayZ - 60.f), FVector(80, 60, 120));
-		Joints.Add(FVector(X, WallY + 40.f, BayZ - 10.f));
+		UMaterialInterface* LampM = JJ::Mat(this, FLinearColor(0.8f, 0.85f, 0.9f), FLinearColor(0.72f, 0.86f, 1.f) * 6.f, 0.5f);
+		for (int32 k = 0; k < 6; ++k)
+		{
+			const float X = (k < 3) ? (BayMin.X + C.X) * 0.5f : (C.X + BayMax.X) * 0.5f + 40.f, Y = BayMin.Y + (0.5f + (k % 3)) * BH / 3.f;
+			Add(3, Cube, Cable, FVector(X, Y, BayZ - 75.f), FVector(6, 6, 110));
+			Add(3, Cube, Steel, FVector(X, Y, BayZ - 140.f), FVector(110, 50, 22));
+			const int32 Face = P.Num(); Add(3, Cube, LampM, FVector(X, Y, BayZ - 152.f), FVector(96, 38, 4));
+			USpotLightComponent* L = NewObject<USpotLightComponent>(this); L->SetupAttachment(RootComponent); L->RegisterComponent();
+			L->SetWorldRotation(FRotator(-90, 0, 0)); L->SetLightColor(FLinearColor(0.72f, 0.86f, 1.f)); L->SetIntensityUnits(ELightUnits::Lumens);
+			L->SetIntensity(9000.f); L->SetAttenuationRadius(2200.f); L->SetOuterConeAngle(62.f); L->SetInnerConeAngle(30.f); L->SetCastShadows(k % 2 == 0);
+			BayLamps.Add(L); BayLampPiece.Add(Face);
+		}
+	}
+	// 2a onda: trelicas/vigas do vao central que despencam logo depois (o colapso se espalha alem da secao)
+	for (int32 i = 0; i < 7; ++i)
+	{
+		const float X = 1350.f + i * 210.f, Y = (i % 2 ? 1.f : -1.f) * (500.f + H01(i, 41) * 700.f);
+		Add(6, Cube, i % 3 == 0 ? Paint : Steel, FVector(X, Y, TrussZ - 40.f), FVector(i % 3 == 0 ? 520.f : 760.f, 40, 55), FRotator(0, 90.f * (i % 2) + H01(i, 43) * 30.f, 0));
+		P.Last().Detach = Lead + 0.25f + i * 0.13f;
 	}
 	// 5) pecas secundarias que se soltam antes do colapso (chapas do deck, travessa, bandeja de cabos, luminarias)
 	const float DetT[6] = { 0.42f, 0.55f, 0.66f, 0.76f, 0.85f, 0.93f };
@@ -151,7 +185,7 @@ void ACoopCollapseRig::Build()
 	Pivot = FVector(DC.X, DC.Y, FloorZ);
 	// 7) particulas leves (instancias): poeira, faiscas e detritos
 	UMaterialInterface* DustMat = DustM;
-	if (DustM) { UMaterialInstanceDynamic* M = UMaterialInstanceDynamic::Create(DustM, this); M->SetVectorParameterValue(TEXT("Cor"), FLinearColor(0.075f, 0.068f, 0.06f)); M->SetScalarParameterValue(TEXT("Opac"), 0.22f); DustMat = M; }
+	if (DustM) { UMaterialInstanceDynamic* M = UMaterialInstanceDynamic::Create(DustM, this); M->SetVectorParameterValue(TEXT("Cor"), FLinearColor(0.09f, 0.075f, 0.06f)); M->SetScalarParameterValue(TEXT("Opac"), 0.16f); DustMat = M; }
 	auto Pool = [&](TArray<UStaticMeshComponent*>& Arr, int32 N, UStaticMesh* M, UMaterialInterface* Mat, bool bShadow)
 	{
 		for (int32 i = 0; i < N; ++i)
@@ -161,7 +195,7 @@ void ACoopCollapseRig::Build()
 			Q->SetCanEverAffectNavigation(false); Q->SetVisibility(false); Q->RegisterComponent(); Arr.Add(Q);
 		}
 	};
-	Pool(DustC, 70, Sph, DustMat, false); Pool(SparkC, 40, Cube, Ember, false); Pool(DebrisC, 36, Cube, Conc, true);
+	Pool(DustC, 110, Sph, DustMat, false); Pool(SparkC, 40, Cube, Ember, false); Pool(DebrisC, 36, Cube, Conc, true);
 	for (int32 i = 0; i < 36; ++i)
 	{
 		DebrisFrom.Add(FVector(BayMin.X + 100 + H01(i, 11) * (BW - 200), BayMin.Y + 100 + H01(i, 13) * (BH - 200), BayZ - 5.f));
@@ -187,6 +221,8 @@ void ACoopCollapseRig::BeginPlay()
 {
 	Super::BeginPlay();
 	Build();
+	CamRest = LoseCamPos; CamRot = (LoseCamTarget - LoseCamPos).Rotation();
+	LoseCam->SetWorldLocationAndRotation(CamRest, CamRot);
 }
 
 void ACoopCollapseRig::SetP(UStaticMeshComponent* C, const FTransform& X)
@@ -221,7 +257,7 @@ void ACoopCollapseRig::ApplyVisual(float T, float Dt)
 	const float BayT = BayFallTime();
 	const float DeckDrop0 = ColumnTopZ - 40.f + (GetActorLocation().Z - FloorZ);   // deck ate o piso
 	const float DeckDrop = bFall ? FMath::Min(0.5f * 980.f * Tf * Tf, DeckDrop0) : 0.f;
-	const float BayDrop = bFall ? FMath::Min(0.5f * 980.f * Tf * Tf, BayZ - (FloorZ + 230.f)) : 0.f;
+	const float BayDrop = bFall ? FMath::Min(0.5f * 980.f * Tf * Tf, BayZ - (FloorZ + RestH)) : 0.f;
 	const bool bImpact = bFall && Tf >= BayT;
 	// cedencia (sem a coluna o deck afunda e inclina) + vibracao crescente
 	const float Sag = (St.Stage == 1 || St.Stage == 3) ? 40.f * S * S : bFall ? 40.f : 0.f;
@@ -269,6 +305,16 @@ void ACoopCollapseRig::ApplyVisual(float T, float Dt)
 			L += Jit - FVector(0, 0, Sag);
 			break;
 		}
+		case 6:   // trelica do vao: cai pouco depois da secao, girando, ate sumir no poco
+		{
+			L += Jit * 0.5f;
+			if (bFall && Tf > Pc.Detach)
+			{
+				const float tt = Tf - Pc.Detach; L.Z -= 0.5f * 980.f * tt * tt; R += FRotator(tt * 55.f, 0, tt * 35.f * (Pc.Phase > 5.f ? 1.f : -1.f));
+				if (L.Z < -1400.f || (L.X > 2800.f && L.Z < FloorZ + 30.f)) { L.Z = FMath::Max(L.Z, FloorZ + 30.f); bVis = L.X > 2800.f; }
+			}
+			break;
+		}
 		default: L += Jit * 0.3f; break;
 		}
 		Pc.C->SetWorldLocationAndRotation(L, R); Pc.C->SetWorldScale3D(Sc); Pc.C->SetVisibility(bVis);
@@ -292,15 +338,18 @@ void ACoopCollapseRig::ApplyVisual(float T, float Dt)
 	}
 	// poeira: escorre das juncoes (intensidade = tensao); no impacto vira nuvem no chao
 	const float DustRate = bImpact ? 1.f : S;
-	for (int32 i = 0; i < 70; ++i)
+	for (int32 i = 0; i < DustC.Num(); ++i)
 	{
 		FTransform X(FQuat::Identity, FVector::ZeroVector, FVector(0.f));
 		const float Life = 2.6f, ph = FMath::Frac((T + H01(i, 21) * Life) / Life), Age = ph * Life;
 		if (bImpact)
 		{
-			const float tI = Tf - BayT; const float r = 120.f + tI * 380.f * (0.5f + H01(i, 23));
-			const float a = H01(i, 25) * 6.283f; const float s = (0.6f + tI * 1.1f) * (0.6f + H01(i, 27)) * FMath::Clamp(1.f - tI / 3.f, 0.f, 1.f);
-			X = FTransform(FQuat::Identity, Pivot + FVector(FMath::Cos(a) * r, FMath::Sin(a) * r, 40.f + tI * 90.f * H01(i, 29)), FVector(s));
+			// nuvem de impacto: nasce sob toda a secao e se espalha (cobre os soterrados)
+			const float tI = Tf - BayT;
+			const FVector Base(FMath::Lerp(BayMin.X, BayMax.X, H01(i, 23)), FMath::Lerp(BayMin.Y, BayMax.Y, H01(i, 24)), FloorZ);
+			const FVector Out = (Base - FVector((BayMin.X + BayMax.X) * 0.5f, (BayMin.Y + BayMax.Y) * 0.5f, FloorZ)).GetSafeNormal2D();
+			const float s = (1.2f + tI * 1.6f) * (0.6f + H01(i, 27)) * FMath::Clamp(1.3f - tI / 3.2f, 0.f, 1.f);
+			X = FTransform(FQuat::Identity, Base + Out * tI * 260.f * (0.4f + H01(i, 26)) + FVector(0, 0, 60.f + tI * 140.f * H01(i, 29)), FVector(s));
 		}
 		else if (H01(i, 31) < DustRate * 0.95f && Joints.Num() && (St.Stage == 1 || St.Stage == 3))
 		{
@@ -333,14 +382,29 @@ void ACoopCollapseRig::ApplyVisual(float T, float Dt)
 	SparkLight->SetIntensity(LightI); if (LightI > 0.f) SparkLight->SetWorldLocation(LightP);
 	ImpactLight->SetIntensity(bImpact ? 60000.f * FMath::Clamp(1.f - (Tf - BayT) / 0.8f, 0.f, 1.f) : 0.f);
 	// tremor da camera local (somente visual) perto da estrutura
+	const float KImp = bImpact ? 1.6f * FMath::Clamp(1.f - (Tf - BayT) / 0.9f, 0.f, 1.f) : 0.f;
 	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
-		if (PC->IsLocalController() && PC->GetPawn())
+		if (PC->IsLocalController() && PC->GetPawn() && PC->GetViewTarget() == PC->GetPawn())
 		{
 			const float Dist = FVector::Dist(PC->GetPawn()->GetActorLocation(), Pivot);
-			float K = (St.Stage == 1 ? 0.05f + 0.35f * S * S : 0.f) + (bImpact ? 1.6f * FMath::Clamp(1.f - (Tf - BayT) / 0.7f, 0.f, 1.f) : 0.f) + (bFall && !bImpact ? 0.4f : 0.f);
+			float K = (St.Stage == 1 ? 0.05f + 0.35f * S * S : 0.f) + KImp + (bFall && !bImpact ? 0.4f : 0.f);
 			K *= FMath::Clamp(1.f - Dist / 4000.f, 0.25f, 1.f);
 			if (K > 0.f) { static int32 Flip = 1; Flip = -Flip; PC->AddPitchInput(Flip * K * 0.35f); PC->AddYawInput(Flip * K * 0.25f); }
 		}
+	// camera de derrota: tremor na queda e forte no impacto
+	{
+		const float K = bFall ? (bImpact ? KImp * 18.f + 2.f : 5.f) : 0.f;
+		LoseCam->SetWorldLocationAndRotation(CamRest + FVector(FMath::Sin(T * 61.f), FMath::Cos(T * 53.f), FMath::Sin(T * 47.f + 1.f)) * K,
+			CamRot + FRotator(FMath::Sin(T * 43.f) * K * 0.05f, FMath::Cos(T * 39.f) * K * 0.05f, 0));
+	}
+	for (int32 k = 0; k < BayLamps.Num(); ++k)   // luminarias da secao: seguem a peca, piscam com a tensao, apagam no impacto
+	{
+		const UStaticMeshComponent* F = P[BayLampPiece[k]].C;
+		BayLamps[k]->SetWorldLocationAndRotation(F->GetComponentLocation() - FVector(0, 0, 8.f), (F->GetComponentQuat() * FRotator(-90, 0, 0).Quaternion()).Rotator());
+		const float Fl = (St.Stage == 1) ? (0.6f + 0.4f * FMath::Sin(T * (6.f + 18.f * S) + k * 1.7f)) : bFall ? (0.3f + 0.7f * FMath::Abs(FMath::Sin(T * 31.f + k))) : 1.f;
+		BayLamps[k]->SetIntensity(bImpact ? 0.f : 9000.f * FMath::Lerp(1.f, Fl, FMath::Max(S, bFall ? 1.f : 0.f)));
+		BayLamps[k]->SetLightColor(FMath::Lerp(FLinearColor(0.72f, 0.86f, 1.f), FLinearColor(1.f, 0.42f, 0.18f), (St.Stage == 1 || bFall) ? FMath::Min(S * 0.8f, 0.6f) : 0.f));
+	}
 	for (UPointLightComponent* L : ServiceLights)   // pisca e avermelha com a tensao; apaga quando desaba
 	{
 		const float Fl = (St.Stage == 1) ? (0.55f + 0.45f * FMath::Sin(T * (8.f + 20.f * S))) : 1.f;

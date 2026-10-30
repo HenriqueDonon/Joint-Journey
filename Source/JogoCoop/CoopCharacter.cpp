@@ -348,7 +348,7 @@ void ACoopCharacter::AnimateBody(float DT)
 		GunPivot->SetWorldLocation(ArmRPivot->GetComponentLocation() + Aim.Vector() * 46.f);
 		GunPivot->SetWorldRotation(Aim);
 	}
-	const bool bShowGun = !bCrushed && ArmAlpha > 0.12f;
+	const bool bShowGun = !bCrushed && !bBrace && ArmAlpha > 0.12f;
 	for (UMeshComponent* C : GunParts) if (C && C->IsVisible() != bShowGun) C->SetVisibility(bShowGun);
 	if (FaceLight && FaceLight->IsVisible() && bSK && SK->DoesSocketExist(TEXT("head")))
 		FaceLight->SetWorldLocation(SK->GetSocketLocation(TEXT("head")) + GetActorForwardVector() * 38.f + FVector(0, 0, 10.f));
@@ -376,6 +376,7 @@ void ACoopCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(ACoopCharacter, CoopRole);
 	DOREPLIFETIME(ACoopCharacter, bPortalMode);
 	DOREPLIFETIME(ACoopCharacter, bCrushed);
+	DOREPLIFETIME(ACoopCharacter, bBrace);
 	DOREPLIFETIME(ACoopCharacter, bFreeCam);
 }
 
@@ -493,7 +494,7 @@ ACoopDestructible* ACoopCharacter::TraceDestructible() const
 
 void ACoopCharacter::PowerShot()
 {
-	if (!Controller || bCrushed) return;
+	if (!Controller || bCrushed || bBrace) return;
 	FVector Loc; FRotator Rot;
 	Controller->GetPlayerViewPoint(Loc, Rot);
 	FHitResult Hit; FCollisionQueryParams P(NAME_None, false, this);
@@ -675,23 +676,37 @@ void ACoopCharacter::ServerToggleTestBridge_Implementation()
 	else ClientToast(TEXT("F4 so funciona no mapa Fase1_Teste"));
 }
 
-void ACoopCharacter::SetCrushed(bool b)
+void ACoopCharacter::SetCrushed(bool b, bool bBury)
 {
-	if (!HasAuthority() || bCrushed == b) return;
+	if (!HasAuthority()) return;
+	if (b && bBury) SetActorHiddenInGame(true);        // soterrado: some sob os destrocos (bHidden replica)
+	else if (!b) SetActorHiddenInGame(false);
+	if (bCrushed == b) return;
 	bCrushed = b;
-	if (b) { GetCharacterMovement()->StopMovementImmediately(); GetCharacterMovement()->DisableMovement(); ClientToast(TEXT("ESMAGADO pelo teto!")); }
+	if (b) { GetCharacterMovement()->StopMovementImmediately(); GetCharacterMovement()->DisableMovement(); ClientToast(bBury ? TEXT("SOTERRADOS! A estrutura desabou.") : TEXT("ESMAGADO pelo teto!")); }
 	else GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+	OnRep_Crushed();
+}
+
+void ACoopCharacter::SetBrace(bool b)
+{
+	if (!HasAuthority() || bBrace == b) return;
+	bBrace = b;
+	if (b) { GetCharacterMovement()->StopMovementImmediately(); GetCharacterMovement()->DisableMovement(); }
+	else if (!bCrushed) GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	OnRep_Crushed();
 }
 
 void ACoopCharacter::OnRep_Crushed()
 {
-	// achata o boneco a partir dos pes (a malha tem origem nos pes) e esconde a arma
+	// esmagado: achatado a partir dos pes | agachado (bBrace): encolhido se protegendo; arma escondida nos dois
 	USkeletalMeshComponent* SK = GetMesh();
-	if (bCrushed && !bSquashed) { MeshScale0 = SK->GetRelativeScale3D(); SK->SetRelativeScale3D(MeshScale0 * FVector(1.35f, 1.35f, 0.18f)); bSquashed = true; }
-	else if (!bCrushed && bSquashed) { SK->SetRelativeScale3D(MeshScale0); bSquashed = false; }
-	if (UpperPivot) UpperPivot->SetRelativeScale3D(bCrushed ? FVector(1.3f, 1.3f, 0.15f) : FVector(1.f));
-	for (UMeshComponent* C : GunParts) if (C) C->SetHiddenInGame(bCrushed);
+	const bool bSq = bCrushed || bBrace;
+	const FVector K = bCrushed ? FVector(1.35f, 1.35f, 0.18f) : FVector(1.12f, 1.12f, 0.68f);
+	if (bSq) { if (!bSquashed) { MeshScale0 = SK->GetRelativeScale3D(); bSquashed = true; } SK->SetRelativeScale3D(MeshScale0 * K); }
+	else if (bSquashed) { SK->SetRelativeScale3D(MeshScale0); bSquashed = false; }
+	if (UpperPivot) UpperPivot->SetRelativeScale3D(bCrushed ? FVector(1.3f, 1.3f, 0.15f) : bBrace ? FVector(1.1f, 1.1f, 0.7f) : FVector(1.f));
+	for (UMeshComponent* C : GunParts) if (C) C->SetHiddenInGame(bSq);
 }
 
 void ACoopCharacter::ToggleFreeCam()

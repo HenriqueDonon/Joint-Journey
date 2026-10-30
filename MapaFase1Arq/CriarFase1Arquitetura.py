@@ -53,8 +53,13 @@ rig = ell.spawn_actor_from_class(unreal.load_class(None, '/Script/JogoCoop.CoopC
 rig.set_actor_label('F1_EstruturaColuna_Colapso'); rig.set_folder_path('Gameplay_Marcadores')
 def v2(x, y): return unreal.Vector2D(x, y)
 ys = sorted((330 * SY, 1410 * SY)); rig.set_editor_property('deck_min', v2(0, ys[0])); rig.set_editor_property('deck_max', v2(1167, ys[1]))
-ys = sorted((150 * SY, 1395 * SY)); rig.set_editor_property('bay_min', v2(-150, ys[0])); rig.set_editor_property('bay_max', v2(1400, ys[1]))
-rig.set_editor_property('wall_y', 1400 * SY); rig.set_editor_property('bay_z', 1300.0); rig.set_editor_property('truss_z', 1540.0)
+# secao do teto = cobertura de toda a area de inicio (parede a parede), logo abaixo das trelicas
+rig.set_editor_property('bay_min', v2(-250, -1400)); rig.set_editor_property('bay_max', v2(1240, 1400))
+rig.set_editor_property('wall_y', 1400 * SY); rig.set_editor_property('bay_z', 1380.0); rig.set_editor_property('truss_z', 1545.0)
+rig.set_editor_property('lose_cam_pos', unreal.Vector(1750, 1100 * SY * -1, 900)); rig.set_editor_property('lose_cam_target', unreal.Vector(450, -100 * SY * -1, 200))
+# revestimento do tunel pos-fase (na posicao do marcador F1L_Porta)
+td = ell.spawn_actor_from_class(unreal.load_class(None, '/Script/JogoCoop.CoopTunnelDressing'), unreal.Vector(4176, 0, 300))
+td.set_actor_label('F1_TunelPosFase_Revestimento'); td.set_folder_path('Gameplay_Marcadores')
 mark('F1L_Rachaduras', 600, 1396, 420, 12.0, 1.0, 5.0)
 # 3. luzes do experimento (mesmas posicoes/cores), refeitas como luzes nativas
 L = json.load(open(os.path.join(proj, 'Higgsfield_Fase1', 'luzes_layout2.json')))
