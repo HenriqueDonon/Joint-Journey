@@ -54,6 +54,9 @@ public:
 	void ServerReset();
 	float ImpactDelay() const { return Lead + BayFallTime(); }   // tempo do inicio da queda ate o impacto principal
 	float BayFallTime() const;
+	// diagnostico de teste: maior movimento (cm + graus) dos detritos visiveis ja no chao no ultimo quadro
+	float DebrisMotion() const { return LastDebrisMotion; }
+	int32 DebrisOnFloor() const { return LastDebrisOnFloor; }
 
 private:
 	UPROPERTY(ReplicatedUsing=OnRep_State) FRigState St;
@@ -76,6 +79,8 @@ private:
 	TArray<FVector> DebrisFrom; TArray<float> DebrisAt; TArray<float> DebrisLandZ;
 	FVector Pivot = FVector::ZeroVector;
 	float PrevStress = 0.f;
+	float LastDebrisMotion = 0.f; int32 LastDebrisOnFloor = 0;
+	TArray<FTransform> PrevDebrisX;
 	class UStaticMeshComponent* Add(int32 Group, class UStaticMesh* M, class UMaterialInterface* Mat, FVector Loc, FVector Size, FRotator Rot = FRotator::ZeroRotator, bool bModelBase = false);
 	void Build();
 	float Stress(float T) const;     // 0..1 tensao visual

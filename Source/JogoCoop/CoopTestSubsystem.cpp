@@ -1,6 +1,8 @@
 #include "CoopTestSubsystem.h"
 #include "CoopCharacter.h"
 #include "CoopDestructible.h"
+#include "CoopCollapseRig.h"
+#include "Components/StaticMeshComponent.h"
 #include "Camera/CameraActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
@@ -180,6 +182,8 @@ void ACoopF1Flow::Tick(float Dt)
 			}
 			return;
 		}
+		if (Ph == 4 && SaveT < Dt + 0.001f)
+			for (TActorIterator<ACoopCollapseRig> R(W); R; ++R) Log += FString::Printf(TEXT("DETRITOS pos-estabilizacao: no chao=%d movimento max/quadro=%.3f\n"), R->DebrisOnFloor(), R->DebrisMotion());
 		if (Ph == 4 && PhT > 8.f) { Log += FString::Printf(TEXT("RESULTADO SALVAMENTO: queda/esmagamento depois da reconstrucao = %s\n"), bAnyCrush ? TEXT("SIM (FALHA)") : TEXT("NAO (OK)")); Save(); SetPh(11, TEXT("fim salvar")); }
 		return;
 	}
@@ -224,8 +228,13 @@ void ACoopF1Flow::Tick(float Dt)
 		else if (!bNeon && Col->IsDestroyed()) SetPh(3, TEXT("Ruina: coluna DESTRUIDA"));
 		else if (PhT > 15.f) SetPh(9, TEXT("TIMEOUT coluna"));
 		break;
-	case 3: if (!Br->IsDestroyed()) SetPh(4, TEXT("ponte CONSTRUIDA -> atravessar")); else if (PhT > 10.f) SetPh(9, TEXT("TIMEOUT ponte")); break;
+	case 3: if (!Br->IsDestroyed()) { SetPh(4, TEXT("ponte CONSTRUIDA -> atravessar")); BrT0 = Total; BrLog = 0; } else if (PhT > 10.f) SetPh(9, TEXT("TIMEOUT ponte")); break;
 	case 4: // atravessa a ponte (espera a montagem visual terminar)
+		{
+			const bool bSolid = Br->Mesh->GetCollisionEnabled() != ECollisionEnabled::NoCollision;
+			if (BrLog == 0 && Total - BrT0 >= 0.5f) { Log += FString::Printf(TEXT("PONTE t+%.2fs colisao=%s (esperado: nao, montando)\n"), Total - BrT0, bSolid ? TEXT("SIM") : TEXT("NAO")); BrLog = 1; }
+			if (BrLog == 1 && bSolid) { Log += FString::Printf(TEXT("PONTE solida em t+%.2fs (montagem ~1,52 s)\n"), Total - BrT0); BrLog = 2; }
+		}
 		if (PhT < 1.6f) break;
 		if (Walk(FVector2D(AcrossX, DoorY + Oy)) < 25.f) SetPh(5, TEXT("do outro lado"));
 		else if (PhT > 15.f) SetPh(9, FString::Printf(TEXT("TIMEOUT travessia (X=%.0f)"), Me->GetActorLocation().X));

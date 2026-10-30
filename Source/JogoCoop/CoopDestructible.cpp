@@ -12,6 +12,7 @@
 #include "TimerManager.h"
 #include "Components/BoxComponent.h"
 #include "Components/PointLightComponent.h"
+#include "GameFramework/GameStateBase.h"
 
 ACoopDestructible::ACoopDestructible()
 {
@@ -178,7 +179,7 @@ void ACoopDestructible::ApplyState(bool bWithFx)
 	// mesma logica no servidor e nos clientes: visual + colisao seguem o estado replicado
 	if (ModelComp) { ModelComp->SetVisibility(!bDestroyed); Mesh->SetVisibility(false, false); }
 	else Mesh->SetVisibility(!bDestroyed, false);
-	Mesh->SetCollisionEnabled(bDestroyed ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
+	ApplyCollision();
 	for (UStaticMeshComponent* C : Chunks) if (C) C->SetVisibility(bDestroyed);
 	if (FragMeshes.Num() > 0 && GetNetMode() != NM_DedicatedServer)
 	{
@@ -220,6 +221,7 @@ bool ACoopDestructible::ServerRebuild(FString& OutWhy)
 		for (const FOverlapResult& H : Hits)
 			if (Cast<APawn>(H.GetActor())) { OutWhy = TEXT("Tem alguem no lugar do objeto"); return false; }
 	bDestroyed = false; bQuietChange = false;
+	SolidAt = (bAssemblyFx && Size.X >= Size.Z * 2.f) ? SrvNow() + AssemblyDuration() : 0.f;
 	ApplyState(true);
 	ForceNetUpdate();
 	return true;
@@ -229,6 +231,7 @@ void ACoopDestructible::ServerForce(bool bBreak, bool bFx)
 {
 	if (!HasAuthority() || bDestroyed == bBreak) return;
 	bDestroyed = bBreak; bQuietChange = !bFx;
+	SolidAt = (!bBreak && bFx && bAssemblyFx && Size.X >= Size.Z * 2.f) ? SrvNow() + AssemblyDuration() : 0.f;
 	ApplyState(true);
 	ForceNetUpdate();
 }
@@ -238,6 +241,7 @@ void ACoopDestructible::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACoopDestructible, bDestroyed);
 	DOREPLIFETIME(ACoopDestructible, bQuietChange);
+	DOREPLIFETIME(ACoopDestructible, SolidAt);
 	DOREPLIFETIME(ACoopDestructible, Partner);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, bAssemblyFx, COND_InitialOnly);
 	DOREPLIFETIME_CONDITION(ACoopDestructible, Size, COND_InitialOnly);
@@ -265,7 +269,7 @@ void ACoopDestructible::ClearAssembly()
 	Asm.Reset();
 	if (AsmBeam) { AsmBeam->DestroyComponent(); AsmBeam = nullptr; }
 	if (AsmLight) { AsmLight->DestroyComponent(); AsmLight = nullptr; }
-	if (AsmT0 >= 0.f) { AsmT0 = -1.f; SetActorTickEnabled(false); }
+	AsmT0 = -1.f; UpdateTick();
 }
 
 void ACoopDestructible::StartAssembly()
@@ -318,7 +322,7 @@ void ACoopDestructible::StartAssembly()
 	if (ModelComp) ModelComp->SetVisibility(false);
 	Mesh->SetVisibility(false, false);
 	AsmT0 = GetWorld()->GetTimeSeconds();
-	SetActorTickEnabled(true);
+	UpdateTick();
 	TickAssembly();
 }
 
@@ -326,6 +330,34 @@ void ACoopDestructible::Tick(float Dt)
 {
 	Super::Tick(Dt);
 	if (AsmT0 >= 0.f) TickAssembly();
+	if (bPendingSolid && SrvNow() >= SolidAt) ApplyCollision();
+}
+
+float ACoopDestructible::SrvNow() const
+{
+	const AGameStateBase* GS = GetWorld() ? GetWorld()->GetGameState() : nullptr;
+	return GS ? GS->GetServerWorldTimeSeconds() : (GetWorld() ? GetWorld()->GetTimeSeconds() : 0.f);
+}
+
+float ACoopDestructible::AssemblyDuration() const
+{
+	// mesma conta da montagem horizontal (StartAssembly/TickAssembly): ultimo segmento encaixa + assentamento
+	const int32 N = FMath::Clamp(FMath::RoundToInt(Size.X / 140.f), 6, 12);
+	return 0.18f + 0.07f * (N - 1) + 0.42f + 0.22f;
+}
+
+void ACoopDestructible::ApplyCollision()
+{
+	// mesma regra no servidor e nos clientes: destruido = sem colisao; reconstruido = solido so depois de SolidAt
+	const bool bWait = !bDestroyed && SolidAt > 0.f && SrvNow() < SolidAt;
+	Mesh->SetCollisionEnabled((bDestroyed || bWait) ? ECollisionEnabled::NoCollision : ECollisionEnabled::QueryAndPhysics);
+	bPendingSolid = bWait;
+	UpdateTick();
+}
+
+void ACoopDestructible::UpdateTick()
+{
+	SetActorTickEnabled(AsmT0 >= 0.f || bPendingSolid);
 }
 
 void ACoopDestructible::TickAssembly()

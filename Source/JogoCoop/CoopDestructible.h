@@ -59,6 +59,13 @@ private:
 	UPROPERTY() class UMaterialInstanceDynamic* BodyMat = nullptr;
 	bool bApplied = false;
 	UPROPERTY(Replicated) bool bQuietChange = false;
+	// ponte (montagem horizontal): so fica solida quando a montagem visual termina (hora do servidor; 0 = imediato)
+	UPROPERTY(Replicated) float SolidAt = 0.f;
+	bool bPendingSolid = false;
+	float SrvNow() const;
+	float AssemblyDuration() const;
+	void ApplyCollision();
+	void UpdateTick();
 	struct FAsm { class UStaticMeshComponent* C = nullptr; FVector From, To, Scale; float Delay = 0.f; };
 	TArray<FAsm> Asm;
 	UPROPERTY() class UStaticMeshComponent* AsmBeam = nullptr;

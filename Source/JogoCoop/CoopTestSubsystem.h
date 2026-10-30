@@ -33,7 +33,7 @@ public:
 	ACoopF1Flow() { PrimaryActorTick.bCanEverTick = true; }
 	virtual void Tick(float Dt) override;
 private:
-	int32 Ph = 0, Shots = 0; float PhT = 0.f, ShotT = 0.f, SaveT = 0.f, Total = 0.f; FString Tag, Log;
+	int32 Ph = 0, Shots = 0, BrLog = 0; float PhT = 0.f, ShotT = 0.f, SaveT = 0.f, Total = 0.f, BrT0 = 0.f; FString Tag, Log;
 	void SetPh(int32 P, const FString& Why);
 	void Save();
 	void Fire(class ACoopCharacter* Me, class ACoopDestructible* T);

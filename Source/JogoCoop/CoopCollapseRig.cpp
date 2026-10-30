@@ -320,6 +320,8 @@ void ACoopCollapseRig::ApplyVisual(float T, float Dt)
 		Pc.C->SetWorldLocationAndRotation(L, R); Pc.C->SetWorldScale3D(Sc); Pc.C->SetVisibility(bVis);
 	}
 	// detritos pequenos caindo da secao (agendados ao longo da contagem; ficam no chao ate o reinicio)
+	if (PrevDebrisX.Num() != DebrisFrom.Num()) PrevDebrisX.Init(FTransform(FQuat::Identity, FVector::ZeroVector, FVector(0.f)), DebrisFrom.Num());
+	LastDebrisMotion = 0.f; LastDebrisOnFloor = 0;
 	for (int32 i = 0; i < DebrisFrom.Num(); ++i)
 	{
 		const float tStart = St.T0 + DebrisAt[i] * St.Dur;
@@ -329,12 +331,21 @@ void ACoopCollapseRig::ApplyVisual(float T, float Dt)
 		const bool bLaunched = (St.Stage == 1) ? tD > 0.f : (PrevStress >= DebrisAt[i]);   // apos estabilizar/desabar, so os que ja tinham caido
 		if (bActive && bLaunched)
 		{
-			const float Dz = DebrisFrom[i].Z - DebrisLandZ[i]; const float tt = FMath::Max(tD, 0.f);
+			// gira so durante a queda; ao tocar o piso fica parado (antes continuava girando = "vibrava" no chao)
+			const float Dz = DebrisFrom[i].Z - DebrisLandZ[i]; const float tl = FMath::Sqrt(2.f * FMath::Max(Dz, 1.f) / 980.f);
+			const float tt = FMath::Clamp(tD, 0.f, tl);
 			const float z = DebrisFrom[i].Z - FMath::Min(0.5f * 980.f * tt * tt, Dz);
 			const float s = 0.12f + H01(i, 17) * 0.22f;
 			X = FTransform(FRotator(tt * 300.f, tt * 200.f, 0).Quaternion(), FVector(DebrisFrom[i].X, DebrisFrom[i].Y, z), FVector(s, s * 0.8f, s * 0.6f));
 		}
 		SetP(DebrisC[i], X);
+		if (!X.GetScale3D().IsNearlyZero(1e-3f) && X.GetLocation().Z <= DebrisLandZ[i] + 1.f)
+		{
+			++LastDebrisOnFloor;
+			if (!PrevDebrisX[i].GetScale3D().IsNearlyZero(1e-3f))
+				LastDebrisMotion = FMath::Max(LastDebrisMotion, FVector::Dist(X.GetLocation(), PrevDebrisX[i].GetLocation()) + FMath::RadiansToDegrees(X.GetRotation().AngularDistance(PrevDebrisX[i].GetRotation())));
+		}
+		PrevDebrisX[i] = X;
 	}
 	// poeira: escorre das juncoes (intensidade = tensao); no impacto vira nuvem no chao
 	const float DustRate = bImpact ? 1.f : S;
