@@ -47,6 +47,35 @@ ACoopElevator::ACoopElevator()
 	GateW = Panel(TEXT("PortaoW"), FVector(-130, 0, 125), FVector(0.1f, 2.5f, 2.5f));
 	WallE = Panel(TEXT("ParedeE"), FVector(130, 0, 125), FVector(0.1f, 2.5f, 2.5f));
 	if (MatD.Succeeded()) WallE->SetMaterial(0, Platform->GetMaterial(0));
+	// portas de patamar (fixas no mundo; so usadas com bLandingDoors): 12 cm fora das portas da cabine
+	LandA = Panel(TEXT("PatamarA"), FVector(-142, 0, 125), FVector(0.1f, 2.6f, 2.5f));
+	LandN = Panel(TEXT("PatamarN"), FVector(0, 142, 125), FVector(2.6f, 0.1f, 2.5f));
+	LandS = Panel(TEXT("PatamarS"), FVector(0, -142, 125), FVector(2.6f, 0.1f, 2.5f));
+	for (UStaticMeshComponent* L : { LandA, LandN, LandS }) L->SetUsingAbsoluteLocation(true);
+}
+
+void ACoopElevator::ServerSetLocked(bool b) { if (HasAuthority()) { bLockedP1 = b; ForceNetUpdate(); } }
+
+bool ACoopElevator::ServerRequestGo(bool bUp, FString& OutWhy)
+{
+	if (!HasAuthority()) { OutWhy = TEXT("sem autoridade"); return false; }
+	if (bLockedP1) { OutWhy = TEXT("Mecanismo TRAVADO (Puzzle 1 ainda nao resolvido)"); return false; }
+	if (IsMoving()) { OutWhy = TEXT("Elevador em movimento"); return false; }
+	if (Cmd.bUp == bUp) { OutWhy = TEXT("O elevador ja esta neste andar"); return false; }
+	// ninguem parado na soleira (meio dentro/meio fora): as portas fecham antes de partir
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		const APawn* P = It->Get() ? It->Get()->GetPawn() : nullptr;
+		if (!P) continue;
+		const FVector D = P->GetActorLocation() - GetActorLocation();
+		const float Ax = FMath::Abs(D.X), Ay = FMath::Abs(D.Y);
+		const bool bIn = Ax < 100.f && Ay < 100.f;   // dentro da cabine (capsula r34 ate o painel em 125)
+		const bool bNear = Ax < 175.f && Ay < 175.f;
+		if (D.Z > -50.f && D.Z < 250.f && bNear && !bIn) { OutWhy = TEXT("Alguem esta na porta do elevador"); return false; }
+	}
+	Cmd.bUp = bUp; Cmd.T0 = NowSrv() + LeadSeconds; DwellAcc = 0.f; bArmed = false;
+	ForceNetUpdate();
+	return true;
 }
 
 void ACoopElevator::BeginPlay()
@@ -54,6 +83,7 @@ void ACoopElevator::BeginPlay()
 	Super::BeginPlay();
 	Home = GetActorLocation();
 	SideAlpha = 0.f; FrontAlpha = 1.f;   // estado inicial: cabine embaixo, portao de entrada aberto
+	if (!bLandingDoors) for (UStaticMeshComponent* L : { LandA, LandN, LandS }) { L->SetVisibility(false); L->SetCollisionEnabled(ECollisionEnabled::NoCollision); }
 	UpdateDoors(0.f);   // posicao base (cabine embaixo); o mapa posiciona o ator no topo da plataforma, nivel inferior
 }
 
@@ -88,6 +118,7 @@ int32 ACoopElevator::NumAboard() const
 
 void ACoopElevator::ServerLogic(float Dt)
 {
+	if (bExplicitControl) return;   // modo explicito: so ServerRequestGo
 	if (IsMoving()) { DwellAcc = 0.f; bArmed = false; return; }
 	const int32 N = NumAboard(), P = GetWorld()->GetNumPlayerControllers();
 	if (N < P) bArmed = true;                        // rearma quando alguem sai (nao exige plataforma vazia: quem fica a bordo nao trava o retorno dos outros)
@@ -118,6 +149,16 @@ void ACoopElevator::UpdateDoors(float Dt)
 	if (DoorN) DoorN->SetRelativeLocation(FVector(0, 130, 125 + H * SideAlpha));
 	if (DoorS) DoorS->SetRelativeLocation(FVector(0, -130, 125 + H * SideAlpha));
 	if (GateW) GateW->SetRelativeLocation(FVector(-130, 0, 125 + H * FrontAlpha));
+	if (bLandingDoors)
+	{
+		// patamares: abertos so com a cabine parada naquele andar (mesma regra das portas da cabine)
+		const float TgtBot = (bParked && !Cmd.bUp) ? 1.f : 0.f, TgtTop = (bParked && Cmd.bUp) ? 1.f : 0.f;
+		LandBotAlpha = FMath::FInterpConstantTo(LandBotAlpha, TgtBot, Dt <= 0.f ? 1.f : Dt, Rate);
+		LandTopAlpha = FMath::FInterpConstantTo(LandTopAlpha, TgtTop, Dt <= 0.f ? 1.f : Dt, Rate);
+		LandA->SetWorldLocation(Home + FVector(-142, 0, 125 + H * LandBotAlpha));
+		LandN->SetWorldLocation(Home + FVector(0, 142, Rise + 125 + H * LandTopAlpha));
+		LandS->SetWorldLocation(Home + FVector(0, -142, Rise + 125 + H * LandTopAlpha));
+	}
 }
 
 void ACoopElevator::Tick(float DeltaSeconds)
@@ -132,4 +173,5 @@ void ACoopElevator::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACoopElevator, Cmd);
+	DOREPLIFETIME(ACoopElevator, bLockedP1);
 }

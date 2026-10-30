@@ -1,0 +1,219 @@
+INTRO comecou t=0.01 (vista=CoopIntroCam)
+t=0.51 passo=0 Ruina pos=(-300,150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=1.02 passo=0 Ruina pos=(-300,150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=1.53 passo=0 Ruina pos=(-300,150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+ACAO t=1.53 tecla E (pular apresentacao)
+RESULTADO INTRO pulada apos 1.54 s (vista devolvida ao personagem)
+EVT t=1.55 srvT=30.88 passo 0->1 controle devolvido
+t=2.04 passo=1 Ruina pos=(-257,142,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=2.58 passo=1 Ruina pos=(-234,137,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=3.09 passo=1 Ruina pos=(65,79,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=3.64 passo=1 Ruina pos=(388,16,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=4.15 passo=1 Ruina pos=(691,-43,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=4.65 passo=1 Ruina pos=(992,-47,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=5.16 passo=1 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=5.68 passo=1 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=6.18 passo=1 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+EVT t=6.44 srvT=36.02 passo 1->2 os dois na cabine (A)
+t=6.69 passo=2 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=7.22 passo=2 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=7.74 passo=2 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=8.26 passo=2 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=8.78 passo=2 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=9.32 passo=2 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+RESULTADO TRAVA P1: pedido com elevador travado -> recusado, ficou parado (OK)
+EVT t=9.46 srvT=39.06 passo 2->3 teste da trava
+t=9.83 passo=3 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=10.34 passo=3 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=10.87 passo=3 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+ELEV partiu t=11.12
+t=11.37 passo=3 Ruina pos=(1190,-45,90) chao=1 elevZ=0.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=11.88 passo=3 Ruina pos=(1190,-45,92) chao=1 elevZ=2.4 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=12.42 passo=3 Ruina pos=(1190,-45,125) chao=1 elevZ=34.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=12.94 passo=3 Ruina pos=(1190,-45,184) chao=1 elevZ=93.6 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=13.46 passo=3 Ruina pos=(1190,-45,262) chao=1 elevZ=172.3 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=13.98 passo=3 Ruina pos=(1190,-45,353) chao=1 elevZ=263.1 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=14.48 passo=3 Ruina pos=(1190,-45,444) chao=1 elevZ=353.8 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=14.99 passo=3 Ruina pos=(1190,-45,531) chao=1 elevZ=441.1 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=15.52 passo=3 Ruina pos=(1190,-45,608) chao=1 elevZ=518.3 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=16.06 passo=3 Ruina pos=(1190,-45,665) chao=1 elevZ=574.8 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=16.57 passo=3 Ruina pos=(1190,-45,689) chao=1 elevZ=599.1 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=17.07 passo=3 Ruina pos=(1190,-45,690) chao=1 elevZ=600.0 topo=1 portasLat=0.31 portao=0.00 travado=0 vista=personagem
+RESULTADO SUBIDA A->B: chegou, eu a bordo=1, desvio altura rel=0.1 cm, portas laterais abertas
+EVT t=17.35 srvT=46.98 passo 3->4 topo
+t=17.60 passo=4 Ruina pos=(1189,-45,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=18.11 passo=4 Ruina pos=(1162,-2,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=18.61 passo=4 Ruina pos=(1205,266,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO BARREIRA PROPRIA (roxa): atravessou, Y=443
+EVT t=18.91 srvT=48.54 passo 4->5 na sala propria
+t=19.15 passo=5 Ruina pos=(1199,437,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=19.70 passo=5 Ruina pos=(1200,124,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=20.24 passo=5 Ruina pos=(1202,30,875) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=20.81 passo=5 Ruina pos=(1235,5,835) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=21.32 passo=5 Ruina pos=(1265,-186,800) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=21.83 passo=5 Ruina pos=(1229,-186,696) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=22.34 passo=5 Ruina pos=(1169,-186,777) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=22.86 passo=5 Ruina pos=(1138,-186,810) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=23.37 passo=5 Ruina pos=(1174,-186,723) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=23.91 passo=5 Ruina pos=(1234,-186,751) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=24.41 passo=5 Ruina pos=(1260,-186,805) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=24.92 passo=5 Ruina pos=(1226,-186,761) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=25.45 passo=5 Ruina pos=(1167,-186,722) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO BARREIRA DO OUTRO: avancou ate |Y|=186 (barreira em 220..240) -> BLOQUEADO (OK)
+EVT t=25.81 srvT=55.45 passo 5->6 bloqueio testado
+t=25.95 passo=6 Ruina pos=(1140,-181,797) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=26.47 passo=6 Ruina pos=(1152,-19,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=26.97 passo=6 Ruina pos=(1170,279,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+EVT t=27.25 srvT=56.89 passo 6->7 Ruina aguarda na sala norte
+t=27.49 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=28.00 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=28.56 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=600.0 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=29.08 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=594.0 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=29.58 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=559.2 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=30.12 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=495.5 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=30.66 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=409.5 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=31.17 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=320.7 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=31.69 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=229.2 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=32.20 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=144.0 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=32.76 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=66.6 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=33.27 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=18.3 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=33.77 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=34.28 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=0.55 travado=0 vista=personagem
+t=34.79 passo=7 Ruina pos=(1198,459,690) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+ACAO t=35.05 tecla E (chamar elevador (B norte))
+t=35.33 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=0.0 topo=1 portasLat=0.00 portao=0.22 travado=0 vista=personagem
+t=35.86 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=2.1 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=36.38 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=31.5 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=36.90 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=89.3 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=37.45 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=171.1 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=37.99 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=264.1 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=38.50 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=354.9 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=39.00 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=441.2 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=39.50 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=515.2 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=40.02 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=570.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=40.55 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=598.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=41.09 passo=7 Ruina pos=(1233,466,690) chao=1 elevZ=600.0 topo=1 portasLat=0.31 portao=0.00 travado=0 vista=personagem
+t=41.60 passo=7 Ruina pos=(1227,396,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=42.11 passo=7 Ruina pos=(1204,93,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+ACAO t=42.15 tecla E (descer com o elevador)
+EVT t=42.15 srvT=71.80 passo 7->8 Ruina desce
+t=42.62 passo=8 Ruina pos=(1200,43,690) chao=1 elevZ=600.0 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=43.12 passo=8 Ruina pos=(1200,43,682) chao=1 elevZ=592.2 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=43.63 passo=8 Ruina pos=(1200,43,645) chao=1 elevZ=554.6 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=44.14 passo=8 Ruina pos=(1200,43,582) chao=1 elevZ=492.3 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=44.64 passo=8 Ruina pos=(1200,43,504) chao=1 elevZ=414.1 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=45.15 passo=8 Ruina pos=(1200,43,415) chao=1 elevZ=324.7 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=45.66 passo=8 Ruina pos=(1200,43,323) chao=1 elevZ=232.5 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=46.17 passo=8 Ruina pos=(1200,43,238) chao=1 elevZ=147.4 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=46.68 passo=8 Ruina pos=(1200,43,165) chao=1 elevZ=75.3 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=47.20 passo=8 Ruina pos=(1200,43,113) chao=1 elevZ=22.7 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=47.70 passo=8 Ruina pos=(1200,43,91) chao=1 elevZ=0.5 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=48.21 passo=8 Ruina pos=(1200,43,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=0.52 travado=0 vista=personagem
+t=48.72 passo=8 Ruina pos=(1200,43,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=49.23 passo=8 Ruina pos=(1200,43,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+ACAO t=49.32 tecla E (subir de novo)
+EVT t=49.32 srvT=78.98 passo 8->9 Ruina pediu subida
+t=49.74 passo=9 Ruina pos=(1200,43,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=50.25 passo=9 Ruina pos=(1200,43,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=50.76 passo=9 Ruina pos=(1200,43,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=51.27 passo=9 Ruina pos=(1200,43,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+ACAO t=51.33 tecla E (subir de novo (pedido repetido: o anterior foi recusado))
+t=51.83 passo=9 Ruina pos=(1200,43,90) chao=1 elevZ=0.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=52.34 passo=9 Ruina pos=(1200,43,99) chao=1 elevZ=9.2 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=52.86 passo=9 Ruina pos=(1200,43,141) chao=1 elevZ=50.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=53.42 passo=9 Ruina pos=(1200,43,212) chao=1 elevZ=121.8 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=53.92 passo=9 Ruina pos=(1200,43,293) chao=1 elevZ=202.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=54.44 passo=9 Ruina pos=(1200,43,386) chao=1 elevZ=295.6 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=54.95 passo=9 Ruina pos=(1200,43,476) chao=1 elevZ=386.3 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=55.48 passo=9 Ruina pos=(1200,43,562) chao=1 elevZ=472.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=56.01 passo=9 Ruina pos=(1200,43,632) chao=1 elevZ=542.2 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=56.54 passo=9 Ruina pos=(1200,43,677) chao=1 elevZ=586.9 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=57.08 passo=9 Ruina pos=(1200,43,690) chao=1 elevZ=600.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+RESULTADO RETORNO/CHAMADA: Neon desceu sozinho, Ruina chamou de B, desceu, os dois subiram de novo (OK)
+EVT t=57.57 srvT=87.23 passo 9->10 topo de novo
+t=57.58 passo=10 Ruina pos=(1200,43,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=58.11 passo=10 Ruina pos=(1200,279,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=58.65 passo=10 Ruina pos=(1327,496,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=59.17 passo=10 Ruina pos=(1638,484,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=59.67 passo=10 Ruina pos=(1891,471,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=60.17 passo=10 Ruina pos=(1899,707,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=60.70 passo=10 Ruina pos=(1916,781,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=61.21 passo=10 Ruina pos=(1916,766,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=61.73 passo=10 Ruina pos=(1916,758,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=62.25 passo=10 Ruina pos=(1916,754,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=62.77 passo=10 Ruina pos=(1916,752,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=63.29 passo=10 Ruina pos=(1916,751,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=63.81 passo=10 Ruina pos=(1916,751,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=64.32 passo=10 Ruina pos=(1916,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=64.87 passo=10 Ruina pos=(1916,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=65.38 passo=10 Ruina pos=(1916,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=65.88 passo=10 Ruina pos=(1916,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=66.39 passo=10 Ruina pos=(1916,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=66.90 passo=10 Ruina pos=(1916,750,820) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=67.41 passo=10 Ruina pos=(1916,750,889) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=67.93 passo=10 Ruina pos=(1916,750,697) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=68.43 passo=10 Ruina pos=(1916,750,883) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=68.93 passo=10 Ruina pos=(1916,750,840) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=69.46 passo=10 Ruina pos=(1916,750,802) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO PORTAO P2 FECHADO: X max=1916 (portao em 1950..1970) -> BLOQUEADO (OK)
+EVT t=69.58 srvT=99.24 passo 10->11 portao testado
+t=69.96 passo=11 Ruina pos=(1916,750,899) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=70.49 passo=11 Ruina pos=(1916,750,735) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=71.02 passo=11 Ruina pos=(1916,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=71.55 passo=11 Ruina pos=(1916,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=72.08 passo=11 Ruina pos=(1916,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=72.58 passo=11 Ruina pos=(2131,750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=73.12 passo=11 Ruina pos=(2168,463,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=73.62 passo=11 Ruina pos=(2151,308,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO REENCONTRO: os dois no reencontro, distancia 620 cm
+EVT t=73.62 srvT=103.28 passo 11->12 reencontro
+t=74.15 passo=12 Ruina pos=(2151,308,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=74.66 passo=12 Ruina pos=(2151,308,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=75.18 passo=12 Ruina pos=(2151,308,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=75.70 passo=12 Ruina pos=(2151,308,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=76.22 passo=12 Ruina pos=(2151,308,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=76.76 passo=12 Ruina pos=(2150,287,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=77.28 passo=12 Ruina pos=(2142,-5,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=77.79 passo=12 Ruina pos=(2133,-307,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=78.32 passo=12 Ruina pos=(2123,-628,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=78.83 passo=12 Ruina pos=(2114,-935,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=79.36 passo=12 Ruina pos=(2223,-1114,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=79.86 passo=12 Ruina pos=(2408,-954,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=80.39 passo=12 Ruina pos=(2402,-636,870) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=80.93 passo=12 Ruina pos=(2393,-312,1078) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=81.46 passo=12 Ruina pos=(2383,10,1260) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=81.97 passo=12 Ruina pos=(2375,310,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO ESCADA B->C: chegou em C, Z=1290
+EVT t=82.27 srvT=111.93 passo 12->13 em C
+t=82.47 passo=13 Ruina pos=(2375,519,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=82.99 passo=13 Ruina pos=(2375,519,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=83.51 passo=13 Ruina pos=(2375,519,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=84.01 passo=13 Ruina pos=(2375,519,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+EVT t=84.28 srvT=113.93 passo 13->14 Ruina segue
+t=84.60 passo=14 Ruina pos=(2375,625,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=85.11 passo=14 Ruina pos=(2375,922,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=85.62 passo=14 Ruina pos=(2380,1216,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=86.12 passo=14 Ruina pos=(2652,1211,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=86.64 passo=14 Ruina pos=(2761,987,1410) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=87.16 passo=14 Ruina pos=(2748,673,1611) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=87.67 passo=14 Ruina pos=(2735,368,1795) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=88.18 passo=14 Ruina pos=(2707,64,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=88.70 passo=14 Ruina pos=(2592,-224,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO ESCADA C->D: chegou em D, Z=1890 (porta de saida a 356 cm)
+EVT t=89.06 srvT=118.72 passo 14->15 em D
+t=89.22 passo=15 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=89.72 passo=15 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=90.23 passo=15 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=90.75 passo=15 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=91.26 passo=15 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=91.77 passo=15 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO FIM: percurso A->B->reencontro->C->D concluido
+EVT t=92.06 srvT=121.72 passo 15->99 fim
+t=92.28 passo=99 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=92.80 passo=99 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=93.31 passo=99 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=93.83 passo=99 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=94.34 passo=99 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=94.85 passo=99 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=95.36 passo=99 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=95.88 passo=99 Ruina pos=(2487,-482,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem

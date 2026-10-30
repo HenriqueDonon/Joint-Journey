@@ -86,6 +86,8 @@ private:
 	void TestVertice();                                   // F3: alterna entre Neon/Ruina/Vertice (teste solo, 1 janela)
 	UFUNCTION(Server, Reliable) void ServerSetRole(ECoopRole NewRole);
 	void TestBridge();                                    // F4: liga/desliga ponte completa (so mapa Fase1_Teste)
+	void Interact();                                      // E: usar console / pular apresentacao (Fase 2)
+	UFUNCTION(Server, Reliable) void ServerInteract();
 	UFUNCTION(Server, Reliable) void ServerToggleTestBridge();
 	UPROPERTY() TArray<class UMeshComponent*> RuinaOnly;
 

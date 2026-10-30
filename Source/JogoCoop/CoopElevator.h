@@ -40,6 +40,15 @@ public:
 	UPROPERTY(EditAnywhere, Category="Portas") float DoorSeconds = 0.35f;           // tempo de abrir/fechar
 	UPROPERTY(EditAnywhere, Category="Portas") float DoorOpenDelay = 0.3f;          // atraso apos parar para comecar a abrir
 	float SideDoorAlpha() const { return SideAlpha; }
+
+	// ---- CONTROLE EXPLICITO (Fase 2 funcional): sem partida automatica; so parte por pedido validado no servidor (console) ----
+	UPROPERTY(EditAnywhere, Category="Controle") bool bExplicitControl = false;   // false = modo antigo (todos a bordo por DwellSeconds) do mapa de teste
+	UPROPERTY(EditAnywhere, Category="Controle") bool bLandingDoors = false;      // portas fixas de patamar (embaixo -X, em cima +-Y): fecham o poco sem a cabine
+	// Trava do mecanismo (Puzzle 1): enquanto true, nenhum pedido e aceito. O Puzzle 1 (futuro) chama ServerSetLocked(false).
+	UPROPERTY(EditAnywhere, Replicated, Category="Controle") bool bLockedP1 = false;
+	void ServerSetLocked(bool b);
+	bool ServerRequestGo(bool bUp, FString& OutWhy);   // pedido de viagem (valida: parado, destravado, outro andar, porta livre)
+	bool IsParkedAt(bool bTop) const { return !IsMoving() && Cmd.bUp == bTop; }
 	float FrontGateAlpha() const { return FrontAlpha; }
 
 	bool IsMoving() const;
@@ -55,6 +64,10 @@ private:
 	UPROPERTY() class UStaticMeshComponent* DoorS = nullptr;   // -Y
 	UPROPERTY() class UStaticMeshComponent* GateW = nullptr;   // -X (entrada)
 	UPROPERTY() class UStaticMeshComponent* WallE = nullptr;   // +X (fixa)
+	UPROPERTY() class UStaticMeshComponent* LandA = nullptr;   // patamar inferior (-X), fixo no mundo
+	UPROPERTY() class UStaticMeshComponent* LandN = nullptr;   // patamar superior (+Y)
+	UPROPERTY() class UStaticMeshComponent* LandS = nullptr;   // patamar superior (-Y)
+	float LandBotAlpha = 1.f, LandTopAlpha = 0.f;
 	float SideAlpha = 0.f, FrontAlpha = 1.f;
 	void UpdateDoors(float Dt);
 	FVector Home = FVector::ZeroVector;

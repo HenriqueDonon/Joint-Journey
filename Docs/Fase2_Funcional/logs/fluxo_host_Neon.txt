@@ -1,0 +1,291 @@
+t=0.50 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=1.00 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=1.50 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=2.01 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=2.51 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=3.01 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=3.51 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=4.02 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=4.52 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=5.03 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=5.53 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=6.03 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=6.53 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=7.04 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=7.54 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=8.04 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=8.54 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=9.04 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=9.55 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=10.05 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=10.55 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=11.05 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=11.56 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=12.06 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=12.56 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=13.06 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=13.57 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=14.07 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=14.57 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=15.07 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=15.58 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=16.08 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=16.58 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=17.08 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=17.59 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=18.09 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=18.59 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=19.09 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=19.60 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=20.10 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=20.60 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=21.10 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=21.61 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=22.11 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=22.62 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=23.12 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=23.62 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=24.12 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=24.62 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=25.13 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=25.64 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=26.14 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=26.64 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=27.14 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=27.64 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=28.15 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=28.65 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+INTRO comecou t=28.79 (vista=CoopIntroCam)
+t=29.15 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=29.65 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=30.15 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=30.65 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=31.16 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=31.66 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=32.17 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=32.67 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+t=33.17 passo=0 Neon pos=(-300,-150,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=CoopIntroCam
+RESULTADO INTRO completa apos 4.80 s (vista devolvida ao personagem)
+EVT t=33.59 srvT=33.59 passo 0->1 controle devolvido
+t=34.00 passo=1 Neon pos=(-136,-118,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=34.50 passo=1 Neon pos=(160,-60,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=35.00 passo=1 Neon pos=(457,-2,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=35.51 passo=1 Neon pos=(755,48,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=36.01 passo=1 Neon pos=(1056,47,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+EVT t=36.20 srvT=36.20 passo 1->2 os dois na cabine (A)
+t=36.52 passo=2 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+ACAO t=36.71 tecla E (cabine com trava do P1)
+t=37.02 passo=2 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=37.52 passo=2 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=38.02 passo=2 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=38.53 passo=2 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+t=39.03 passo=2 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+RESULTADO TRAVA P1: pedido com elevador travado -> recusado, ficou parado (OK)
+EVT t=39.21 srvT=39.21 passo 2->3 teste da trava
+t=39.53 passo=3 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=1 vista=personagem
+DEPURACAO host: trava do elevador liberada para teste (NAO e o Puzzle 1)
+t=40.04 passo=3 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=40.54 passo=3 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+ACAO t=40.71 tecla E (subir)
+ELEV partiu t=40.71
+ACAO t=40.71 tecla E (subir)
+t=41.04 passo=3 Neon pos=(1194,45,90) chao=1 elevZ=0.0 topo=1 portasLat=0.00 portao=0.04 travado=0 vista=personagem
+t=41.54 passo=3 Neon pos=(1194,45,94) chao=1 elevZ=3.9 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=42.05 passo=3 Neon pos=(1194,45,126) chao=1 elevZ=35.6 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=42.55 passo=3 Neon pos=(1194,45,183) chao=1 elevZ=92.6 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=43.05 passo=3 Neon pos=(1194,45,258) chao=1 elevZ=168.3 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=43.56 passo=3 Neon pos=(1194,45,345) chao=1 elevZ=255.2 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=44.06 passo=3 Neon pos=(1194,45,435) chao=1 elevZ=345.1 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=44.56 passo=3 Neon pos=(1194,45,522) chao=1 elevZ=432.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=45.07 passo=3 Neon pos=(1194,45,598) chao=1 elevZ=507.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=45.57 passo=3 Neon pos=(1194,45,655) chao=1 elevZ=564.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=46.08 passo=3 Neon pos=(1194,45,686) chao=1 elevZ=596.3 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=46.58 passo=3 Neon pos=(1194,45,690) chao=1 elevZ=600.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+RESULTADO SUBIDA A->B: chegou, eu a bordo=1, desvio altura rel=0.1 cm, portas laterais abertas
+EVT t=46.93 srvT=46.93 passo 3->4 topo
+t=47.08 passo=4 Neon pos=(1196,24,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=47.59 passo=4 Neon pos=(1220,14,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=48.09 passo=4 Neon pos=(1206,-127,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=48.59 passo=4 Neon pos=(1200,-428,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO BARREIRA PROPRIA (ciano): atravessou, Y=-443
+EVT t=48.61 srvT=48.61 passo 4->5 na sala propria
+t=49.09 passo=5 Neon pos=(1200,-322,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=49.60 passo=5 Neon pos=(1200,-38,740) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=50.10 passo=5 Neon pos=(1197,-38,901) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=50.60 passo=5 Neon pos=(1154,5,814) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=51.11 passo=5 Neon pos=(1118,186,811) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=51.61 passo=5 Neon pos=(1162,186,712) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=52.11 passo=5 Neon pos=(1238,186,766) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=52.61 passo=5 Neon pos=(1281,186,809) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=53.11 passo=5 Neon pos=(1247,186,737) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=53.61 passo=5 Neon pos=(1173,186,750) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=54.12 passo=5 Neon pos=(1129,186,807) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=54.62 passo=5 Neon pos=(1155,186,740) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=55.12 passo=5 Neon pos=(1219,186,756) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO BARREIRA DO OUTRO: avancou ate |Y|=186 (barreira em 220..240) -> BLOQUEADO (OK)
+EVT t=55.52 srvT=55.52 passo 5->6 bloqueio testado
+t=55.62 passo=6 Neon pos=(1263,183,806) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=56.12 passo=6 Neon pos=(1228,70,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=56.62 passo=6 Neon pos=(1214,-48,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+EVT t=56.84 srvT=56.85 passo 6->7 Neon na cabine, Ruina na sala norte
+t=57.13 passo=7 Neon pos=(1214,-48,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=57.63 passo=7 Neon pos=(1214,-48,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+ACAO t=57.85 tecla E (descer sozinho)
+t=58.14 passo=7 Neon pos=(1214,-48,690) chao=1 elevZ=600.0 topo=0 portasLat=0.17 portao=0.00 travado=0 vista=personagem
+t=58.64 passo=7 Neon pos=(1214,-48,688) chao=1 elevZ=597.4 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=59.14 passo=7 Neon pos=(1214,-48,658) chao=1 elevZ=568.2 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=59.65 passo=7 Neon pos=(1214,-48,603) chao=1 elevZ=512.9 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=60.15 passo=7 Neon pos=(1214,-48,529) chao=1 elevZ=438.6 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=60.65 passo=7 Neon pos=(1214,-48,443) chao=1 elevZ=352.4 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=61.16 passo=7 Neon pos=(1214,-48,352) chao=1 elevZ=261.9 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=61.66 passo=7 Neon pos=(1214,-48,264) chao=1 elevZ=174.3 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=62.17 passo=7 Neon pos=(1214,-48,188) chao=1 elevZ=97.8 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=62.67 passo=7 Neon pos=(1214,-48,129) chao=1 elevZ=39.2 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=63.17 passo=7 Neon pos=(1214,-48,95) chao=1 elevZ=5.3 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=63.67 passo=7 Neon pos=(1214,-48,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=64.17 passo=7 Neon pos=(1203,-47,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=64.68 passo=7 Neon pos=(941,-16,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=65.18 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=0.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=65.68 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=8.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=66.19 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=45.6 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=66.69 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=107.5 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=67.19 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=185.8 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=67.70 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=273.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=68.20 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=364.1 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=68.70 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=449.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=69.20 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=520.9 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=69.71 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=573.5 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=70.21 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=598.8 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=70.72 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=600.0 topo=1 portasLat=0.21 portao=0.00 travado=0 vista=personagem
+t=71.22 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=71.72 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=72.23 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=600.0 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=72.73 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=594.1 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=73.24 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=559.2 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=73.74 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=499.6 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=74.24 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=422.6 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=74.75 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=333.7 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=75.27 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=242.1 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=75.77 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=156.4 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=76.27 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=83.2 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=76.78 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=29.0 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=77.28 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=1.9 topo=0 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=77.79 passo=7 Neon pos=(878,-9,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=0.14 travado=0 vista=personagem
+t=78.29 passo=7 Neon pos=(827,-3,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+EVT t=78.29 srvT=78.29 passo 7->8 Neon desembarcou em A
+t=78.80 passo=8 Neon pos=(973,-19,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+EVT t=79.14 srvT=79.14 passo 8->9 os dois na cabine de novo
+t=79.31 passo=9 Neon pos=(1197,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=79.82 passo=9 Neon pos=(1197,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=80.32 passo=9 Neon pos=(1197,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=80.83 passo=9 Neon pos=(1197,-45,90) chao=1 elevZ=0.0 topo=0 portasLat=0.00 portao=1.00 travado=0 vista=personagem
+t=81.34 passo=9 Neon pos=(1197,-45,90) chao=1 elevZ=0.0 topo=1 portasLat=0.00 portao=0.10 travado=0 vista=personagem
+t=81.85 passo=9 Neon pos=(1197,-45,94) chao=1 elevZ=3.4 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=82.36 passo=9 Neon pos=(1197,-45,125) chao=1 elevZ=34.6 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=82.86 passo=9 Neon pos=(1197,-45,181) chao=1 elevZ=91.2 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=83.37 passo=9 Neon pos=(1197,-45,257) chao=1 elevZ=167.2 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=83.87 passo=9 Neon pos=(1197,-45,344) chao=1 elevZ=253.9 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=84.37 passo=9 Neon pos=(1197,-45,434) chao=1 elevZ=344.3 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=84.88 passo=9 Neon pos=(1197,-45,522) chao=1 elevZ=431.8 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=85.39 passo=9 Neon pos=(1197,-45,598) chao=1 elevZ=507.6 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=85.90 passo=9 Neon pos=(1197,-45,656) chao=1 elevZ=565.7 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=86.40 passo=9 Neon pos=(1197,-45,687) chao=1 elevZ=596.5 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+t=86.90 passo=9 Neon pos=(1197,-45,690) chao=1 elevZ=600.0 topo=1 portasLat=0.00 portao=0.00 travado=0 vista=personagem
+RESULTADO RETORNO/CHAMADA: Neon desceu sozinho, Ruina chamou de B, desceu, os dois subiram de novo (OK)
+EVT t=87.26 srvT=87.26 passo 9->10 topo de novo
+t=87.41 passo=10 Neon pos=(1197,-67,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=87.91 passo=10 Neon pos=(1199,-349,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=88.42 passo=10 Neon pos=(1364,-506,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=88.92 passo=10 Neon pos=(1667,-487,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=89.43 passo=10 Neon pos=(1915,-523,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=89.93 passo=10 Neon pos=(1916,-779,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=90.44 passo=10 Neon pos=(1916,-779,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=90.95 passo=10 Neon pos=(1916,-764,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=91.45 passo=10 Neon pos=(1916,-757,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=91.96 passo=10 Neon pos=(1916,-753,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=92.46 passo=10 Neon pos=(1916,-752,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=92.97 passo=10 Neon pos=(1916,-751,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=93.47 passo=10 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=93.97 passo=10 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=94.48 passo=10 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=94.99 passo=10 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=95.50 passo=10 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=96.00 passo=10 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=96.51 passo=10 Neon pos=(1916,-750,820) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=97.01 passo=10 Neon pos=(1916,-750,899) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=97.52 passo=10 Neon pos=(1916,-750,729) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=98.03 passo=10 Neon pos=(1916,-750,879) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=98.53 passo=10 Neon pos=(1916,-750,863) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=99.04 passo=10 Neon pos=(1916,-750,763) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO PORTAO P2 FECHADO: X max=1916 (portao em 1950..1970) -> BLOQUEADO (OK)
+EVT t=99.26 srvT=99.26 passo 10->11 portao testado
+t=99.54 passo=11 Neon pos=(1916,-750,903) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=100.04 passo=11 Neon pos=(1916,-750,795) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+DEPURACAO host: F10 portoes abertos (NAO e solucao de puzzle)
+t=100.55 passo=11 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=101.06 passo=11 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=101.57 passo=11 Neon pos=(1916,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=102.07 passo=11 Neon pos=(2015,-750,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=102.58 passo=11 Neon pos=(2181,-595,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=103.08 passo=11 Neon pos=(2151,-310,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO REENCONTRO: os dois no reencontro, distancia 615 cm
+EVT t=103.27 srvT=103.27 passo 11->12 reencontro
+t=103.59 passo=12 Neon pos=(2157,-409,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=104.09 passo=12 Neon pos=(2174,-712,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=104.60 passo=12 Neon pos=(2191,-1014,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=105.10 passo=12 Neon pos=(2392,-1051,690) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=105.61 passo=12 Neon pos=(2405,-747,810) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=106.12 passo=12 Neon pos=(2396,-444,990) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=106.63 passo=12 Neon pos=(2387,-139,1170) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=107.13 passo=12 Neon pos=(2379,161,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO ESCADA B->C: chegou em C, Z=1290
+EVT t=107.51 srvT=107.51 passo 12->13 em C
+t=107.63 passo=13 Neon pos=(2341,439,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=108.15 passo=13 Neon pos=(2038,445,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=108.65 passo=13 Neon pos=(1736,423,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=109.15 passo=13 Neon pos=(1434,418,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=109.66 passo=13 Neon pos=(1130,419,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=110.17 passo=13 Neon pos=(826,420,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=110.67 passo=13 Neon pos=(693,287,1371) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=111.17 passo=13 Neon pos=(737,133,1505) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=111.68 passo=13 Neon pos=(664,-66,1390) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=112.18 passo=13 Neon pos=(639,30,1026) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=112.68 passo=13 Neon pos=(767,236,418) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO QUEDA no poco: caiu ate Z=90 e voltou ao ponto seguro de C (2375,380,1320)
+EVT t=112.90 srvT=112.90 passo 13->14 recuperado
+t=113.19 passo=14 Neon pos=(2372,435,1467) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=113.69 passo=14 Neon pos=(2371,716,1527) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=114.20 passo=14 Neon pos=(2375,1023,1334) chao=0 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=114.71 passo=14 Neon pos=(2467,1215,1290) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=115.21 passo=14 Neon pos=(2658,1074,1370) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=115.71 passo=14 Neon pos=(2650,773,1551) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=116.22 passo=14 Neon pos=(2639,470,1734) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=116.73 passo=14 Neon pos=(2627,166,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=117.23 passo=14 Neon pos=(2590,-136,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=117.75 passo=14 Neon pos=(2546,-440,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO ESCADA C->D: chegou em D, Z=1890 (porta de saida a 338 cm)
+EVT t=118.22 srvT=118.22 passo 14->15 em D
+t=118.25 passo=15 Neon pos=(2502,-739,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=118.75 passo=15 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=119.26 passo=15 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=119.77 passo=15 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=120.27 passo=15 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=120.77 passo=15 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+RESULTADO FIM: percurso A->B->reencontro->C->D concluido
+EVT t=121.23 srvT=121.23 passo 15->99 fim
+t=121.28 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=121.78 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=122.29 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=122.79 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=123.29 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=123.80 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=124.30 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=124.81 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=125.32 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=125.82 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=126.32 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=126.82 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=127.33 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=127.83 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=128.33 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem
+t=128.84 passo=99 Neon pos=(2499,-758,1890) chao=1 elevZ=600.0 topo=1 portasLat=1.00 portao=0.00 travado=0 vista=personagem

@@ -26,6 +26,7 @@
 #include "Animation/AnimSequence.h"
 #include "Components/PointLightComponent.h"
 #include "CoopSkelMesh.h"
+#include "CoopFase2GameMode.h"
 
 ACoopCharacter::ACoopCharacter(const FObjectInitializer& OI)
 	: Super(OI.SetDefaultSubobjectClass<UCoopSkelMesh>(ACharacter::MeshComponentName))
@@ -392,6 +393,7 @@ void ACoopCharacter::SetupPlayerInputComponent(UInputComponent* I)
 	I->BindKey(EKeys::F, IE_Pressed, this, &ACoopCharacter::PowerShot);
 	I->BindKey(EKeys::F4, IE_Pressed, this, &ACoopCharacter::TestBridge);
 	I->BindKey(EKeys::C, IE_Pressed, this, &ACoopCharacter::ToggleFreeCam);
+	I->BindKey(EKeys::E, IE_Pressed, this, &ACoopCharacter::Interact);
 	I->BindAxisKey(EKeys::MouseX, this, &ACoopCharacter::LookX);
 	I->BindAxisKey(EKeys::MouseY, this, &ACoopCharacter::LookY);
 }
@@ -668,6 +670,13 @@ void ACoopCharacter::UpdateVerticeAnim()
 }
 
 void ACoopCharacter::TestBridge() { ServerToggleTestBridge(); }
+
+void ACoopCharacter::Interact() { ServerInteract(); }
+void ACoopCharacter::ServerInteract_Implementation()
+{
+	// so a Fase 2 usa por enquanto (consoles do elevador, pular apresentacao); nos outros mapas nao faz nada
+	if (ACoopFase2GameMode* GM = GetWorld()->GetAuthGameMode<ACoopFase2GameMode>()) GM->HandleInteract(this);
+}
 
 void ACoopCharacter::ServerToggleTestBridge_Implementation()
 {

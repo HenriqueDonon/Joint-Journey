@@ -14,7 +14,24 @@ public:
 	ACoopFase2GameMode();
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 	virtual void Tick(float DeltaSeconds) override;
+	// ---- layout FUNCIONAL (mapa experimental com marcador F2X_Layout); no Fase2_Blockout nada disso e ativado ----
+	void HandleInteract(class ACoopCharacter* C);     // tecla E (servidor): pula a apresentacao ou usa o console mais proximo
+	void DebugUnlockAll();                             // F10 (DEPURACAO): abre portoes e destrava o elevador; NAO e solucao de puzzle
+	bool IsFunctionalLayout() const { return bF2X; }
+	bool bDebugUnlocked = false;
 private:
 	void TeleportTo(APlayerController* PC, int32 Level);
 	int32 NextStart = 0;
+	// layout funcional
+	bool bF2XChecked = false, bF2X = false;
+	void SetupF2X();
+	void TickF2X(float Dt);
+	FVector CheckSpot(int32 Level, const class ACoopCharacter* C) const;
+	void EndIntroFor(APlayerController* PC);
+	UPROPERTY() class ACoopIntroCam* Intro = nullptr;
+	UPROPERTY() TArray<APlayerController*> InIntro;
+	bool bIntroStarted = false; float F2XTime = 0.f;
+	TMap<TWeakObjectPtr<APawn>, float> FallStart;     // Z do inicio da queda
+	TMap<TWeakObjectPtr<APawn>, int32> MaxLevel;      // maior nivel em que pisou
+	TMap<FName, FVector> Spots;                       // F2X_Check_A / _B_Ruina / _B_Neon / _C / _D
 };

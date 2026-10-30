@@ -18,6 +18,10 @@
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "UnrealClient.h"
+#include "CoopConsole.h"
+#include "CoopGate.h"
+#include "CoopElevator.h"
+#include "CoopIntroCam.h"
 
 // pontos de pouso (cm) dos 4 niveis: Z = superficie + folga; X/Y em area livre de cada setor
 static const FVector GLevelSpots[4] = { FVector(300, -600, 110), FVector(500, 0, 710), FVector(500, 0, 1310), FVector(1900, 0, 1910) };
@@ -43,7 +47,7 @@ void ACoopFase2GameMode::TeleportTo(APlayerController* PC, int32 Level)
 {
 	APawn* P = PC ? PC->GetPawn() : nullptr;
 	if (!P || Level < 0 || Level > 3) return;
-	P->SetActorLocation(GLevelSpots[Level], false, nullptr, ETeleportType::TeleportPhysics);
+	P->SetActorLocation(bF2X ? CheckSpot(Level, Cast<ACoopCharacter>(P)) : GLevelSpots[Level], false, nullptr, ETeleportType::TeleportPhysics);
 	if (ACharacter* C = Cast<ACharacter>(P)) C->GetCharacterMovement()->StopMovementImmediately();
 }
 
@@ -59,8 +63,14 @@ void ACoopFase2GameMode::Tick(float DeltaSeconds)
 		if (PC0->WasInputKeyJustPressed(EKeys::F8)) TeleportTo(PC0, 2);
 		if (PC0->WasInputKeyJustPressed(EKeys::F9)) TeleportTo(PC0, 3);
 	}
+	if (!bF2XChecked) SetupF2X();
+	if (bF2X)
+	{
+		if (PC0 && PC0->WasInputKeyJustPressed(EKeys::F10)) DebugUnlockAll();
+		TickF2X(DeltaSeconds);
+	}
 	// queda para fora do poco (Z < -300): volta ao nivel 0
-	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	if (!bF2X) for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 		if (APawn* P = It->Get() ? It->Get()->GetPawn() : nullptr)
 			if (P->GetActorLocation().Z < -300.f) TeleportTo(It->Get(), 0);
 
@@ -119,5 +129,120 @@ void ACoopFase2GameMode::Tick(float DeltaSeconds)
 		case 19: GEngine->Exec(GetWorld(), TEXT("quit")); break;
 		}
 		++S;
+	}
+}
+
+// =================== layout funcional da Fase 2 (mapa experimental Fase2_Funcional) ===================
+void ACoopFase2GameMode::SetupF2X()
+{
+	bF2XChecked = true;
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+	{
+		if (It->ActorHasTag(TEXT("F2X_Layout"))) bF2X = true;
+		for (const FName& T : It->Tags) if (T.ToString().StartsWith(TEXT("F2X_Check_"))) Spots.Add(T, It->GetActorLocation());
+	}
+	for (TActorIterator<ACoopIntroCam> It(GetWorld()); It; ++It) { Intro = *It; break; }
+	if (bF2X) UE_LOG(LogTemp, Warning, TEXT("F2X layout funcional ativo: %d pontos de retorno, intro=%d"), Spots.Num(), Intro ? 1 : 0);
+}
+
+FVector ACoopFase2GameMode::CheckSpot(int32 Level, const ACoopCharacter* C) const
+{
+	static const TCHAR* L[4] = { TEXT("A"), TEXT("B"), TEXT("C"), TEXT("D") };
+	Level = FMath::Clamp(Level, 0, 3);
+	if (C)
+	{
+		const FName RoleTag(*FString::Printf(TEXT("F2X_Check_%s_%s"), L[Level], C->CoopRole == ECoopRole::Ruina ? TEXT("Ruina") : TEXT("Neon")));
+		if (const FVector* V = Spots.Find(RoleTag)) return *V;
+	}
+	if (const FVector* V = Spots.Find(FName(*FString::Printf(TEXT("F2X_Check_%s"), L[Level])))) return *V;
+	return GLevelSpots[Level];
+}
+
+void ACoopFase2GameMode::DebugUnlockAll()
+{
+	bDebugUnlocked = true;
+	for (TActorIterator<ACoopGate> It(GetWorld()); It; ++It) It->ServerSetOpen(true);
+	for (TActorIterator<ACoopElevator> It(GetWorld()); It; ++It) It->ServerSetLocked(false);
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+		if (ACoopCharacter* C = It->Get() ? Cast<ACoopCharacter>(It->Get()->GetPawn()) : nullptr)
+			C->ClientToast(TEXT("[DEPURACAO F10] portoes abertos e trava do elevador ignorada - NAO e solucao de puzzle"));
+	UE_LOG(LogTemp, Warning, TEXT("F2X DEPURACAO: portoes abertos e elevador destravado"));
+}
+
+void ACoopFase2GameMode::EndIntroFor(APlayerController* PC)
+{
+	if (!PC || !InIntro.Contains(PC)) return;
+	InIntro.Remove(PC);
+	PC->ClientIgnoreMoveInput(false);
+	if (PC->GetPawn()) PC->SetViewTargetWithBlend(PC->GetPawn(), 0.35f, VTBlend_EaseInOut, 2.f);
+}
+
+void ACoopFase2GameMode::HandleInteract(ACoopCharacter* C)
+{
+	APlayerController* PC = C ? Cast<APlayerController>(C->GetController()) : nullptr;
+	if (!PC) return;
+	if (InIntro.Contains(PC)) { EndIntroFor(PC); C->ClientToast(TEXT("Apresentacao pulada")); return; }
+	ACoopConsole* Best = nullptr; float BestD = 1e9f;
+	for (TActorIterator<ACoopConsole> It(GetWorld()); It; ++It)
+	{
+		const float D = FVector::Dist(It->GetActorLocation(), C->GetActorLocation());
+		if (D < It->UseRadius && D < BestD) { BestD = D; Best = *It; }
+	}
+	if (!Best) { C->ClientToast(TEXT("Nada para usar aqui")); return; }
+	FString Why;
+	if (Best->ServerUse(C, Why)) C->ClientToast(TEXT("Elevador: comando aceito"));
+	else C->ClientToast(Why);
+	UE_LOG(LogTemp, Warning, TEXT("F2X console %s por %s: %s"), *Best->GetName(), *C->GetName(), Why.IsEmpty() ? TEXT("aceito") : *Why);
+}
+
+void ACoopFase2GameMode::TickF2X(float Dt)
+{
+	F2XTime += Dt;
+	// apresentacao: uma vez por sessao, quando os dois jogadores estao presentes (ou 30 s jogando sozinho)
+	const int32 NP = GetWorld()->GetNumPlayerControllers();
+	static const bool bNoIntro = FParse::Param(FCommandLine::Get(), TEXT("F2SemIntro"));
+	static const bool bIntroSolo = FParse::Param(FCommandLine::Get(), TEXT("F2Intro"));   // teste: grava a apresentacao com 1 jogador
+	if (Intro && !bIntroStarted && !bNoIntro && F2XTime > 2.f && (NP >= 2 || F2XTime > (bIntroSolo ? 3.f : 30.f)))
+	{
+		bIntroStarted = true;
+		Intro->ServerStart(0.3f);
+		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+			if (APlayerController* PC = It->Get()) { InIntro.Add(PC); PC->ClientIgnoreMoveInput(true); PC->SetViewTargetWithBlend(Intro, 0.3f); }
+		UE_LOG(LogTemp, Warning, TEXT("F2X apresentacao iniciada (%d jogadores)"), NP);
+	}
+	if (Intro && bIntroStarted && Intro->IsDone() && InIntro.Num() > 0)
+	{
+		TArray<APlayerController*> L = InIntro;
+		for (APlayerController* PC : L) EndIntroFor(PC);
+		UE_LOG(LogTemp, Warning, TEXT("F2X apresentacao terminou"));
+	}
+	// recuperacao de queda: queda livre de mais de 3,5 m -> volta ao ponto de retorno do nivel de onde caiu
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		APlayerController* PC = It->Get();
+		ACharacter* Ch = PC ? Cast<ACharacter>(PC->GetPawn()) : nullptr;
+		if (!Ch) continue;
+		const float Z = Ch->GetActorLocation().Z;
+		const bool bFalling = Ch->GetCharacterMovement()->IsFalling();
+		int32& ML = MaxLevel.FindOrAdd(Ch);
+		if (!bFalling)
+		{
+			const int32 Lv = FMath::Clamp(FMath::RoundToInt((Z - 90.f) / 600.f), 0, 3);
+			ML = FMath::Max(ML, Lv);
+			if (float* S = FallStart.Find(Ch))
+			{
+				if (*S - Z > 350.f)
+				{
+					const int32 From = FMath::Clamp(FMath::RoundToInt((*S - 90.f) / 600.f), 0, 3);
+					TeleportTo(PC, From);
+					if (ACoopCharacter* CC = Cast<ACoopCharacter>(Ch)) CC->ClientToast(TEXT("Queda: voce voltou ao ultimo ponto seguro"));
+					UE_LOG(LogTemp, Warning, TEXT("F2X queda de %.0f cm -> retorno ao nivel %d"), *S - Z, From);
+				}
+				FallStart.Remove(Ch);
+			}
+		}
+		else if (!FallStart.Contains(Ch)) FallStart.Add(Ch, Z);
+		else FallStart[Ch] = FMath::Max(FallStart[Ch], Z);   // pulo: conta do ponto mais alto
+		if (Z < -400.f) { TeleportTo(PC, ML); FallStart.Remove(Ch); }
 	}
 }

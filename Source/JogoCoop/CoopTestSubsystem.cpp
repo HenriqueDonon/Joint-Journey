@@ -2,6 +2,7 @@
 #include "CoopCharacter.h"
 #include "CoopDestructible.h"
 #include "CoopCollapseRig.h"
+#include "CoopF2Test.h"
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -23,6 +24,8 @@ void UCoopTestSubsystem::OnWorldBeginPlay(UWorld& W)
 	if (!W.IsGameWorld()) return;
 	if (FParse::Param(FCommandLine::Get(), TEXT("F1Tour"))) W.SpawnActor<ACoopF1Tour>();
 	if (FParse::Param(FCommandLine::Get(), TEXT("F1Fluxo"))) W.SpawnActor<ACoopF1Flow>();
+	if (FParse::Param(FCommandLine::Get(), TEXT("F2Fluxo"))) W.SpawnActor<ACoopF2Flow>();
+	if (FParse::Param(FCommandLine::Get(), TEXT("F2Vistas"))) W.SpawnActor<ACoopF2Views>();
 }
 
 // ---------------- passeio de camera (mesmo trajeto em qualquer mapa da Fase 1) ----------------
